@@ -1,0 +1,84 @@
+config {
+  connection-string = "Data Source=Database/BestFitBox.db;"
+  defaultCredit = 10
+  admins = ["onur@outlook.com.tr"]
+  akka {
+    persistence {
+      query.journal.sql {
+        # Implementation class of the SQL ReadJournalProvider
+        class = "Akka.Persistence.Query.Sql.SqlReadJournalProvider, Akka.Persistence.Query.Sql"
+        # Absolute path to the write journal plugin configuration entry that this
+        # query journal will connect to.
+        # If undefined (or "") it will connect to the default journal as specified by the
+        # akka.persistence.journal.plugin property.
+        write-plugin = ""
+        # The SQL write journal is notifying the query side as soon as things
+        # are persisted, but for efficiency reasons the query side retrieves the events
+        # in batches that sometimes can be delayed up to the configured `refresh-interval`.
+        refresh-interval = 1s
+        # How many events to fetch in one query (replay) and keep buffered until they
+        # are delivered downstreams.
+        max-buffer-size = 20
+      }
+      journal {
+        plugin = "akka.persistence.journal.sqlite"
+        sqlite
+        {
+            connection-string = ${config.connection-string}
+            auto-initialize = on
+            event-adapters.tagger = "Command.Actor+Tagger, Command"
+            event-adapters.v1 = "Command.Actor+MyEventAdapter, Command"
+            event-adapter-bindings {
+              "Command.Common+IDefaultTag, Command" = [v1]
+            }
+          }
+      }
+      snapshot-store {
+        plugin = "akka.persistence.snapshot-store.sqlite"
+        sqlite {
+          auto-initialize = on
+          connection-string = ${config.connection-string}
+        }
+      }
+    }
+    extensions = ["Akka.Cluster.Tools.PublishSubscribe.DistributedPubSubExtensionProvider,Akka.Cluster.Tools"]
+    stdout-loglevel = INFO
+    loglevel = INFO
+    log-config-on-start = false
+    loggers=["Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog"]
+
+    actor {
+      debug {
+        receive = on
+        autoreceive = on
+        lifecycle = on
+        event-stream = on
+        unhandled = on
+      }
+      provider = "Akka.Cluster.ClusterActorRefProvider, Akka.Cluster"
+      serializers {
+        json = "Akka.Serialization.NewtonSoftJsonSerializer"
+        plainnewtonsoft = "Command.Common+STJSerializer, Command"
+        thoth = "Command.Serialization+ThothSerializer, Command"
+      }
+      serialization-bindings {
+        "System.Object" = json
+        "Command.Common+IDefaultTag, Command" = thoth
+      }
+    }
+    remote {
+      dot-netty.tcp {
+        public-hostname = "localhost"
+        hostname = "localhost"
+        port = 0
+      }
+    }
+    cluster {
+      pub-sub.send-to-dead-letters-when-no-subscribers = false
+      sharding{
+            state-store-mode = ddata
+            remember-entities-store = eventsourced
+        }
+    }
+  }
+}

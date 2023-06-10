@@ -1,0 +1,83 @@
+source https://api.nuget.org/v3/index.json
+
+storage: none
+framework: auto-detect
+
+nuget Giraffe
+nuget FSharp.Core
+nuget Microsoft.AspNetCore.SpaServices.Extensions
+nuget TickSpec
+nuget Microsoft.Playwright
+nuget Fable.Remoting.Giraffe
+nuget Serilog.Sinks.ApplicationInsights
+nuget Serilog.Sinks.Console
+nuget Destructurama.FSharp
+nuget Serilog.Sinks.File
+nuget Thoth.Json.Net
+nuget Akkling.Streams
+nuget NodaTime.Serialization.SystemTextJson
+nuget Akka.Cluster.Sharding
+nuget Akkling.Persistence
+nuget Akkling.Cluster.Sharding
+nuget Akka.Cluster.Tools
+nuget Akka.Persistence.Sqlite
+nuget Microsoft.Data.SQLite.Core
+nuget FSharp.Interop.Dynamic
+nuget Microsoft.Extensions.Configuration
+nuget Hocon.Extensions.Configuration
+nuget FsHttp
+nuget SQLProvider
+nuget Serilog
+nuget Serilog.Sinks.Async
+nuget FluentMigrator.Runner.SQLite
+nuget FluentMigrator.Runner
+nuget FluentMigrator
+nuget Giraffe.SerilogExtensions
+nuget SwaggerProvider 2.0.0-beta9
+nuget FsToolkit.ErrorHandling
+nuget FsConfig
+nuget Stripe.net
+nuget Fsharp.Data
+nuget NodaTime.Serialization.JsonNet
+nuget NodaTime
+nuget Akka.Logger.Serilog
+nuget Akka.Persistence.Query.Sql
+nuget Serilog.Expressions
+nuget Serilog.AspNetCore
+nuget SQLitePCLRaw.bundle_green
+nuget ExcelProvider
+nuget Serilog.Sinks.Seq
+nuget Microsoft.ApplicationInsights.AspNetCore
+nuget Twilio
+nuget ThrottlingTroll
+nuget Google.Apis.Auth
+
+group Client
+    source https://api.nuget.org/v3/index.json
+    framework: auto-detect
+    storage: none
+    
+    nuget FSharp.Core
+    nuget Fable.Elmish.HMR
+    nuget Fable.Lit
+    nuget Fable.Lit.Elmish
+    nuget Fable.Elmish.Debugger
+    nuget Fable.LitStore
+    nuget Fable.Store
+    nuget Elmish
+    nuget FsToolkit.ErrorHandling
+    nuget Fable.Remoting.Client
+    nuget Fable.Browser.Url
+    nuget Fable.Browser.Dom
+    nuget Fable.Browser.Navigator
+    nuget Fable.Promise
+    nuget FSharp.Control.AsyncRx
+
+group Build
+    source https://api.nuget.org/v3/index.json
+    framework: auto-detect
+    storage: none
+
+    nuget FSharp.Core
+    nuget Fake.Core.Target
+    nuget Fake.DotNet.Cli
