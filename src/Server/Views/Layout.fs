@@ -6,6 +6,7 @@ open System
 open System.IO
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Http.Extensions
+open Common
 let scriptFiles =
     let assetsDir = "WebRoot/dist/assets"
 
@@ -18,7 +19,7 @@ let path =
     scriptFiles
     |> Array.map (fun x -> x.Substring(x.LastIndexOf(Path.DirectorySeparatorChar) + 1))
 
-let layout (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
+let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
     let script =
         if isDev || path.Length = 0 then
             html
@@ -88,7 +89,9 @@ let layout (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                 }}
         </script>
         <body>
-            
+            <main>
+                {body 0}
+            </main>
             {script}
             <script nonce="110888888" defer>
                 function attachShadowRoots(root) {{
@@ -106,6 +109,7 @@ let layout (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                 }}
                 attachShadowRoots(document.body);
             </script>
+            <script src="/_framework/aspnetcore-browser-refresh.js"></script>
         </body>
     </html>"""
     }

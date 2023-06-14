@@ -4,7 +4,6 @@
     <TargetFramework>net7.0</TargetFramework>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="web.config" CopyToOutputDirectory="PreserveNewest" />
     <Content Include="WebRoot\**\*">
@@ -14,7 +13,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Folder Include="WebRoot\" />
+    <Compile Include="Views\Common.fs" />
+    <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />
+    <Compile Include="Handlers\Default.fs" />
+    <Compile Include="Envirionments.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

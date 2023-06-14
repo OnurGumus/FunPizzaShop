@@ -36,7 +36,8 @@
  //    * If only using Remote - Containers with a local container, uncomment this line instead:
 	"mounts": [ 
 		"source=${env:HOME}${env:USERPROFILE}/.aspnet/https,target=/home/vscode/.aspnet/https,type=bind",
-		"source=${env:HOME}${env:USERPROFILE}/.microsoft/usersecrets,target=/root/.microsoft/usersecrets,type=bind"
+		"source=${env:HOME}${env:USERPROFILE}/.microsoft/usersecrets,target=/root/.microsoft/usersecrets,type=bind",
+		"source=${env:HOME}${env:USERPROFILE}/.aspnet/DataProtection-Keys,target=/root/.aspnet/DataProtection-Keys,type=bind"
 	 ],
 
 	"customizations": {

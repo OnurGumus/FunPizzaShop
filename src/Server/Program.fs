@@ -38,6 +38,8 @@ open Serilog.Context
 open Serilog.Formatting.Compact
 open Serilog.Filters
 open ThrottlingTroll
+open FunPizzaShop.Server.Views
+open BestFitBox.Server.Handlers.Default
 
 type Self = Self
 
@@ -138,25 +140,17 @@ let styleSrc =
         """'unsafe-inline'"""
     |]
     |> String.concat " "
-
-let webApp  =
-        choose [
-    
-            GET >=> route "/" >=> htmlString "Hello World"
-    
-        ]
     
 let configureApp (app: IApplicationBuilder) =
     let env = app.ApplicationServices.GetService<IWebHostEnvironment>()
     let isDevelopment = env.IsDevelopment()
-    //let config = app.ApplicationServices.GetService<IConfiguration>()
-   // let appEnv = Environments.AppEnv(config)
+    let config = app.ApplicationServices.GetService<IConfiguration>()
+    let appEnv = Environments.AppEnv(config)
     let provider = FileExtensionContentTypeProvider()
 
     provider.Mappings[".css"] <- "text/css; charset=utf-8"
     provider.Mappings[".js"] <- "text/javascript; charset=utf-8"
     provider.Mappings[".webmanifest"] <- "application/manifest+json; charset=utf-8"
-    StripeConfiguration.ApiKey <- config["config:StripeAPIKey"]
     let app = app.UseDefaultFiles()
     let app = if isDevelopment then app else app.UseResponseCompression()
 
@@ -193,8 +187,7 @@ let configureApp (app: IApplicationBuilder) =
             next.Invoke())
     |> ignore
 
-    // let layout ctx =
-    //     Main.layout ctx (appEnv) (env.IsDevelopment())
+    let layout ctx = Layout.view ctx (appEnv) (env.IsDevelopment())
 
     let sConfig = {
         SerilogConfig.defaults with
@@ -203,8 +196,7 @@ let configureApp (app: IApplicationBuilder) =
             ResponseMessageTemplate =
                 "{Method} Response (StatusCode {StatusCode}) at {Path} took {Duration} ms, User: {UserName}"
     }
-
-    let handler = SerilogAdapter.Enable((webApp), sConfig)
+    let handler = SerilogAdapter.Enable(webAppWrapper appEnv layout, sConfig)
 
     (match isDevelopment with
      | true -> app.UseDeveloperExceptionPage()
@@ -308,8 +300,6 @@ let host args =
     Host
         .CreateDefaultBuilder(args)
         .UseSerilog(fun context services loggerConfiguration ->
-            let telConfig = services.GetRequiredService<TelemetryConfiguration>()
-            let trace = TelemetryConverter.Traces
 
             loggerConfiguration
 #if DEBUG
@@ -341,7 +331,9 @@ let host args =
                 .WriteTo.Seq("http://192.168.50.236:5341")
 #endif
                 .WriteTo.Console()
-                .WriteTo.ApplicationInsights(telConfig, trace)
+                .WriteTo.ApplicationInsights(
+                    services.GetRequiredService<TelemetryConfiguration>(),
+                    TelemetryConverter.Traces)
             |> ignore)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
