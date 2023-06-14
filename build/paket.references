@@ -1,0 +1,4 @@
+group Build
+FSharp.Core
+Fake.Core.Target
+Fake.DotNet.Cli
