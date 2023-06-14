@@ -1,5 +1,4 @@
-﻿namespace Client
+﻿module FunPizzaShop.Client.App
 
-module Say =
-    let hello name =
-        printfn "Hello %s" name
+
+PizzaMenu.register()

@@ -16,7 +16,7 @@
     <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />
     <Compile Include="Handlers\Default.fs" />
-    <Compile Include="Envirionments.fs" />
+    <Compile Include="Environments.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

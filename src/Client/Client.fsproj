@@ -4,9 +4,11 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="PizzaMenu.fs" />
     <Compile Include="App.fs" />
     <Content Include="paket.references" />
     <Content Include="package.json" />
+    <TypeScriptCompile Include="vite.config.ts" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

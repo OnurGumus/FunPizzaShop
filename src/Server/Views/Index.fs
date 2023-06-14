@@ -3,5 +3,5 @@ open Common
 
 let view (dataLevel: int) =
     html $""" 
-        Hello from F#!
+        <fps-pizza-menu></fps-pizza-menu>
     """
