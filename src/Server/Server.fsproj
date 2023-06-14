@@ -12,7 +12,6 @@
     <Content Include="./config.hocon">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Folder Include="WebRoot\" />
     <Compile Include="Views\Common.fs" />
     <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />

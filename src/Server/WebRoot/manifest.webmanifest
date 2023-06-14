@@ -1,0 +1,47 @@
+{
+    "id": "/",
+    "scope": "/",
+    "name": "Fun Pizza Shop",
+    "dir": "ltr",
+    "lang": "en-US",
+    "display": "standalone",
+    "start_url": "/",
+    "short_name": "Fun Pizza Shop",
+    "theme_color": "#E1477E",
+    "description": "Fun Pizza Shop",
+    "orientation": "any",
+    "background_color": "#E1477E",
+    "related_applications": [],
+    "prefer_related_applications": false,
+    "icons": [
+      {
+        "src": "assets/icons/favicon-rounded.svg",
+        "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+        "type": "image/svg+xml",
+        "purpose": "any"
+      },
+      {
+        "src": "assets/icons/favicon-rounded.svg",
+        "sizes": "48x48 72x72 96x96 128x128 256x256 512x512",
+        "type": "image/svg+xml",
+        "purpose": "maskable"
+      }
+      
+     
+    ],
+    "screenshots": [
+      {
+        "src": "assets/screenshots/screen.png",
+        "sizes": "3132x1590",
+        "type": "image/png"
+      }
+    ],
+  
+    "categories": [
+      "business","utilities","productivity"
+    ],
+    "shortcuts": [
+     
+    ]
+  }
+  

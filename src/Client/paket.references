@@ -1,0 +1,13 @@
+group Client
+FSharp.Core
+Fable.Elmish.HMR
+Fable.Lit
+Fable.Lit.Elmish
+Fable.Elmish.Debugger
+Fable.LitStore
+FsToolkit.ErrorHandling
+Fable.Remoting.Client
+Fable.Browser.Url
+Fable.Browser.Dom
+Fable.Browser.Navigator
+Fable.Promise

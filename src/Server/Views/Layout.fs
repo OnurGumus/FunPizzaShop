@@ -69,7 +69,6 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
             <link rel="stylesheet" href="index.css"/>
             <script defer crossorigin="anonymous" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
         
-            <script nonce="110888888" defer src="script.js"></script>
         </head>
         <script nonce="110888888">
                 if (typeof trustedTypes !== "undefined") {{

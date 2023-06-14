@@ -1,0 +1,17 @@
+{
+  "name": "funpizzashop",
+  "version": "1.0.0",
+  "description": "",
+  "workspaces": [
+    "src/Client"
+  ],
+  "scripts": {
+    "watch": "npm run start --workspace=src/Client"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/node": "latest"
+  }
+}
