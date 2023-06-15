@@ -1,4 +1,4 @@
-﻿
+
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -10,6 +10,8 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "build", "build\build.fsproj", "{3DBD3BAB-E5F6-4F1E-A5F0-D868BAFDBB3F}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Client", "src\Client\Client.fsproj", "{5B66FAB1-A824-4B54-9D4D-EFF922818706}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "MVU", "src\MVU\MVU.fsproj", "{671A306A-A517-456C-84DB-12269C02930A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -32,8 +34,13 @@ Global
 		{5B66FAB1-A824-4B54-9D4D-EFF922818706}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5B66FAB1-A824-4B54-9D4D-EFF922818706}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5B66FAB1-A824-4B54-9D4D-EFF922818706}.Release|Any CPU.Build.0 = Release|Any CPU
+		{671A306A-A517-456C-84DB-12269C02930A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{671A306A-A517-456C-84DB-12269C02930A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{671A306A-A517-456C-84DB-12269C02930A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{671A306A-A517-456C-84DB-12269C02930A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{671A306A-A517-456C-84DB-12269C02930A} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
 		{73B46A52-B640-4147-9BDD-C0762ED74BDF} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
 		{5B66FAB1-A824-4B54-9D4D-EFF922818706} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
 	EndGlobalSection

@@ -4,15 +4,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ElmishOrder.fs" />
     <Compile Include="PizzaMenu.fs" />
     <Compile Include="App.fs" />
     <Content Include="paket.references" />
-    <Content Include="package.json" />
-    <TypeScriptCompile Include="vite.config.ts" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MVU\MVU.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

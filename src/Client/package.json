@@ -11,7 +11,7 @@
   "dependencies": {
     "@lit-labs/motion": "latest",
     "lit": "latest",
-    "remotedev": "^0.2.7",
+    "remotedev": "latest",
     "three": "latest"
   },
   "devDependencies": {

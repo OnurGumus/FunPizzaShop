@@ -11,16 +11,17 @@ open System
 open Browser
 open Elmish.Debug
 open FsToolkit.ErrorHandling
+open ElmishOrder
 open Browser.Types
 open Fable.Core.JS
+open FunPizzaShop.MVU.PizzaMenu
 
 let private hmr = HMR.createToken ()
 
-let init () = (), Cmd.none
+let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
+    match order with
+    | Order.None -> ()
 
-let update (model: unit) (msg: unit) =
-    match msg with
-    | _ -> model, Cmd.none
 
 let view host model dispatch =
     html
@@ -30,14 +31,13 @@ let view host model dispatch =
         </h2>
         """
 
-
 [<LitElement("fps-pizza-menu")>]
 let LitElement () =
     Hook.useHmr (hmr)
     let host, _ = LitElement.init (fun config -> config.useShadowDom <- false)
 
     let program =
-        Program.mkHidden (init) (update)
+        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace
