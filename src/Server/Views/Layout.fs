@@ -51,10 +51,13 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                 content="Best Pizza in the Town" />
             <meta name="keywords" content="Order Pizza">
 
-            <link rel="apple-touch-icon" href="/assets/icons/favicon-rounded.png">
+            <link rel="apple-touch-icon" href="/assets/icon-512.png">
             <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
             <meta name="viewport"
                 content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
+            <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
+            <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
+
 
             <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
             <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -62,7 +65,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
             <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
             <!-- Imports an icon to represent the document. -->
-            <link rel="icon" href="/assets/icons/favicon.png" type="image/x-icon" />
+            <link rel="icon" href="/assets/icon-512.svg" type="image/x-icon" />
 
             <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
             <link rel="manifest" href="/manifest.webmanifest" />
