@@ -78,7 +78,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
        
         <body>
             <header>
-                <h1>Fun Pizza Shop</h1>
+                <img class=logo src = "/assets/icons/logo.svg" alt="Fun Pizza Shop"/>
                 <nav>
                     <ul>
                         <li><a href="/">Home</a></li>

@@ -2,6 +2,41 @@
  
 @import "base.css" layer(base);
 
-header{
-    background:red;
+@layer layout{
+    header{
+        block-size: var(--size-10);
+        display: flex;
+        align-items: stretch;
+        padding: 0 var(--size-8);
+        position: fixed;
+        inset: 0 0 auto 0;
+    }
+    .logo {
+        margin-inline-end: var(--size-8);
+        inline-size: var(--size-12);
+    }
+}
+
+@layer appearance{
+    :root{
+        /* default */
+        --header-background-color-default:rgb(192,0,0);
+        --header-background-image-default: linear-gradient(rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.25) 25%, rgba(0,0,0,0) 70%);
+        --header-color-default: white;
+        --header-box-shadow-default: 0 1px 3px rgba(0,0,0,0.4);
+    }
+    
+    [theme="default"] {
+        color-scheme: default;
+        --header-background-color: var(--header-background-color-default);
+        --header-background-image: var(--header-background-image-default);
+        --header-color: var(--header-color-default);
+        --header-box=shadow: var(--header-box-shadow-default);
+    }
+    header{
+        background-color: var(--header-background-color);
+        background-image: var(--header-background-image);
+        color: var(--header-color);
+        box-shadow: var(--header-box-shadow);
+    }
 }

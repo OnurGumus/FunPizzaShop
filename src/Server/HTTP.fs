@@ -75,10 +75,11 @@ let staticFileOptions =
         ContentTypeProvider = provider,
         OnPrepareResponse =
             fun (context) ->
-                let headers = context.Context.Response.GetTypedHeaders()
-                headers.CacheControl <-
-                    Microsoft.Net.Http.Headers.CacheControlHeaderValue(
-                        Public = true,
-                        MaxAge = TimeSpan.FromDays(1)
-                    )
+                // let headers = context.Context.Response.GetTypedHeaders()
+                // headers.CacheControl <-
+                //     Microsoft.Net.Http.Headers.CacheControlHeaderValue(
+                //         Public = true,
+                //         MaxAge = TimeSpan.FromDays(1)
+                //     )
+                ()
     )

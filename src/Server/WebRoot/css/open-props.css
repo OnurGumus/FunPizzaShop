@@ -4,6 +4,26 @@
 /* optional imports that use the props */
 /* optional imports that use the props */
 
+*, ::before, ::after { box-sizing: border-box; }
+
+:where(:not(dialog)) {
+  margin: 0;
+}
+
+:where(:not(fieldset, progress, meter)) {
+  border-width: 0;
+  border-style: solid;
+  background-origin: border-box;
+  background-repeat: no-repeat;
+}
+
+:where(html) {
+  block-size: 100%;
+  font-family: var(--font-sans);
+  line-height: var(--font-lineheight-3);
+  -webkit-text-size-adjust: none; /* https://kilianvalkhof.com/2022/css-html/your-css-reset-needs-text-size-adjust-probably/ */
+}
+
 :where(html) {
 --size-fluid-1: clamp(.5rem, 1dvi, 1rem);
 --size-fluid-2: clamp(1rem, 2dvi, 1.5rem);
@@ -31,5 +51,5 @@
 }
 
 :root{
-    --link-light : var(--color-link-light);
+    --link-light: red;
 }
