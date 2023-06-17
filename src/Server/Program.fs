@@ -10,19 +10,16 @@ open Microsoft.Extensions.Logging
 open Microsoft.Extensions.DependencyInjection
 open Giraffe
 open Giraffe.SerilogExtensions
-open Microsoft.AspNetCore.Authorization
 open Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer
 open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Configuration
 open Serilog
-open Microsoft.AspNetCore.StaticFiles
-open System.Threading.Tasks
 open Hocon.Extensions.Configuration
-open Serilog.Context
 open ThrottlingTroll
 open FunPizzaShop.Server.Views
 open BestFitBox.Server.Handlers.Default
+open HTTP
 
 bootstrapLogger()
         
@@ -43,42 +40,22 @@ let errorHandler (ex: Exception) (ctx: HttpContext) =
     | _ -> clearResponse >=> setStatusCode 500 >=> text ex.Message
 
 let configureCors (builder: CorsPolicyBuilder) =
+    #if DEBUG
     builder
         .WithOrigins("http://localhost:8000", "https://localhost:8001")
         .AllowAnyMethod()
         .AllowAnyHeader()
     |> ignore
-
-let srciptSrcElem =
-    [|
-       
-        """data:"""
-        """'nonce-110888888'"""
-        """https://cdnjs.cloudflare.com/ajax/libs/dompurify/"""
-    |]
-    |> String.concat " "
-
-let styleSrcWithHashes =
-    [|
-        """'nonce-110888888'"""
-    |]
-    |> String.concat " "
-
-let styleSrc =
-    [|
-    |]
-    |> String.concat " "
+    #else 
+        ()
+    #endif
     
 let configureApp (app: IApplicationBuilder) =
     let env = app.ApplicationServices.GetService<IWebHostEnvironment>()
     let isDevelopment = env.IsDevelopment()
     let config = app.ApplicationServices.GetService<IConfiguration>()
     let appEnv = Environments.AppEnv(config)
-    let provider = FileExtensionContentTypeProvider()
-
-    provider.Mappings[".css"] <- "text/css; charset=utf-8"
-    provider.Mappings[".js"] <- "text/javascript; charset=utf-8"
-    provider.Mappings[".webmanifest"] <- "application/manifest+json; charset=utf-8"
+   
     let app = if isDevelopment then app else app.UseResponseCompression()
 
     app
@@ -86,33 +63,7 @@ let configureApp (app: IApplicationBuilder) =
         .UseAuthentication()
         .UseAuthorization()
         .UseMiddleware<LogUserNameMiddleware>()
-        .Use(fun (context: HttpContext) (next: Func<Task>) ->
-            let headers = context.Response.Headers
-            headers.Add("X-Content-Type-Options", "nosniff")
-
-            match context.Request.Headers.TryGetValue("Accept") with
-            | true, accept ->
-                if accept |> Seq.exists (fun x -> x.Contains "text/html") then
-                    headers.Add("Cross-Origin-Embedder-Policy", "corp")
-                    headers.Add("Cross-Origin-Opener-Policy", "same-origin")
-
-                headers.Add(
-                    "Content-Security-Policy",
-                    $"default-src 'none';\
-                    font-src 'self';\
-                    img-src 'self';\
-                    manifest-src 'self';\
-                    script-src-elem 'self' {srciptSrcElem} ;\
-                    connect-src 'self'  localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
-                    style-src 'self' {styleSrc} ;\
-                    worker-src 'self';\
-                    form-action 'self';\
-                    script-src  'wasm-unsafe-eval';\
-                    frame-src 'self';\
-                    ")
-            | _ -> ()
-
-            next.Invoke())
+        .Use(headerMiddleware)
     |> ignore
 
     let layout ctx = Layout.view ctx (appEnv) (env.IsDevelopment())
@@ -124,20 +75,7 @@ let configureApp (app: IApplicationBuilder) =
      | true -> app.UseDeveloperExceptionPage()
      | false -> app.UseHttpsRedirection())
         .UseCors(configureCors)
-        .UseStaticFiles(
-            StaticFileOptions(
-                ContentTypeProvider = provider,
-                OnPrepareResponse =
-                    fun (context) ->
-                        let headers = context.Context.Response.GetTypedHeaders()
-
-                        headers.CacheControl <-
-                            Microsoft.Net.Http.Headers.CacheControlHeaderValue(
-                                Public = true,
-                                MaxAge = TimeSpan.FromDays(1)
-                            )
-            )
-        )
+        .UseStaticFiles(staticFileOptions)
         .UseThrottlingTroll(Throttling.setOptions)
         .UseGiraffe(handler)
 

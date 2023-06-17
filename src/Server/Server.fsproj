@@ -19,6 +19,7 @@
     <Compile Include="Environments.fs" />
     <Compile Include="Throttling.fs" />
     <Compile Include="Serilog.fs" />
+    <Compile Include="HTTP.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
