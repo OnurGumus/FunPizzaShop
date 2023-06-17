@@ -1,0 +1,2 @@
+@layer opencss, base, tooltip, layout, text, appearance;
+@import "open-props.css" layer(opencss);

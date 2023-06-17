@@ -1,0 +1,7 @@
+@layer base, layout, text, appearance, other,animation;
+ 
+@import "base.css" layer(base);
+
+header{
+    background:red;
+}

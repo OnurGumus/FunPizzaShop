@@ -1,0 +1,35 @@
+/* the props */
+@import "https://unpkg.com/open-props@1.5.9/open-props.min.css";
+
+/* optional imports that use the props */
+/* optional imports that use the props */
+
+:where(html) {
+--size-fluid-1: clamp(.5rem, 1dvi, 1rem);
+--size-fluid-2: clamp(1rem, 2dvi, 1.5rem);
+--size-fluid-3: clamp(1.5rem, 3dvi, 2rem);
+--size-fluid-4: clamp(2rem, 4dvi, 3rem);
+--size-fluid-5: clamp(4rem, 5dvi, 5rem);
+--size-fluid-6: clamp(5rem, 7dvi, 7.5rem);
+--size-fluid-7: clamp(7.5rem, 10dvi, 10rem);
+--size-fluid-8: clamp(10rem, 20dvi, 15rem);
+--size-fluid-9: clamp(15rem, 30dvi, 20rem);
+--size-fluid-10: clamp(20rem, 40dvi, 30rem);
+}
+
+:where(html) {
+    --size-block-fluid-1: clamp(.5rem, 1dvb, 1rem);
+    --size-block-fluid-2: clamp(1rem, 2dvb, 1.5rem);
+    --size-block-fluid-3: clamp(1.5rem, 3dvb, 2rem);
+    --size-block-fluid-4: clamp(2rem, 4dvb, 3rem);
+    --size-block-fluid-5: clamp(4rem, 5dvb, 5rem);
+    --size-block-fluid-6: clamp(5rem, 7dvb, 7.5rem);
+    --size-block-fluid-7: clamp(7.5rem, 10dvb, 10rem);
+    --size-block-fluid-8: clamp(10rem, 20dvb, 15rem);
+    --size-block-fluid-9: clamp(15rem, 30dvb, 20rem);
+    --size-block-fluid-10: clamp(20rem, 40dvb, 30rem);
+}
+
+:root{
+    --link-light : var(--color-link-light);
+}

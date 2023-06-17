@@ -21,6 +21,13 @@ let styleSrcWithHashes =
 
 let styleSrc =
     [|
+        """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
+    |]
+    |> String.concat " "
+
+let styleSrcElem = 
+    [|
+        """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
     |]
     |> String.concat " "
 
@@ -43,15 +50,17 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             script-src-elem 'self' {srciptSrcElem} ;\
             connect-src 'self' localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
             style-src 'self' {styleSrc} ;\
+            style-src-elem 'self' {styleSrcElem} ;\
             worker-src 'self';\
             form-action 'self';\
             script-src  'wasm-unsafe-eval';\
             frame-src 'self';\
             require-trusted-types-for 'script';\
-            trusted-types default;\
+            trusted-types default dompurify lit-html;\
             ")
     | _ -> ()
-
+    // require-trusted-types-for 'script';\
+   
     next.Invoke()
 
 
