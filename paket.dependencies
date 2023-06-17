@@ -72,6 +72,7 @@ group Client
     nuget Fable.Browser.Navigator
     nuget Fable.Promise
     nuget FSharp.Control.AsyncRx
+    nuget Fable.Elmish.Browser
 
 group Build
     source https://api.nuget.org/v3/index.json
