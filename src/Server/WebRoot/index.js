@@ -1,8 +1,8 @@
 if (typeof trustedTypes !== "undefined") {
-    trustedTypes.createPolicy('default', {
-        createHTML: (string, sink) => DOMPurify.sanitize(string, { RETURN_TRUSTED_TYPE: true })
+    const policy = trustedTypes.createPolicy('default', {
+        createHTML: (string, sink) => DOMPurify.sanitize(string, { RETURN_TRUSTED_TYPE: true }),
+        createScriptURL: (s) => s 
     });
-    const policy = trustedTypes.createPolicy('myPolicy', { createScriptURL: (s) => s });
     const url = policy.createScriptURL('/sw.js');
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(url);

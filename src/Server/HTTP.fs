@@ -41,12 +41,14 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             img-src 'self';\
             manifest-src 'self';\
             script-src-elem 'self' {srciptSrcElem} ;\
-            connect-src 'self'  localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
+            connect-src 'self' localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
             style-src 'self' {styleSrc} ;\
             worker-src 'self';\
             form-action 'self';\
             script-src  'wasm-unsafe-eval';\
             frame-src 'self';\
+            require-trusted-types-for 'script';\
+            trusted-types default;\
             ")
     | _ -> ()
 
