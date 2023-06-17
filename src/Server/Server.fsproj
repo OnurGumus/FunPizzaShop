@@ -17,6 +17,8 @@
     <Compile Include="Views\Layout.fs" />
     <Compile Include="Handlers\Default.fs" />
     <Compile Include="Environments.fs" />
+    <Compile Include="Throttling.fs" />
+    <Compile Include="Serilog.fs" />
     <Compile Include="Program.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />

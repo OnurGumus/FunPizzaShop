@@ -16,59 +16,26 @@ open Microsoft.AspNetCore.Authentication.Cookies
 open Microsoft.AspNetCore.Http
 open Microsoft.Extensions.Configuration
 open Serilog
-open Serilog.Sinks.SystemConsole
-open Serilog.Sinks.File
-open Microsoft.ApplicationInsights.Extensibility
-open Fable.Remoting.Server
-open Fable.Remoting.Giraffe
-open Thoth.Json.Net
-open System
-open System.Diagnostics
-open Microsoft.Extensions.Configuration
-open Serilog.Sinks.Async
 open Microsoft.AspNetCore.StaticFiles
-open System
 open System.Threading.Tasks
-open Fable.Remoting.Giraffe
-open System.Net
 open Hocon.Extensions.Configuration
-open Stripe
-open Serilog.Events
 open Serilog.Context
-open Serilog.Formatting.Compact
-open Serilog.Filters
 open ThrottlingTroll
 open FunPizzaShop.Server.Views
 open BestFitBox.Server.Handlers.Default
 
+bootstrapLogger()
+        
 type Self = Self
-
+ 
 let configBuilder =
     ConfigurationBuilder()
         .AddUserSecrets<Self>()
-        // .AddHoconFile("config.hocon", true)
+        .AddHoconFile("config.hocon")
         // .AddHoconFile("secrets.hocon", true)
         .AddEnvironmentVariables()
-// .AddInMemoryCollection(clientPath)
 
 let config = configBuilder.Build()
-
-Log.Logger <-
-    LoggerConfiguration()
-        .WriteTo.Console()
-        .WriteTo.File(
-            new CompactJsonFormatter(),
-            "logs/log_boot_strapper_json_.txt",
-            rollingInterval = RollingInterval.Day
-        )
-        .CreateBootstrapLogger()
-
-type LogUserNameMiddleware(next: RequestDelegate) =
-    member private this.next = next
-
-    member this.Invoke(context: HttpContext) : Task =
-        LogContext.PushProperty("UserName", context.User.Identity.Name) |> ignore
-        this.next.Invoke context
 
 let errorHandler (ex: Exception) (ctx: HttpContext) =
     match ex with
@@ -112,10 +79,10 @@ let configureApp (app: IApplicationBuilder) =
     provider.Mappings[".css"] <- "text/css; charset=utf-8"
     provider.Mappings[".js"] <- "text/javascript; charset=utf-8"
     provider.Mappings[".webmanifest"] <- "application/manifest+json; charset=utf-8"
-    let app = app.UseDefaultFiles()
     let app = if isDevelopment then app else app.UseResponseCompression()
 
     app
+        .UseDefaultFiles()
         .UseAuthentication()
         .UseAuthorization()
         .UseMiddleware<LogUserNameMiddleware>()
@@ -150,13 +117,7 @@ let configureApp (app: IApplicationBuilder) =
 
     let layout ctx = Layout.view ctx (appEnv) (env.IsDevelopment())
 
-    let sConfig = {
-        SerilogConfig.defaults with
-            ErrorHandler = errorHandler
-            RequestMessageTemplate = "{Method} Request at {Path}, User: {UserName}"
-            ResponseMessageTemplate =
-                "{Method} Response (StatusCode {StatusCode}) at {Path} took {Duration} ms, User: {UserName}"
-    }
+    let sConfig = Serilog.configure errorHandler 
     let handler = SerilogAdapter.Enable(webAppWrapper appEnv layout, sConfig)
 
     (match isDevelopment with
@@ -177,64 +138,22 @@ let configureApp (app: IApplicationBuilder) =
                             )
             )
         )
-        .UseThrottlingTroll(fun options ->
-            let config = ThrottlingTrollConfig()
-            config.Rules <- [|
-                ThrottlingTrollRule(
-                    UriPattern = "/api/Authentication/Login",
-                    LimitMethod =
-                        FixedWindowRateLimitMethod(PermitLimit = 5, IntervalInSeconds = 60),
-                    IdentityIdExtractor = fun (request) -> 
-                            let r = (request :?>IIncomingHttpRequestProxy).Request
-                            r.HttpContext.Connection.RemoteIpAddress.ToString()
-                )
-                ThrottlingTrollRule(
-                    UriPattern = "/api/Authentication/Login",
-                    LimitMethod =
-                        FixedWindowRateLimitMethod(PermitLimit = 7, IntervalInSeconds = 600),
-                    IdentityIdExtractor = fun (request) -> 
-                            let r = (request :?>IIncomingHttpRequestProxy).Request
-                            r.HttpContext.Connection.RemoteIpAddress.ToString()
-                )
-                ThrottlingTrollRule(
-                    UriPattern = "/api/Authentication/Verify",
-                    LimitMethod =
-                        FixedWindowRateLimitMethod(PermitLimit = 7, IntervalInSeconds = 60),
-                    IdentityIdExtractor = fun (request) -> 
-                            let r = (request :?>IIncomingHttpRequestProxy).Request
-                            r.HttpContext.Connection.RemoteIpAddress.ToString()
-                )
-                ThrottlingTrollRule(
-                    UriPattern = "/api/Authentication/Verify",
-                    LimitMethod =
-                        FixedWindowRateLimitMethod(PermitLimit = 15, IntervalInSeconds = 600),
-                    IdentityIdExtractor = fun (request) -> 
-                            let r = (request :?>IIncomingHttpRequestProxy).Request
-                            r.HttpContext.Connection.RemoteIpAddress.ToString()
-                )
-            |]
-           
-
-            options.Config <- config)
+        .UseThrottlingTroll(Throttling.setOptions)
         .UseGiraffe(handler)
 
     if env.IsDevelopment() then
         app.UseSpa(fun spa ->
             let path = System.IO.Path.Combine(__SOURCE_DIRECTORY__, "../../.")
             spa.Options.SourcePath <- path
-            printfn "path%A" spa.Options.SourcePath
             spa.Options.DevServerPort <- 5173
             spa.UseReactDevelopmentServer(npmScript = "watch"))
 
         app.UseSerilogRequestLogging() |> ignore
 
 let configureServices (services: IServiceCollection) =
-    services.AddAuthorization() |> ignore
-
-    services.AddResponseCompression(fun options -> options.EnableForHttps <- true)
-    |> ignore
-
     services
+        .AddAuthorization()
+        .AddResponseCompression(fun options -> options.EnableForHttps <- true)
         .AddCors()
         .AddGiraffe()
         .AddAntiforgery()
@@ -243,10 +162,8 @@ let configureServices (services: IServiceCollection) =
         .AddCookie(
             CookieAuthenticationDefaults.AuthenticationScheme,
             fun options ->
-                // options.LoginPath <- "/login";
                 options.SlidingExpiration <- true
                 options.ExpireTimeSpan <- TimeSpan.FromDays(7)
-        //   options.AccessDeniedPath <- "/login"
         )
     |> ignore
 
@@ -260,42 +177,7 @@ let host args =
 
     Host
         .CreateDefaultBuilder(args)
-        .UseSerilog(fun context services loggerConfiguration ->
-
-            loggerConfiguration
-#if DEBUG
-                .MinimumLevel
-                .Debug()
-#else
-                .MinimumLevel
-                .Information()
-#endif
-                .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-                .MinimumLevel.Override("Giraffe", LogEventLevel.Warning)
-                .Enrich.FromLogContext()
-                .Filter.ByExcluding(
-                    Matching.WithProperty<string>(
-                        "UserAgent",
-                        (fun p -> String.IsNullOrWhiteSpace p || p = "AlwaysOn")
-                    )
-                )
-                .Filter.ByExcluding("@m like '%/dist/%'")
-                .Filter.ByExcluding("@m = 'Passing through logger HttpHandler'")
-                .Filter.ByExcluding(
-                    "@m like 'GET Response%' and (@p['UserName'] is null) and @p['Path'] = '/' and @p['StatusCode'] = 200"
-                )
-                //  .WriteTo.ApplicationInsights(TelemetryConfiguration.CreateDefault(), TelemetryConverter.Traces)
-                .WriteTo.File(new CompactJsonFormatter(), "logs/log_json_.txt", rollingInterval = RollingInterval.Day)
-                .Destructure.FSharpTypes()
-                .WriteTo.Console()
-#if DEBUG
-                .WriteTo.Seq("http://192.168.50.236:5341")
-#endif
-                .WriteTo.Console()
-                .WriteTo.ApplicationInsights(
-                    services.GetRequiredService<TelemetryConfiguration>(),
-                    TelemetryConverter.Traces)
-            |> ignore)
+        .UseSerilog(Serilog.configureMiddleware)
         .ConfigureWebHostDefaults(fun webHostBuilder ->
             webHostBuilder
 #if !DEBUG
@@ -313,5 +195,13 @@ let host args =
 
 [<EntryPoint>]
 let main args =
-    (host args).Run()
-    0
+    let mutable ret = 0
+    try
+        try
+            (host args).Run()
+        with ex -> 
+            Log.Fatal(ex, "Host terminated unexpectedly")
+            ret <- -1
+    finally
+        Log.CloseAndFlush()
+    ret

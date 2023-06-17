@@ -18,6 +18,11 @@ export default defineConfig({
         }
       },
     server: {
+        watch: {
+          ignored: [ "**/*.fs"]
+        },
+
+        
         https: false,
         strictPort: true,
         hmr: {
