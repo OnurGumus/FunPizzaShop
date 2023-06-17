@@ -47,7 +47,6 @@ let runDotNet cmd workingDir =
         failwithf "'dotnet %s' failed in %s" cmd workingDir
 
 let openBrowser url =
-    //https://github.com/dotnet/corefx/issues/10361
     Command.ShellCommand url
     |> CreateProcess.fromCommand
     |> CreateProcess.ensureExitCodeWithMessage "opening browser failed"
@@ -62,13 +61,9 @@ let initTargets () =
         let runTool = runTool Proc.run
         printfn "Node version:"
         runTool npmTool "ci" "."  |> ignore)
-        // printfn "Yarn version:"
-        // runTool yarnTool "--version" __SOURCE_DIRECTORY__ |>ignore
-        // runTool yarnTool "install --frozen-lockfile" __SOURCE_DIRECTORY__ |> ignore)
 
     Target.create "BuildClient" (fun _ ->
         let runTool = runTool Proc.run
-        runTool npmTool "run postcss" "." |> ignore
         runTool npmTool "run build" clientPath |> ignore
     )
 
@@ -98,51 +93,7 @@ let initTargets () =
         |> Async.RunSynchronously
         |> ignore)
 
-    Target.create "PostCSS" (fun _ ->
-        let runTool = runTool Proc.startRaw
-        runTool "npm" "run postcss-watch" "." |> ignore)
-
-   
-    Target.create "Run" (fun _ ->
-        let runTool = runTool Proc.run
-        let server = async { runDotNet "watch run" serverPath }
-
-        let postcss = async {
-             (runTool)  "npm run postcss-watch" "." |> ignore
-        }
-        
-        let browser = async {
-            do! Async.Sleep 5000
-            openBrowser "http://localhost:8080"
-        }
-
-        let vsCodeSession = Environment.hasEnvironVar "vsCodeSession"
-        let safeClientOnly = Environment.hasEnvironVar "safeClientOnly"
-
-        let tasks = [postcss; server; browser ]
-
-        tasks |> Async.Parallel |> Async.RunSynchronously |> ignore)
-
-
-    Target.create "RunClient" (fun _ ->
-        let runTool = runTool Proc.run
-        let server = async { return () }
-
-       
-        let browser = async {
-            do! Async.Sleep 5000
-            openBrowser "http://localhost:8080"
-        }
-
-        let vsCodeSession = Environment.hasEnvironVar "vsCodeSession"
-        let safeClientOnly = Environment.hasEnvironVar "safeClientOnly"
-
-        let tasks = [ server; browser ]
-
-        tasks |> Async.Parallel |> Async.RunSynchronously |> ignore)
-
     "Clean" ==> "InstallClient" ==> "Build" |> ignore
-    "Clean" ==> "InstallClient" ==> "Run" |> ignore
     "Clean" ==> "InstallClient" ==> "BuildClient" ==> "PublishServer"|> ignore
     "RunServer"
 

@@ -3,14 +3,14 @@ if (typeof trustedTypes !== "undefined") {
         createHTML: (string, sink) => DOMPurify.sanitize(string, { RETURN_TRUSTED_TYPE: true })
     });
     const policy = trustedTypes.createPolicy('myPolicy', { createScriptURL: (s) => s });
-    const url = policy.createScriptURL('/scripts/sw.js');
+    const url = policy.createScriptURL('/sw.js');
     if ("serviceWorker" in navigator) {
         navigator.serviceWorker.register(url);
     }
 }
 else {
     if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register('/scripts/sw.js');
+        navigator.serviceWorker.register('/sw.js');
     }
 }
 

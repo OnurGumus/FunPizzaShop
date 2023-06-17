@@ -71,7 +71,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
             <link rel="stylesheet" href="/css/index.css"/>
             <script defer crossorigin="anonymous" type="text/javascript" 
             src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
-            <script defer src="/scripts/index.js"></script>
+            <script defer src="/index.js"></script>
             {script}
 
         </head>
