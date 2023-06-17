@@ -11,10 +11,27 @@
         position: fixed;
         inset: 0 0 auto 0;
     }
+
     .logo {
         margin-inline-end: var(--size-8);
         inline-size: var(--size-12);
     }
+
+    .nav-tab {
+        margin: 0;
+        padding: var(--size-1) var(--size-6);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+  
+    .nav-tab img {
+        block-size: 2rem;
+        margin-block-end: 0.25rem;
+    }
+
 }
 
 @layer appearance{
@@ -24,14 +41,17 @@
         --header-background-image-default: linear-gradient(rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.25) 25%, rgba(0,0,0,0) 70%);
         --header-color-default: white;
         --header-box-shadow-default: 0 1px 3px rgba(0,0,0,0.4);
+        --nav-tab-active-color-default:#fff2cc
     }
-    
-    [theme="default"] {
-        color-scheme: default;
+
+    [theme="default-pizza"] {
+        color-scheme: default-pizza;
         --header-background-color: var(--header-background-color-default);
         --header-background-image: var(--header-background-image-default);
         --header-color: var(--header-color-default);
-        --header-box=shadow: var(--header-box-shadow-default);
+        --header-box-shadow: var(--header-box-shadow-default);
+        --nav-tab-active-color: var(--nav-tab-active-color-default);
+
     }
     header{
         background-color: var(--header-background-color);
@@ -39,4 +59,40 @@
         color: var(--header-color);
         box-shadow: var(--header-box-shadow);
     }
+
+    .nav-tab {
+        background-color: rgba(0,0,0,0.1);
+        font-size: var(--font-size-1);
+        color: var(--header-color);
+        text-transform: uppercase;
+        transition: 0.2s ease-out;
+    }
+
+    .nav-tab:hover {
+        color: var(--header-color);
+        text-decoration: none;
+        background-color: rgba(255,255,255,0.3);
+    }
+    .nav-tab.active {
+        background-color: rgba(255,255,255,0.2);
+        color: --nav-tab-active-color;
+    }
+
+    .nav-tab.active:after {
+        content: "";
+        position: absolute;
+        bottom: -1rem;
+        z-index: 1;
+        width: 0px;
+        height: 0px;
+        border-left: 0.6rem solid transparent;
+        border-right: 0.6rem solid transparent;
+        border-top: 1rem solid rgb(205,51,51);
+    }
+
+    .nav-tab.active img {
+        filter: brightness(0) saturate(100%) invert(93%) sepia(18%) saturate(797%) hue-rotate(316deg) brightness(109%) contrast(101%);
+    }
+
+
 }

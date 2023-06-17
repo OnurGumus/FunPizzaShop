@@ -49,7 +49,3 @@
     --size-block-fluid-9: clamp(15rem, 30dvb, 20rem);
     --size-block-fluid-10: clamp(20rem, 40dvb, 30rem);
 }
-
-:root{
-    --link-light: red;
-}

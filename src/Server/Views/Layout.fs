@@ -42,7 +42,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
     return
         html $"""
     <!DOCTYPE html>
-    <html theme=default lang="en">
+    <html theme=default-pizza lang="en">
         <head>
             <meta charset="utf-8" >
             <base href="/" />
@@ -79,13 +79,20 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
         <body>
             <header>
                 <img class=logo src = "/assets/icons/logo.svg" alt="Fun Pizza Shop"/>
-                <nav>
-                    <ul>
+               
+                    <!-- <ul>
                         <li><a href="/">Home</a></li>
                         <li><a href="/order">Order</a></li>
                         <li><a href="/about">About</a></li>
-                    </ul>
-                </nav>
+                    </ul> -->
+                    <a href="/" class=nav-tab>
+                        <img src="/assets/icons/pizza-slice.svg" alt="Get Pizza" />
+                        <div>Get Pizza</div>
+                    </a>
+                    <a href="/myOrders" class=nav-tab>
+                        <img src="/assets/icons/bike.svg" alt="My Orders" />
+                        <span>My Orders</span>
+                    </a>
             </header>
             <main>
                 {body 0}
