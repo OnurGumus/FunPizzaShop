@@ -14,7 +14,14 @@ export default defineConfig({
           input: {
             main: './build/App.js',
           },
-
+          manualChunks: (id) =>{
+            if (id.includes('fable')) {
+              return 'fable';
+            }
+            if (id.includes('lit')) {
+              return 'lit';
+            }
+          }
         }
       },
     server: {
