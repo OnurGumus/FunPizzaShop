@@ -4,12 +4,14 @@
 
 @layer layout{
     header{
-        block-size: var(--size-10);
         display: flex;
         align-items: stretch;
         padding: 0 var(--size-8);
         position: fixed;
+        flex-wrap: wrap;
+        gap: 0.7rem;
         inset: 0 0 auto 0;
+        min-inline-size: 390px;
     }
 
     .logo {
@@ -30,6 +32,14 @@
     .nav-tab img {
         block-size: 2rem;
         margin-block-end: 0.25rem;
+    }
+    @media (width < 768px) {
+        header{
+            inset: 0 0 auto 0;
+        }
+        .logo {
+            margin: auto;
+        }
     }
 
 }
@@ -58,6 +68,7 @@
         background-image: var(--header-background-image);
         color: var(--header-color);
         box-shadow: var(--header-box-shadow);
+        padding-block-start: var(--size-3);
     }
 
     .nav-tab {
