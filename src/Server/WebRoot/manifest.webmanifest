@@ -15,13 +15,13 @@
     "prefer_related_applications": false,
     "icons": [
       {
-        "src": "/assets/icon-512.png",
+        "src": "/assets/icons/icon-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "any"
       },
       {
-        "src": "/assets/icon-512.png",
+        "src": "/assets/icons/icon-512.png",
         "sizes": "512x512",
         "type": "image/png",
         "purpose": "maskable"

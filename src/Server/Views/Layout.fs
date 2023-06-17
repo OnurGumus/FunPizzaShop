@@ -26,6 +26,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                 $"""
                 <script type="module" src="/dist/@vite/client"></script>
                 <script type="module" src="/dist/build/App.js"></script>
+                <script defer src="/_framework/aspnetcore-browser-refresh.js"></script>
             """
         else
             let scripts =
@@ -51,13 +52,11 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                 content="Best Pizza in the Town" />
             <meta name="keywords" content="Order Pizza">
 
-            <link rel="apple-touch-icon" href="/assets/icon-512.png">
+            <link rel="apple-touch-icon" href="/assets/icons/icon-512.png">
             <!-- This meta viewport ensures the webpage's dimensions change according to the device it's on. This is called Responsive Web Design.-->
             <meta name="viewport"
                 content="viewport-fit=cover, width=device-width, initial-scale=1.0" />
-            <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#181818" />
-            <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f3f3f3" />
-
+            <meta name="theme-color"  content="#181818" />
 
             <!-- These meta tags are Apple-specific, and set the web application to run in full-screen mode with a black status bar. Learn more at https://developer.apple.com/library/archive/documentation/AppleApplications/Reference/SafariHTMLRef/Articles/MetaTags.html-->
             <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -65,53 +64,32 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
             <meta name="apple-mobile-web-app-status-bar-style" content="black" />
 
             <!-- Imports an icon to represent the document. -->
-            <link rel="icon" href="/assets/icon-512.svg" type="image/x-icon" />
+            <link rel="icon" href="/assets/icons/icon-512.svg" type="image/x-icon" />
 
             <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
             <link rel="manifest" href="/manifest.webmanifest" />
-            <link rel="stylesheet" href="index.css"/>
-            <script defer crossorigin="anonymous" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
-        
+            <link rel="stylesheet" href="/css/index.css"/>
+            <script defer crossorigin="anonymous" type="text/javascript" 
+            src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
+            <script defer src="/scripts/index.js"></script>
+            {script}
+
         </head>
-        <script nonce="110888888">
-                if (typeof trustedTypes !== "undefined") {{
-                    trustedTypes.createPolicy('default', {{
-                        createHTML: (string, sink) => DOMPurify.sanitize(string, {{RETURN_TRUSTED_TYPE: true}})
-                    }});
-                    const policy = trustedTypes.createPolicy('myPolicy', {{ createScriptURL: (s) => s }});
-                    const url = policy.createScriptURL('./sw.js');
-                    if ("serviceWorker" in navigator) {{
-                    navigator.serviceWorker.register(url);
-                    }}
-                }}
-                else{{
-                    if ("serviceWorker" in navigator) {{
-                        navigator.serviceWorker.register('./sw.js');
-                    }}
-                }}
-        </script>
+       
         <body>
+            <header>
+                <h1>Fun Pizza Shop</h1>
+                <nav>
+                    <ul>
+                        <li><a href="/">Home</a></li>
+                        <li><a href="/order">Order</a></li>
+                        <li><a href="/about">About</a></li>
+                    </ul>
+                </nav>
+            </header>
             <main>
                 {body 0}
             </main>
-            {script}
-            <script nonce="110888888" defer>
-                function attachShadowRoots(root) {{
-                    root.querySelectorAll("template[shadowrootmode]").forEach(template => {{
-                        let shadowRoot = root.shadowRoot
-                        if(root.shadowRoot==null){{
-                            const mode = template.getAttribute("shadowrootmode");
-                            shadowRoot = template.parentNode.attachShadow({{ mode }});
-                        }}
-                        shadowRoot.appendChild(template.content);
-                        template.remove();
-                        attachShadowRoots(shadowRoot);
-                        
-                    }})
-                }}
-                attachShadowRoots(document.body);
-            </script>
-            <script src="/_framework/aspnetcore-browser-refresh.js"></script>
         </body>
     </html>"""
     }
