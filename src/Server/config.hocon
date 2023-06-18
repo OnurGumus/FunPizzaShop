@@ -1,5 +1,5 @@
 config {
-  connection-string = "Data Source=Database/BestFitBox.db;"
+  connection-string = "Data Source=Database/FunPizzaShop.db;"
   defaultCredit = 10
   admins = ["onur@outlook.com.tr"]
   akka {

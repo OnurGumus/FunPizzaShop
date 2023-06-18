@@ -20,6 +20,7 @@ open ThrottlingTroll
 open FunPizzaShop.Server.Views
 open BestFitBox.Server.Handlers.Default
 open HTTP
+open FunPizzaShop.Domain.Constants
 
 bootstrapLogger()
         
@@ -28,7 +29,7 @@ type Self = Self
 let configBuilder =
     ConfigurationBuilder()
         .AddUserSecrets<Self>()
-        .AddHoconFile("config.hocon")
+        .AddHoconFile(ConfigHocon)
         // .AddHoconFile("secrets.hocon", true)
         .AddEnvironmentVariables()
 
@@ -109,7 +110,7 @@ let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
 let host args =
-  //  DB.init config
+    DB.init config
     let contentRoot = Directory.GetCurrentDirectory()
     let webRoot = Path.Combine(contentRoot, "WebRoot")
 
