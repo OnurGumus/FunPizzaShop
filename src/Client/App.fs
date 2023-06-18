@@ -15,12 +15,31 @@ type Page =
 
 type Model = Page option
 
+[<RequireQualifiedAccess>]
+module Navigation2 =
+    let [<Literal>] internal NavigatedEvent = "NavigatedEvent"
+
+    /// Modify current location
+    let modifyUrl (newUrl:string):Cmd<_> =
+        [fun _ -> history.replaceState((), "", newUrl)]
+
+    /// Push new location into history and navigate there
+    let newUrl (newUrl:string) (state:obj):Cmd<_> =
+        [fun _ -> history.pushState((), "", newUrl)
+                  let ev = CustomEvent.Create(NavigatedEvent)
+                  window.dispatchEvent ev
+                  |> ignore ]
+
+    /// Jump to some point in history (positve=forward, nagative=backward)
+    let jump (n:int):Cmd<_> =
+        [fun _ -> history.go n]
+
 let toPage =
     function
     | Home -> "home"
     | About -> "about"
 
-let init (result: Option<Page>) = result, Navigation.newUrl (toPage Home)
+let init (result: Option<Page>) = result, Navigation2.newUrl (toPage Home) 1
 
 let update msg (model: Model) = model, Cmd.none
 

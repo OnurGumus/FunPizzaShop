@@ -1,16 +1,34 @@
-@layer base, layout, text, appearance, other,animation;
- 
+@layer base,
+layout,
+text,
+appearance,
+other,
+animation;
+
 @import "base.css" layer(base);
 
-@layer layout{
-    header{
+@layer layout {
+    body{
+        block-size: 100svb;
+        display:flex;
+        flex-direction:column;
+    }
+    header {
         display: flex;
         align-items: stretch;
         padding: 0 var(--size-8);
-        position: fixed;
         flex-wrap: wrap;
-        inset: 0 0 auto 0;
         min-inline-size: 390px;
+    }
+    
+    main{
+        flex-grow:1;
+        display:flex;
+        flex-direction: row;
+        min-height: 0;
+        :not(:is(.sidebar)) {
+           flex-grow: 1;
+        }
     }
 
     .logo {
@@ -26,16 +44,58 @@
         align-items: center;
         justify-content: center;
         position: relative;
+
+        :is(img) {
+            block-size: 2rem;
+            margin-block-end: 0.25rem;
+        }
     }
-  
-    .nav-tab img {
-        block-size: 2rem;
-        margin-block-end: 0.25rem;
+
+    .user-info {
+        margin-inline-start: auto;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        :is(img) {
+            margin-inline-end: 0.7rem;
+            inline-size: 2.6rem;
+        }
+        &.username {
+            display: block;
+            font-weight: 700;
+            line-height: 0.7rem;
+            margin-block-start: 0.5rem;
+        }
     }
+
+    a.sign-in {
+        padding: 0.2rem 0.8rem 0.1rem 0.8rem;
+    }
+
+    .sidebar {
+        background-color: #2b2b2b;
+        width: 20rem;
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+
     @media (width < 768px) {
-        header{
+        main{
+            flex-direction: column;
+        }
+        .sidebar{
+            inline-size: 110vi;
+        }
+        .user-info {
+            margin-inline: auto;
+        }
+
+        header {
             gap: 0.7rem;
         }
+
         .logo {
             margin: auto;
         }
@@ -43,14 +103,14 @@
 
 }
 
-@layer appearance{
-    :root{
+@layer appearance {
+    :root {
         /* default */
-        --header-background-color-default:rgb(192,0,0);
-        --header-background-image-default: linear-gradient(rgba(0,0,0,0.3) 0%, rgba(0,0,0,0.25) 25%, rgba(0,0,0,0) 70%);
+        --header-background-color-default: rgb(192, 0, 0);
+        --header-background-image-default: linear-gradient(rgba(0, 0, 0, 0.3) 0%, rgba(0, 0, 0, 0.25) 25%, rgba(0, 0, 0, 0) 70%);
         --header-color-default: white;
-        --header-box-shadow-default: 0 1px 3px rgba(0,0,0,0.4);
-        --nav-tab-active-color-default:#fff2cc
+        --header-box-shadow-default: 0 1px 3px rgba(0, 0, 0, 0.4);
+        --nav-tab-active-color-default: #fff2cc
     }
 
     [theme="default-pizza"] {
@@ -62,28 +122,35 @@
         --nav-tab-active-color: var(--nav-tab-active-color-default);
 
     }
-    header{
+
+    header {
         background-color: var(--header-background-color);
         background-image: var(--header-background-image);
         color: var(--header-color);
         box-shadow: var(--header-box-shadow);
         padding-block-start: var(--size-3);
     }
+    main{
+        background: linear-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,0.4) 80%);
+    }
 
     .nav-tab {
-        background-color: rgba(0,0,0,0.1);
+        background-color: rgba(0, 0, 0, 0.1);
         font-size: var(--font-size-1);
         color: var(--header-color);
         text-transform: uppercase;
         transition: 0.2s ease-out;
+
         &:hover {
             color: var(--header-color);
             text-decoration: none;
-            background-color: rgba(255,255,255,0.3);
+            background-color: rgba(255, 255, 255, 0.3);
         }
+
         &.active {
-            background-color: rgba(255,255,255,0.2);
+            background-color: rgba(255, 255, 255, 0.2);
             color: --nav-tab-active-color;
+
             &:after {
                 content: "";
                 position: absolute;
@@ -93,12 +160,35 @@
                 height: 0px;
                 border-left: 0.6rem solid transparent;
                 border-right: 0.6rem solid transparent;
-                border-top: 1rem solid rgb(205,51,51);
+                border-top: 1rem solid rgb(205, 51, 51);
             }
+
             :is(img) {
                 filter: brightness(0) saturate(100%) invert(93%) sepia(18%) saturate(797%) hue-rotate(316deg) brightness(109%) contrast(101%);
             }
         }
     }
+
+    .user-info a {
+        color: #fff2cc;
+        font-size: 0.8rem;
+    }
+    a.sign-in {
+        background: none;
+        border: 1.5px solid var(--header-color);
+        border-radius: 0.7em;
+        color: var(--header-color);
+        text-transform: uppercase;
+        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+        font-weight: 100;
+        cursor: pointer;
+        transition: 0.2s ease-out;
+        &:hover {
+            background-color: rgba(255, 255, 255, 0.3);
+            color: #fff2cc;
+            border-color: #fff2cc;
+        }
+    }
+
 
 }

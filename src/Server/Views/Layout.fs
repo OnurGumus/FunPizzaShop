@@ -93,9 +93,16 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                         <img src="/assets/icons/bike.svg" alt="My Orders" />
                         <span>My Orders</span>
                     </a>
+                    <div class=user-info>
+                        <a class=sign-in>Sign In</a>
+                    </div>
             </header>
             <main>
                 {body 0}
+                <div class="sidebar">
+                    side bar
+                </div>
+
             </main>
         </body>
     </html>"""

@@ -56,10 +56,9 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             script-src  'wasm-unsafe-eval';\
             frame-src 'self';\
             require-trusted-types-for 'script';\
-            trusted-types default dompurify lit-html;\
+            trusted-types *;\
             ")
     | _ -> ()
-    // require-trusted-types-for 'script';\
    
     next.Invoke()
 
@@ -75,11 +74,15 @@ let staticFileOptions =
         ContentTypeProvider = provider,
         OnPrepareResponse =
             fun (context) ->
-                // let headers = context.Context.Response.GetTypedHeaders()
-                // headers.CacheControl <-
-                //     Microsoft.Net.Http.Headers.CacheControlHeaderValue(
-                //         Public = true,
-                //         MaxAge = TimeSpan.FromDays(1)
-                //     )
+        #if !DEBUG
+                let headers = context.Context.Response.GetTypedHeaders()
+                headers.CacheControl <-
+                    Microsoft.Net.Http.Headers.CacheControlHeaderValue(
+                        Public = true,
+                        MaxAge = TimeSpan.FromDays(1)
+                    )
+        #else
                 ()
+        #endif
+        
     )
