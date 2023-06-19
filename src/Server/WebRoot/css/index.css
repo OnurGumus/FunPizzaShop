@@ -81,6 +81,68 @@ animation;
         color: white;
     }
 
+
+    .pizza-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, 20rem);
+        grid-gap: 2rem;
+        justify-content: center;
+        padding-left: 0;
+    }
+    
+        .pizza-cards > li {
+            height: 10rem;
+            position: relative;
+            background-size: cover;
+            border-radius: 0.5rem;
+            list-style-type: none;
+            box-shadow: 0 3px 4px rgba(0,0,0,0.4);
+            transition: 0.1s ease-out;
+        }
+    
+            .pizza-cards > li:hover {
+                transform: scale(1.02);
+            }
+
+.pizza-info {
+    border-radius: 0.5rem;
+ 
+    background: linear-gradient(rgba(0,0,0,0.7) 30%, rgba(0,0,0,0) 80%);
+    padding: 1rem 1rem;
+    color: #fff2cc;
+    cursor: pointer;
+    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+    line-height: 1.25rem;
+}
+
+    .pizza-info .title {
+        color: white;
+        font-size: 1.4rem;
+        display: block;
+        margin: 0.2rem 0 0.4rem 0;
+        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+        text-transform: uppercase;
+    }
+
+    .pizza-info .price {
+        position: absolute;
+        bottom: 0.5rem;
+        right: 1rem;
+        font-size: 1.5rem;
+        font-weight: 700;
+        padding: 0rem 0.7rem;
+        border-radius: 4px;
+        background-color: #08af08;
+        color: white;
+        line-height: 2rem;
+    }
+
+.price::before {
+    content: '£';
+    font-weight: 300;
+    font-size: 1.2rem;
+    margin-right: 0.2rem;
+}
     @media (width < 768px) {
         main{
             flex-direction: column;
