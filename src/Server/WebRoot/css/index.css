@@ -100,60 +100,35 @@ animation;
         padding-left: 0;
         > li {
             height: 10rem;
-            cursor: pointer;
             position: relative;
             background-size: cover;
-            border-radius: 0.5rem;
-            list-style-type: none;
-            box-shadow: 0 3px 4px rgba(0,0,0,0.4);
-            transition: 0.1s ease-out;
         }
         > li:hover {
             transform: scale(1.02);
         }
     }
-    
-       
-    
 
-.pizza-info {
-    border-radius: 0.5rem;
- 
-    background: linear-gradient(rgba(0,0,0,0.7) 30%, rgba(0,0,0,0) 80%);
-    padding: 1rem 1rem;
-    color: #fff2cc;
-    text-shadow: 0 2px 2px rgba(0,0,0,0.5);
-    line-height: 1.25rem;
-}
-
-    .pizza-info .title {
-        color: white;
-        font-size: 1.4rem;
-        display: block;
-        margin: 0.2rem 0 0.4rem 0;
-        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
+    .pizza-info {
+        border-radius: 0.5rem;
+        padding: 1rem 1rem;
+        line-height: 1.25rem;
+        .title {
+            display: block;
+        }
+        .price {
+            position: absolute;
+            bottom: 0.5rem;
+            right: 1rem;
+            padding: 0rem 0.7rem;
+            border-radius: 4px;
+            line-height: 2rem;
+        }
     }
-
-    .pizza-info .price {
-        position: absolute;
-        bottom: 0.5rem;
-        right: 1rem;
-        font-size: 1.5rem;
-        font-weight: 700;
-        padding: 0rem 0.7rem;
-        border-radius: 4px;
-        background-color: #08af08;
-        color: white;
-        line-height: 2rem;
+    .price::before {
+        font-size: 1.2rem;
+        margin-right: 0.2rem;
     }
-
-.price::before {
-    content: '£';
-    font-weight: 300;
-    font-size: 1.2rem;
-    margin-right: 0.2rem;
-}
+    
     @media (width < 768px) {
         main{
             flex-direction: column;
@@ -262,6 +237,43 @@ animation;
             border-color: #fff2cc;
         }
     }
+    .pizza-cards {
+        > li {
+            cursor: pointer;
+            border-radius: 0.5rem;
+            background-size: cover;
+            list-style-type: none;
+            box-shadow: 0 3px 4px rgba(0,0,0,0.4);
+            transition: 0.1s ease-out;
+        }
+    }
+
+    .pizza-info {
+        border-radius: 0.5rem;
+        background: linear-gradient(rgba(0,0,0,0.7) 30%, rgba(0,0,0,0) 80%);
+        color: #fff2cc;
+        text-shadow: 0 2px 2px rgba(0,0,0,0.5);
+        line-height: 1.25rem;
+        .title {
+            color: white;
+            font-size: 1.4rem;
+            font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+        }
+        .price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            border-radius: 4px;
+            background-color: #08af08;
+            color: white;
+        }
+    }
+    .price::before {
+        content: '£';
+        font-weight: 300;
+        font-size: 1.2rem;
+    }
+
 
 
 }
