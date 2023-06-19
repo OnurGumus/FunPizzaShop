@@ -15,7 +15,7 @@ let view (env:#_) (dataLevel: int) = task{
         pizzas 
         |> List.map (fun pizza -> 
         html $"""
-            <li  style="background-image: url('/assets/{pizza.ImageUrl}')">
+            <li style="background-image: url('/assets/{pizza.ImageUrl}')">
             <div class="pizza-info">
                 <span class=title>{pizza.Name}</span>
                 {pizza.Description}

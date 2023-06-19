@@ -29,7 +29,25 @@ animation;
         :not(:is(.sidebar)) {
            flex-grow: 1;
         }
+
     }
+    main{
+        >*:not(.sidebar){
+        overflow-y: auto;
+        }
+    }
+    fps-pizza-menu{
+        padding: var(--size-5);
+    }
+
+    .sidebar {
+        background-color: #2b2b2b;
+        width: 20rem;
+        display: flex;
+        flex-direction: column;
+        color: white;
+    }
+
 
     .logo {
         margin-inline-end: var(--size-8);
@@ -73,14 +91,6 @@ animation;
         padding: 0.2rem 0.8rem 0.1rem 0.8rem;
     }
 
-    .sidebar {
-        background-color: #2b2b2b;
-        width: 20rem;
-        display: flex;
-        flex-direction: column;
-        color: white;
-    }
-
 
     .pizza-cards {
         display: grid;
@@ -88,10 +98,9 @@ animation;
         grid-gap: 2rem;
         justify-content: center;
         padding-left: 0;
-    }
-    
-        .pizza-cards > li {
+        > li {
             height: 10rem;
+            cursor: pointer;
             position: relative;
             background-size: cover;
             border-radius: 0.5rem;
@@ -99,10 +108,13 @@ animation;
             box-shadow: 0 3px 4px rgba(0,0,0,0.4);
             transition: 0.1s ease-out;
         }
+        > li:hover {
+            transform: scale(1.02);
+        }
+    }
     
-            .pizza-cards > li:hover {
-                transform: scale(1.02);
-            }
+       
+    
 
 .pizza-info {
     border-radius: 0.5rem;
@@ -110,7 +122,6 @@ animation;
     background: linear-gradient(rgba(0,0,0,0.7) 30%, rgba(0,0,0,0) 80%);
     padding: 1rem 1rem;
     color: #fff2cc;
-    cursor: pointer;
     text-shadow: 0 2px 2px rgba(0,0,0,0.5);
     line-height: 1.25rem;
 }

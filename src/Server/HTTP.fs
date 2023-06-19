@@ -21,7 +21,14 @@ let styleSrcWithHashes =
 
 let styleSrc =
     [|
-        """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
+        """'sha256-s5lCkoBP6YOkvh/CPFGUTfLYaAKWmn/afZOK/RXey84='"""
+        """'sha256-gxL9+aniObPX9WtUTxMAXCSVJgXs9M5d6F9ia5CFia0='"""
+        """'sha256-Y2t+UQ8/zrxi0m/Zp6z/zKfXxJwbGS82PmmuJK2MhW8='"""
+        """'sha256-RrYK/jynWvPyBbaMxKRQkyELYUIMmD1uSJLn5/T3ci0='"""
+        """'sha256-ctWNF7ykaOZFUGZfGChlx3SWTkYQ0vp4PZgG/aAk+oY='""" 
+        """'sha256-uPWqoOqJlYRh4vuSeJqL7+v95llQo6xvHZ87qSOUfR8='"""
+        """'sha256-aRsWYqZCaVHt8N5HotM+QdQl721qCNtGAH5KpRp19+g='"""
+        """'sha256-0fbn1I45Wm0gd77UCbWHVcVY1tcwwo/EfrGEzMR7dN8='"""
     |]
     |> String.concat " "
 
@@ -49,7 +56,7 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             manifest-src 'self';\
             script-src-elem 'self' {srciptSrcElem} ;\
             connect-src 'self' localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
-            style-src 'self' {styleSrc} ;\
+            style-src 'self' 'unsafe-hashes' {styleSrc} ;\
             style-src-elem 'self' {styleSrcElem} ;\
             worker-src 'self';\
             form-action 'self';\
