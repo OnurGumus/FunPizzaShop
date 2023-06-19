@@ -14,7 +14,9 @@ let view (env:#_) (dataLevel: int) = task{
     let li = 
         pizzas 
         |> List.map (fun pizza -> 
-        let serializedSpecial = Encode.Auto.toString (pizza, extra = extraThoth)
+        let serializedSpecial = 
+            Encode.Auto.toString(pizza, extra = extraThoth)
+        let serializedSpecial = System.Net.WebUtility.HtmlEncode serializedSpecial
         html $"""
             <li>
                 <fps-pizza-item special='{serializedSpecial}'>

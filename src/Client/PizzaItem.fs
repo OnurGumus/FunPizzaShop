@@ -13,7 +13,7 @@ open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
-open FunPizzaShop.MVU.PizzaMenu
+open FunPizzaShop.MVU.PizzaItem
 open Thoth.Json
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Model
@@ -25,10 +25,10 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     | Order.None -> ()
 
 [<HookComponent>]
-let view (host:LitElement) model dispatch =
+let view (host:LitElement) (model:Model) dispatch =
     Hook.useEffectOnce (fun () -> 
         host?addEventListener("click", (fun (e: MouseEvent) -> 
-            printfn "click"
+            printfn "%A" (model.PizzaSpecial)
         )) |> ignore
     )
     Lit.nothing
@@ -41,7 +41,7 @@ let LitElement () =
            let res = Decode.Auto.fromString<PizzaSpecial>(str, extra = extraEncoders)
            match res with
                 | Ok x -> Some x
-                | Error x -> Option.None
+                | Error x -> console.error(x); Option.None
 
         config.useShadowDom <- false
         config.props <-
@@ -49,14 +49,13 @@ let LitElement () =
             special = Prop.Of( Option.None , attribute="special", fromAttribute = split)
         |}
     )
-
     let program =
-        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
+        Program.mkHiddenProgramWithOrderExecute 
+            (init (prop.special.Value.Value)) (update) (execute host)
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace
 #endif
-    printf "%A" (prop.special)
     let model, dispatch = Hook.useElmish program
     view host model dispatch
 

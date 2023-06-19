@@ -49,14 +49,13 @@ let LitElement () =
             toppings = Prop.Of([], attribute="toppings", fromAttribute = split)
         |}
     )
-
+    printfn "%A" prop.toppings.Value
     let program =
         Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace
 #endif
-    printf "%A" (prop.toppings)
     let model, dispatch = Hook.useElmish program
     view host model dispatch
 
