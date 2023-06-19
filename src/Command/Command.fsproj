@@ -4,11 +4,9 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Constants.fs" />
-    <Compile Include="Fable.Validation.fs" />
-    <Compile Include="Model.fs" />
-    <Compile Include="Query.fs" />
-    <Content Include="paket.references" />
+    <Compile Include="AkklingHelpers.fs" />
+    <Compile Include="Common.fs" />
+    <Compile Include="Actor.fs" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

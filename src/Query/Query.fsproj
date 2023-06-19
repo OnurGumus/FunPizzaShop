@@ -4,11 +4,15 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Constants.fs" />
-    <Compile Include="Fable.Validation.fs" />
-    <Compile Include="Model.fs" />
-    <Compile Include="Query.fs" />
+    <Compile Include="Projection.fs" />
+    <Compile Include="API.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.fsproj" />
     <Content Include="paket.references" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Command\Command.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

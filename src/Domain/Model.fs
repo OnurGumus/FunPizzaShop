@@ -71,7 +71,7 @@ module Pizza =
     [<CLIMutable>]
     type PizzaSpecial =
         {
-            Id: int
+            Id: int64
             Name: string
             BasePrice: decimal
             Description: string
@@ -82,7 +82,7 @@ module Pizza =
     [<CLIMutable>]
     type Topping =
         {
-            Id: int
+            Id: int64
             Name: string
             Price: decimal
         }
@@ -91,10 +91,10 @@ module Pizza =
     [<CLIMutable>]
     type Pizza =
         {
-            Id: int
+            Id: int64
             Special: PizzaSpecial
-            SpecialId: int
-            Size: int
+            SpecialId: int64
+            Size: int64
             Toppings: Topping list
         }
         static member DefaultSize = 12
