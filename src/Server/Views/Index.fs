@@ -14,21 +14,24 @@ let view (env:#_) (dataLevel: int) = task{
     let li = 
         pizzas 
         |> List.map (fun pizza -> 
+        let serializedSpecial = Encode.Auto.toString (pizza, extra = extraThoth)
         html $"""
-            <li style="background-image: url('/assets/{pizza.ImageUrl}')">
-            <div class="pizza-info">
-                <span class=title>{pizza.Name}</span>
-                {pizza.Description}
-                <span class=price>{pizza.FormattedBasePrice}</span>
-            </div>
-    </li>
+            <li>
+                <fps-pizza-item special='{serializedSpecial}'>
+                    <div class="pizza-info" style="background-image: url('/assets/{pizza.ImageUrl}')">
+                        <span class=title>{pizza.Name}</span>
+                        {pizza.Description}
+                        <span class=price>{pizza.FormattedBasePrice}</span>
+                    </div>
+                </fps-pizza-item>
+            </li>
         """)
         |> String.concat "\r\n"
     return
         html $""" 
             <fps-pizza-menu toppings='{serializedToppings}'>
                 <ul class="pizza-cards">
-                {li}
+                    {li}
                 </ul>
             </fps-pizza-menu>
         """

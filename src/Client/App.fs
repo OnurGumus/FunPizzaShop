@@ -8,6 +8,7 @@ open Elmish.UrlParser
 open Elmish.Navigation
 
 PizzaMenu.register ()
+PizzaItem.register ()
 
 type Page =
     | Home

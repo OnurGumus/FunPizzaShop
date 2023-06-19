@@ -1,4 +1,4 @@
-module FunPizzaShop.Client.PizzaMenu
+module FunPizzaShop.Client.PizzaItem
 
 open Elmish
 open Elmish.HMR
@@ -24,29 +24,29 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     match order with
     | Order.None -> ()
 
+[<HookComponent>]
+let view (host:LitElement) model dispatch =
+    Hook.useEffectOnce (fun () -> 
+        host?addEventListener("click", (fun (e: MouseEvent) -> 
+            printfn "click"
+        )) |> ignore
+    )
+    Lit.nothing
 
-let view host model dispatch =
-    html
-        $"""
-        <h2>
-            Pizza Menu
-        </h2>
-        """
-
-[<LitElement("fps-pizza-menu")>]
+[<LitElement("fps-pizza-item")>]
 let LitElement () =
     Hook.useHmr (hmr)
     let host, prop = LitElement.init (fun config -> 
-        let split (str: string): Topping list =
-           let res = Decode.Auto.fromString<Topping list>(str, extra = extraEncoders)
+        let split (str: string): PizzaSpecial option =
+           let res = Decode.Auto.fromString<PizzaSpecial>(str, extra = extraEncoders)
            match res with
-              | Ok x -> x
-                | Error x -> []
+                | Ok x -> Some x
+                | Error x -> Option.None
 
         config.useShadowDom <- false
         config.props <-
         {|
-            toppings = Prop.Of([], attribute="toppings", fromAttribute = split)
+            special = Prop.Of( Option.None , attribute="special", fromAttribute = split)
         |}
     )
 
@@ -56,7 +56,7 @@ let LitElement () =
         |> Program.withDebugger
         |> Program.withConsoleTrace
 #endif
-    printf "%A" (prop.toppings)
+    printf "%A" (prop.special)
     let model, dispatch = Hook.useElmish program
     view host model dispatch
 

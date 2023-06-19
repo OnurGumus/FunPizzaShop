@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ElmishOrder.fs" />
+    <Compile Include="PizzaItem.fs" />
     <Compile Include="PizzaMenu.fs" />
     <Compile Include="App.fs" />
     <Content Include="paket.references" />
