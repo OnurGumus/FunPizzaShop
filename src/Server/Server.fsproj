@@ -12,6 +12,7 @@
     <Content Include="./config.hocon">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Compile Include="Query.fs" />
     <Compile Include="Views\Common.fs" />
     <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />
@@ -25,6 +26,8 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Domain\Domain.fsproj" />
+    <ProjectReference Include="..\Command\Command.fsproj" />
+    <ProjectReference Include="..\Query\Query.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

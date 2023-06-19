@@ -6,6 +6,7 @@ open System
 open System.IO
 open Microsoft.AspNetCore.Http
 open Microsoft.AspNetCore.Http.Extensions
+open System.Threading.Tasks
 open Common
 let scriptFiles =
     let assetsDir = "WebRoot/dist/assets"
@@ -19,7 +20,7 @@ let path =
     scriptFiles
     |> Array.map (fun x -> x.Substring(x.LastIndexOf(Path.DirectorySeparatorChar) + 1))
 
-let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
+let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
     let script =
         if isDev || path.Length = 0 then
             html
@@ -38,6 +39,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                     """)
 
             String.Join("\r\n", scripts)
+    let! body = body 0
                 
     return
         html $"""
@@ -98,7 +100,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> string) = async{
                     </div>
             </header>
             <main>
-                {body 0}
+                {body}
                 <div class="sidebar">
                     side bar
                 </div>

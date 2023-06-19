@@ -1,0 +1,55 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Launch Web",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/Server/bin/Debug/net7.0/Server.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/src/Server",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "justMyCode": true,
+            // "symbolOptions": {
+            //     "searchMicrosoftSymbolServer": true,
+            //     "searchNuGetOrgSymbolServer": true
+            // },
+            // "suppressJITOptimizations": true,
+            // "env": {
+            //     "COMPlus_ZapDisable": "1",
+            //     "COMPlus_ReadyToRun": "0"
+            // }
+        },
+        {
+            "type": "msedge",
+            "request": "launch",
+            "name": "Launch Edge against localhost",
+            "url": "http://localhost:8000",
+            "webRoot": "${workspaceFolder}/src/Client/"
+        },
+        {
+            "name": "Automation",
+            "type": "coreclr",
+            "request": "launch",
+            "program": "${workspaceFolder}/test/Automation/bin/Debug/net7.0/Automation.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/test/Automation",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "justMyCode": true,
+            // "symbolOptions": {
+            //     "searchMicrosoftSymbolServer": true,
+            //     "searchNuGetOrgSymbolServer": true
+            // },
+            // "suppressJITOptimizations": true,
+            // "env": {
+            //     "COMPlus_ZapDisable": "1",
+            //     "COMPlus_ReadyToRun": "0"
+            // }
+        }
+    ]
+}
