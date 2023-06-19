@@ -13,8 +13,10 @@ open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
-open Fable.Core.JS
 open FunPizzaShop.MVU.PizzaMenu
+open Thoth.Json
+open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Domain.Model
 
 let private hmr = HMR.createToken ()
 
@@ -30,11 +32,24 @@ let view host model dispatch =
             Pizza Menu
         </h2>
         """
+let myExtraCoders = Extra.empty |> Extra.withInt64 |> Extra.withDecimal
 
 [<LitElement("fps-pizza-menu")>]
 let LitElement () =
     Hook.useHmr (hmr)
-    let host, _ = LitElement.init (fun config -> config.useShadowDom <- false)
+    let host, prop = LitElement.init (fun config -> 
+        let split (str: string): Topping list =
+           let res = Decode.Auto.fromString<Topping list>(str, extra = myExtraCoders)
+           match res with
+              | Ok x -> x
+                | Error x -> []
+
+        config.useShadowDom <- false
+        config.props <-
+        {|
+            toppings = Prop.Of([], attribute="toppings", fromAttribute = split)
+        |}
+    )
 
     let program =
         Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
@@ -42,6 +57,7 @@ let LitElement () =
         |> Program.withDebugger
         |> Program.withConsoleTrace
 #endif
+    printf "%A" (prop.toppings)
     let model, dispatch = Hook.useElmish program
     view host model dispatch
 

@@ -158,13 +158,13 @@ let api (config: IConfiguration) actorApi =
 
             let res = 
                 if typeof<'t> = typeof<Pizza.PizzaSpecial> then
-                    let credit =
+                    let items =
                         query {
                             for c in ctx.Main.Specials do
                                 select c
                         }
 
-                    augment <@ credit @>
+                    augment <@ items @>
                     |> Seq.map (fun x ->
                         {
                                 Name = x.Name
@@ -177,7 +177,25 @@ let api (config: IConfiguration) actorApi =
                     |> List.ofSeq
                     |> box
 
-              
+                elif typeof<'t> = typeof<Pizza.Topping> then
+                    let items =
+                        query {
+                            for c in ctx.Main.Toppings do
+                                select c
+                        }
+
+                    augment <@ items @>
+                    |> Seq.map (fun x ->
+                        {
+                                Name = x.Name
+                                Price = x.Price
+                                Id = x.Id
+                        }
+                        : Pizza.Topping)
+                    |> List.ofSeq
+                    |> box
+
+               
                 else
                     failwith "not implemented"
 

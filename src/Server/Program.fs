@@ -29,7 +29,7 @@ type Self = Self
 let configBuilder =
     ConfigurationBuilder()
         .AddUserSecrets<Self>()
-        .AddHoconFile("config.hocon")
+        .AddHoconFile(ConfigHocon)
         // .AddHoconFile("secrets.hocon", true)
         .AddEnvironmentVariables()
 
@@ -54,7 +54,6 @@ let configureCors (builder: CorsPolicyBuilder) =
 let configureApp (app: IApplicationBuilder) =
     let env = app.ApplicationServices.GetService<IWebHostEnvironment>()
     let isDevelopment = env.IsDevelopment()
-   // let config = app.ApplicationServices.GetService<IConfiguration>()
     let appEnv = Environments.AppEnv(config)
    
     let app = if isDevelopment then app else app.UseResponseCompression()
