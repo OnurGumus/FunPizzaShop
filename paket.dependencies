@@ -51,6 +51,7 @@ nuget Microsoft.ApplicationInsights.AspNetCore
 nuget Twilio
 nuget ThrottlingTroll
 nuget Google.Apis.Auth
+nuget Thoth.Json
 
 group Client
     source https://api.nuget.org/v3/index.json

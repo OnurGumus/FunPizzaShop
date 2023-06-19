@@ -8,7 +8,8 @@ open FSharp.Data.Sql.Common
 open Akkling.Streams
 open Akka.Streams
 open Thoth.Json.Net
-open Command.Common
+open Command.Serialization
+
 
 [<Literal>]
 let resolutionPath = __SOURCE_DIRECTORY__ + @"/libs"
@@ -39,13 +40,12 @@ type Sql =
 let ctx = Sql.GetDataContext(connectionString)
 
 
-let myExtraCoders = Extra.empty |> Extra.withInt64 |> Extra.withDecimal
 
 let inline encoder<'T> =
-    Encode.Auto.generateEncoderCached<'T> (caseStrategy = CamelCase, extra = myExtraCoders)
+    Encode.Auto.generateEncoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
 
 let inline decoder<'T> =
-    Decode.Auto.generateDecoderCached<'T> (caseStrategy = CamelCase, extra = myExtraCoders)
+    Decode.Auto.generateDecoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
 
 
 

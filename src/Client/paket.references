@@ -12,3 +12,4 @@ Fable.Browser.Dom
 Fable.Browser.Navigator
 Fable.Promise
 Fable.Elmish.Browser
+Thoth.Json

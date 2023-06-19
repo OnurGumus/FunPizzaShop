@@ -18,6 +18,7 @@ open Thoth.Json
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Model
 
+
 let private hmr = HMR.createToken ()
 
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
@@ -32,14 +33,13 @@ let view host model dispatch =
             Pizza Menu
         </h2>
         """
-let myExtraCoders = Extra.empty |> Extra.withInt64 |> Extra.withDecimal
 
 [<LitElement("fps-pizza-menu")>]
 let LitElement () =
     Hook.useHmr (hmr)
     let host, prop = LitElement.init (fun config -> 
         let split (str: string): Topping list =
-           let res = Decode.Auto.fromString<Topping list>(str, extra = myExtraCoders)
+           let res = Decode.Auto.fromString<Topping list>(str, extra = extraEncoders)
            match res with
               | Ok x -> x
                 | Error x -> []

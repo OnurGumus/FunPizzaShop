@@ -3,6 +3,8 @@ module FunPizzaShop.Domain.Model
 open System
 open Fable.Validation
 open FsToolkit.ErrorHandling
+open Thoth.Json
+let extraEncoders = Extra.empty |> Extra.withInt64 |> Extra.withDecimal
 
 let inline forceValidate (e) =
     match e with
