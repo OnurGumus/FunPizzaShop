@@ -3,7 +3,7 @@ open Elmish
 open FunPizzaShop.Domain.Model.Pizza
 
 
-type Model = { Pizza : Pizza option }
+type Model = { Pizza : Pizza option; Toppings : Topping list }
 
 type Msg = 
    | PizzaConfirmed 
@@ -14,7 +14,7 @@ type Msg =
 
 type Order = NoOrder
     
-let init () = {Pizza = Option.None} , NoOrder
+let init (toppings: Topping list) () = {Pizza = Option.None; Toppings = toppings} , NoOrder
 
 let update msg model =
    match msg with

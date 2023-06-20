@@ -27,7 +27,7 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     | Order.NoOrder -> ()
 
 [<HookComponent>]
-let view host model dispatch =
+let view host (model:Model) dispatch =
     Hook.useEffectOnce (fun () -> 
         let handleSelectedPizza (e:Event) =
             let customEvent = e :?> CustomEvent
@@ -39,6 +39,19 @@ let view host model dispatch =
 
         Hook.createDisposable (fun () ->host?removeEventListener (Events.PizzaSelected, handleSelectedPizza))
     )
+    let topicOption (index:int) (topping:Topping)  = 
+        html $"""
+            <option value={ index }> { topping.Name } </option>
+        """
+            
+    let toppings =
+        let toppingOptions = model.Toppings |> Lit.mapiUnique (fun t -> t.Id.ToString()) topicOption
+        html $"""
+            <select class="custom-select">
+                <option value="-1">Choose a topping</option>
+                {toppingOptions}
+            </select>
+        """
     let dialog (pizza:Pizza.Pizza) = 
         html $"""
         <div class="dialog-container">
@@ -48,7 +61,10 @@ let view host model dispatch =
                     { pizza.Special.Description }
                 </div>
                 <form class="dialog-body">
-                    ToppingCombo
+                    <div>
+                        <label>Toppings:</label>
+                        { toppings }
+                    </div>
                     ToppingItems
                     <div>
                         <label>Size:</label>
@@ -72,12 +88,8 @@ let view host model dispatch =
     match model.Pizza with
     | Some pizza -> dialog pizza
     | None ->
-        html
-            $"""
-            <h2>
-                Pizza Menu
-            </h2>
-            """
+        Lit.nothing
+       
 
 [<LitElement("fps-pizza-menu")>]
 let LitElement () =
@@ -95,9 +107,8 @@ let LitElement () =
             toppings = Prop.Of([], attribute="toppings", fromAttribute = split)
         |}
     )
-    printfn "%A" prop.toppings.Value
     let program =
-        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
+        Program.mkHiddenProgramWithOrderExecute (init (prop.toppings.Value)) (update) (execute host)
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace
