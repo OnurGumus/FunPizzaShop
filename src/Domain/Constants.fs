@@ -15,3 +15,8 @@ let ConfigHocon = "config.hocon"
 
 [<Literal>]
 let ClientPath = "ClientPath"
+
+module Events =
+    
+    [<Literal>]
+    let PizzaSelected = "pizzaSelected"

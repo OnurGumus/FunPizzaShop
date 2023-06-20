@@ -1,14 +1,36 @@
 module FunPizzaShop.MVU.PizzaMenu
 open Elmish
+open FunPizzaShop.Domain.Model.Pizza
 
 
-type Model = NA
+type Model = { Pizza : Pizza option }
 
-type Msg = NA
+type Msg = 
+   | PizzaConfirmed 
+   | PizzaCancelled 
+   | ToppingRemoved of Topping 
+   | PizzaSelected of Pizza
+   | SizeChanged of int
 
-type Order = None
+type Order = NoOrder
     
-let init () = Model.NA , None
+let init () = {Pizza = Option.None} , NoOrder
 
 let update msg model =
-   Model.NA , None
+   match msg with
+   | PizzaConfirmed -> {model with Pizza = Option.None} , NoOrder
+   | PizzaCancelled -> {model with Pizza = Option.None} , NoOrder
+   | SizeChanged size -> 
+      match model.Pizza with
+      | Some pizza -> 
+         let newPizza = { pizza with Size = size }
+         {model with Pizza = Some newPizza} , NoOrder
+      | None -> model , NoOrder
+   | ToppingRemoved topping -> 
+      match model.Pizza with
+      | Some pizza -> 
+         let newPizza = pizza// Pizza.RemoveTopping topping pizza
+         {model with Pizza = Some newPizza} , NoOrder
+      | None -> model , NoOrder
+   | PizzaSelected pizza -> {model with Pizza = Some pizza} , NoOrder
+   

@@ -17,18 +17,19 @@ open FunPizzaShop.MVU.PizzaItem
 open Thoth.Json
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Model
+open FunPizzaShop.Domain.Constants
 
 let private hmr = HMR.createToken ()
 
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     match order with
-    | Order.None -> ()
+    | Order.NoOrder -> ()
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
     Hook.useEffectOnce (fun () -> 
         host?addEventListener("click", (fun (e: MouseEvent) -> 
-            printfn "%A" (model.PizzaSpecial)
+            host.dispatchCustomEvent (Events.PizzaSelected ,model.PizzaSpecial, true, true,true)
         )) |> ignore
     )
     Lit.nothing

@@ -35,6 +35,8 @@ let styleSrc =
 let styleSrcElem = 
     [|
         """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
+        """https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"""
+
     |]
     |> String.concat " "
 

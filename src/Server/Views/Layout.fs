@@ -71,6 +71,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
             <!-- Imports the manifest to represent the web application. A web app must have a manifest to be a PWA. -->
             <link rel="manifest" href="/manifest.webmanifest" />
             <link rel="stylesheet" href="/css/index.css"/>
+            
             <script defer crossorigin="anonymous" type="text/javascript" 
             src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.1/purify.min.js"></script>
             <script defer src="/index.js"></script>

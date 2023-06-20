@@ -93,7 +93,7 @@ module Pizza =
     [<CLIMutable>]
     type Pizza =
         {
-            Id: int64
+            Id: Guid
             Special: PizzaSpecial
             SpecialId: int64
             Size: int64
@@ -103,12 +103,19 @@ module Pizza =
         static member MinimumSize = 9
         static member MaximumSize = 17
 
-        member this.BasePrice =
-            ((decimal) this.Size / (decimal) Pizza.DefaultSize)
-            * this.Special.BasePrice
+        member this.BasePrice = (this.Size |> decimal) /  (Pizza.DefaultSize |> decimal) * this.Special.BasePrice
 
         member this.TotalPrice =
             this.BasePrice
             + (this.Toppings |> List.sumBy(fun t -> t.Price))
 
         member this.FormattedTotalPrice = this.TotalPrice.ToString("0.00")
+        
+        static member CreatePizzaFromSpecial (special: PizzaSpecial) =
+            {
+                Id = Guid.NewGuid()
+                Special = special
+                SpecialId = special.Id
+                Size = Pizza.DefaultSize
+                Toppings = []
+            }

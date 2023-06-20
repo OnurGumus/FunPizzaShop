@@ -6,10 +6,10 @@ type Model = { PizzaSpecial: PizzaSpecial }
 
 type Msg = NA
 
-type Order = None
+type Order = NoOrder
     
 let init (pizzaSpecial:PizzaSpecial) () = 
-   {PizzaSpecial = pizzaSpecial} , None
+   {PizzaSpecial = pizzaSpecial} , NoOrder
 
 let update msg model =
-   model , None
+   model , NoOrder
