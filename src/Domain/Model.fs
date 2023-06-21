@@ -149,6 +149,14 @@ module Pizza =
 
         member this.FormattedBasePrice = this.BasePrice.ToString()
 
+        static member Validate(s: PizzaSpecial) =
+            s.BasePrice|> Price.Validate |> ignore
+            s.Name |> ShortString.Validate |> ignore
+            s.Description |> ShortString.Validate |> ignore
+            s.ImageUrl |> ShortString.Validate |> ignore
+            s.Id |> SpecialId.Validate |> ignore
+
+
     [<CLIMutable>]
     type Topping = {
         Id: ToppingId
@@ -157,6 +165,11 @@ module Pizza =
     } with
 
         member this.FormattedBasePrice = this.Price.ToString()
+
+        static member Validate(s: Topping) =
+            s.Price |> Price.Validate |> ignore
+            s.Name |> ShortString.Validate |> ignore
+            s.Id |> ToppingId.Validate |> ignore
 
     [<CLIMutable>]
     type Pizza = {
@@ -188,3 +201,9 @@ module Pizza =
             Size = Pizza.DefaultSize
             Toppings = []
         }
+
+        static member Validate(s: Pizza) =
+            s.Special |> PizzaSpecial.Validate |> ignore
+            s.Toppings |> List.iter (fun t -> t |> Topping.Validate |> ignore)
+            s.Id |> PizzaId.Validate |> ignore
+            s.SpecialId |> SpecialId.Validate |> ignore
