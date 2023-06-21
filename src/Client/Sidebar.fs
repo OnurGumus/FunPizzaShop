@@ -34,7 +34,12 @@ let view (host:LitElement) (model:Model) dispatch =
 
     Hook.createDisposable (fun () -> document.removeEventListener (Events.PizzaOrdered, handleOrderedPizza)))
 
-    Lit.nothing
+    html $"""
+     <div class= "empty-cart">
+         Choose a pizza <br/>
+         to get started
+    </div>
+    """
 
 [<LitElement("fps-side-bar")>]
 let LitElement () =
