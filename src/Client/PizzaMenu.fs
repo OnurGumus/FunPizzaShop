@@ -27,7 +27,7 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     | Order.NoOrder -> ()
 
 [<HookComponent>]
-let view host (model: Model) dispatch =
+let view (host:LitElement) (model: Model) dispatch =
     Hook.useEffectOnce (fun () ->
         let handleSelectedPizza (e: Event) =
             let customEvent = e :?> CustomEvent
@@ -83,8 +83,7 @@ let view host (model: Model) dispatch =
         | None -> Lit.nothing
 
     let dialog (pizza: Pizza.Pizza) =
-        html
-            $"""
+        html $"""
         <div class="dialog-container">
             <div class="dialog">
                 <div class="dialog-title">
@@ -99,19 +98,28 @@ let view host (model: Model) dispatch =
                     {toppingInstances}
                     <div>
                         <label>Size:</label>
-                        <input type="range" .value={pizza.Size} min={Pizza.MinimumSize}
-                            max= {Pizza.MaximumSize} step="1" @input={Ev(fun e -> dispatch (SizeChanged e.target?value))}  />
+                        <input type="range" .value={ pizza.Size } min={Pizza.MinimumSize}
+                            max= {Pizza.MaximumSize} step="1" 
+                                @input={Ev(fun e -> dispatch (SizeChanged e.target?value))}  />
                         <span class="size-label">
                             {pizza.Size}" (£{pizza.FormattedTotalPrice})
                         </span>
                     </div>
                 </form>
                 <div class="dialog-buttons">
-                    <button id="cancelButton" class="btn btn-secondary mr-auto" @click={Ev(fun _ -> dispatch PizzaCancelled)}>Cancel</button>
+                    <button id="cancelButton" 
+                        class="btn btn-secondary mr-auto" 
+                        @click={Ev(fun _ -> dispatch PizzaCancelled)}>Cancel</button>
+
                     <span class="mr-center">
                         Price: <span class="price">{pizza.FormattedTotalPrice}</span>
+
                     </span>
-                    <button id="confirmButton" class="btn btn-success ml-auto" @click={Ev(fun _ -> dispatch PizzaConfirmed)}>Order ></button>
+                    <button id="confirmButton" 
+                        class="btn btn-success ml-auto" 
+                        @click={Ev(fun _ -> 
+                            host.dispatchCustomEvent(Constants.Events.PizzaOrdered, model.Pizza.Value, true, true,true); 
+                            dispatch PizzaConfirmed)}>Order ></button>
                 </div>
             </div>
         </div>

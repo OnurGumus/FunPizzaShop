@@ -20,3 +20,6 @@ module Events =
     
     [<Literal>]
     let PizzaSelected = "pizzaSelected"
+
+    [<Literal>]
+    let PizzaOrdered = "pizzaOrdered"

@@ -103,7 +103,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
             <main>
                 {body}
                 <div class="sidebar">
-                    side bar
+                    <fps-side-bar></fps-side-bar>
                 </div>
 
             </main>
