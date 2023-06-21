@@ -45,13 +45,13 @@ let view (host:LitElement) (model:Model) dispatch =
             let toppings  =
                 pizza.Toppings 
                     |> Lit.mapiUnique 
-                        (fun (t:Topping )-> t.Name) 
-                        (fun index (t: Topping) ->html $"""<li>+{t.Name}</li>""")
+                        (fun (t:Topping )-> t.Name.Value) 
+                        (fun index (t: Topping) ->html $"""<li>+{t.Name.Value}</li>""")
             html $"""
                 <div class="cart-item">
-                    <button class="delete-topping">x</button>
+                    <button class="delete-topping" @click={Ev(fun _ -> dispatch (RemovePizza pizza))}>x</button>
                     <div class="title">
-                        {pizza.Size.ToString()} { pizza.Special.Name }
+                        {pizza.Size.ToString()} { pizza.Special.Name.Value }
                     </div>
                     <ul>
                         {toppings}

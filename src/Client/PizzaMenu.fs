@@ -42,7 +42,7 @@ let view (host:LitElement) (model: Model) dispatch =
     let topicOption (index: int) (topping: Topping) =
         html
             $"""
-            <option value={index}> {topping.Name} - {topping.FormattedBasePrice}</option>
+            <option value={index}> {topping.Name.Value} - {topping.FormattedBasePrice}</option>
         """
 
     let toppings =
@@ -61,7 +61,7 @@ let view (host:LitElement) (model: Model) dispatch =
         html
             $"""
             <div class="topping">
-                <span class="topping-name">{topping.Name}</span>
+                <span class="topping-name">{topping.Name.Value}</span>
                 <span class="topping-price">{topping.FormattedBasePrice}</span>
                 <button  class="delete-topping" 
                     @click={Ev(fun _ -> dispatch (ToppingRemoved topping))}>x</button>
@@ -87,8 +87,8 @@ let view (host:LitElement) (model: Model) dispatch =
         <div class="dialog-container">
             <div class="dialog">
                 <div class="dialog-title">
-                    <h2> {pizza.Special.Name} </h2>
-                    {pizza.Special.Description}
+                    <h2> {pizza.Special.Name.Value} </h2>
+                    {pizza.Special.Description.Value}
                 </div>
                 <form class="dialog-body">
                     <div>

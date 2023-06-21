@@ -50,6 +50,8 @@ type ShortString =
     static member Validate(s: ShortString) =
         s.Value |> ShortString.TryCreate |> forceValidate
 
+    override this.ToString() = this.Value
+
 type LongStringError = EmptyString
 
 type LongString =
@@ -63,6 +65,8 @@ type LongString =
 
     static member Validate(s: LongString) =
         s.Value |> LongString.TryCreate |> forceValidate
+    
+    override this.ToString() = this.Value
 
 
 
@@ -74,10 +78,10 @@ module Pizza =
     type PizzaSpecial =
         {
             Id: int64
-            Name: string
+            Name: ShortString
             BasePrice: decimal
-            Description: string
-            ImageUrl: string
+            Description: ShortString
+            ImageUrl: ShortString
         }
         member this.FormattedBasePrice = this.BasePrice.ToString("0.00")
 
@@ -85,7 +89,7 @@ module Pizza =
     type Topping =
         {
             Id: int64
-            Name: string
+            Name: ShortString
             Price: decimal
         }
         member this.FormattedBasePrice = this.Price.ToString("0.00")

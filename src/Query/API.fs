@@ -167,10 +167,10 @@ let api (config: IConfiguration) actorApi =
                     augment <@ items @>
                     |> Seq.map (fun x ->
                         {
-                                Name = x.Name
-                                Description = x.Description
+                                Name = x.Name |> ShortString.TryCreate |> forceValidate
+                                Description = x.Description |> ShortString.TryCreate |> forceValidate
                                 BasePrice = x.BasePrice
-                                ImageUrl = x.ImageUrl
+                                ImageUrl = x.ImageUrl |> ShortString.TryCreate |> forceValidate
                                 Id = x.Id
                         }
                         : Pizza.PizzaSpecial)
@@ -187,7 +187,7 @@ let api (config: IConfiguration) actorApi =
                     augment <@ items @>
                     |> Seq.map (fun x ->
                         {
-                                Name = x.Name
+                                Name = x.Name |> ShortString.TryCreate |> forceValidate
                                 Price = x.Price
                                 Id = x.Id
                         }
