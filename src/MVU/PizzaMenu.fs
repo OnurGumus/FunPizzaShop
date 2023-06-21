@@ -9,6 +9,7 @@ type Msg =
    | PizzaConfirmed 
    | PizzaCancelled 
    | ToppingRemoved of Topping 
+   | ToppingAdded of int
    | PizzaSelected of Pizza
    | SizeChanged of int
 
@@ -24,6 +25,13 @@ let update msg model =
       match model.Pizza with
       | Some pizza -> 
          let newPizza = { pizza with Size = size }
+         {model with Pizza = Some newPizza} , NoOrder
+      | None -> model , NoOrder
+   | ToppingAdded index ->
+      match model.Pizza with
+      | Some pizza -> 
+         let topping = List.item index model.Toppings
+         let newPizza = { pizza with Toppings = topping :: pizza.Toppings}
          {model with Pizza = Some newPizza} , NoOrder
       | None -> model , NoOrder
    | ToppingRemoved topping -> 

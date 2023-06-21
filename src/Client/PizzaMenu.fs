@@ -41,7 +41,7 @@ let view host (model:Model) dispatch =
     )
     let topicOption (index:int) (topping:Topping)  = 
         html $"""
-            <option value={ index }> { topping.Name } </option>
+            <option value={ index }> { topping.Name } - { topping.FormattedBasePrice }</option>
         """
             
     let toppings =
