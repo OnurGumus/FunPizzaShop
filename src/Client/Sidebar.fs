@@ -14,6 +14,8 @@ open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
 open FunPizzaShop.MVU.Sidebar
+open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Domain.Constants
 
 let private hmr = HMR.createToken ()
 
@@ -23,7 +25,15 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
-   
+    Hook.useEffectOnce (fun () ->
+    let handleOrderedPizza (e: Event) =
+        let customEvent = e :?> CustomEvent
+        let pizza = customEvent.detail :?> Pizza
+        dispatch (AddPizza pizza)
+    document.addEventListener (Events.PizzaOrdered, handleOrderedPizza) |> ignore
+
+    Hook.createDisposable (fun () -> document.removeEventListener (Events.PizzaOrdered, handleOrderedPizza)))
+
     Lit.nothing
 
 [<LitElement("fps-side-bar")>]

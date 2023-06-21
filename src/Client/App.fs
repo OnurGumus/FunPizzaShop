@@ -9,6 +9,7 @@ open Elmish.Navigation
 
 PizzaMenu.register ()
 PizzaItem.register ()
+Sidebar.register ()
 
 type Page =
     | Home
