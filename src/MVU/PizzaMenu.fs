@@ -37,7 +37,8 @@ let update msg model =
    | ToppingRemoved topping -> 
       match model.Pizza with
       | Some pizza -> 
-         let newPizza = pizza// Pizza.RemoveTopping topping pizza
+         let newPizza = 
+            { pizza with Toppings = pizza.Toppings |> List.filter (fun t -> t.Id <> topping.Id) }
          {model with Pizza = Some newPizza} , NoOrder
       | None -> model , NoOrder
    | PizzaSelected pizza -> {model with Pizza = Some pizza} , NoOrder

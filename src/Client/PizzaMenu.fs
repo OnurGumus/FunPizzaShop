@@ -47,11 +47,31 @@ let view host (model:Model) dispatch =
     let toppings =
         let toppingOptions = model.Toppings |> Lit.mapiUnique (fun t -> t.Id.ToString()) topicOption
         html $"""
-            <select class="custom-select">
+            <select class="custom-select" @input={Ev(fun e -> dispatch (ToppingAdded(e.target?value))) }>
                 <option value="-1">Choose a topping</option>
                 {toppingOptions}
             </select>
         """
+    let toppingInstance (index:int) (topping:Topping) = 
+        html $"""
+            <div class="topping">
+                <span class="topping-name">{ topping.Name }</span>
+                <span class="topping-price">{ topping.FormattedBasePrice }</span>
+                <button  class="delete-topping" 
+                    @click={Ev(fun _ -> dispatch (ToppingRemoved topping))}>x</button>
+            </div>
+        """
+    let toppingInstances =
+        match model.Pizza with
+        | Some pizza -> 
+            let toppings = pizza.Toppings |> Lit.mapiUnique (fun t -> t.Id.ToString()) toppingInstance
+            html $"""
+                <div class="toppings">
+                    { toppings }
+                </div>
+            """
+        | None -> Lit.nothing
+
     let dialog (pizza:Pizza.Pizza) = 
         html $"""
         <div class="dialog-container">
@@ -65,7 +85,7 @@ let view host (model:Model) dispatch =
                         <label>Toppings:</label>
                         { toppings }
                     </div>
-                    ToppingItems
+                    { toppingInstances}
                     <div>
                         <label>Size:</label>
                         <input type="range" .value={ pizza.Size } min={ Pizza.MinimumSize }
