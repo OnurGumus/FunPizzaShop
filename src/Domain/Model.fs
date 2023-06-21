@@ -70,7 +70,7 @@ type LongString =
 
     override this.ToString() = this.Value
 
-type PriceError =
+type NumericError =
     | Negative
 
 type Price =
@@ -100,10 +100,38 @@ module Pizza =
         member this.Value = let (SpecialId pizzaId) = this in pizzaId
 
         static member TryCreate(s: int64) =
-            single (fun t -> t.TestOne s |> t.Map SpecialId |> t.End)
+            single (fun t -> t.TestOne s  |> t.Gte 0L Negative  |> t.Map SpecialId |> t.End)
 
         static member Validate(s: SpecialId) =
             s.Value |> SpecialId.TryCreate |> forceValidate
+
+        override this.ToString() = this.Value.ToString()
+
+    type ToppingId =
+        private
+        | ToppingId of int64
+
+        member this.Value = let (ToppingId pizzaId) = this in pizzaId
+
+        static member TryCreate(s: int64) =
+            single (fun t -> t.TestOne s |> t.Gte 0L Negative |> t.Map ToppingId |> t.End)
+
+        static member Validate(s: ToppingId) =
+            s.Value |> ToppingId.TryCreate |> forceValidate
+
+        override this.ToString() = this.Value.ToString()
+
+    type PizzaId =
+        private
+        | PizzaId of Guid
+
+        member this.Value = let (PizzaId pizzaId) = this in pizzaId
+
+        static member TryCreate(s: Guid) =
+            single (fun t -> t.TestOne s |> t.Map PizzaId |> t.End)
+
+        static member Validate(s: PizzaId) =
+            s.Value |> PizzaId.TryCreate |> forceValidate
 
         override this.ToString() = this.Value.ToString()
 
@@ -123,7 +151,7 @@ module Pizza =
 
     [<CLIMutable>]
     type Topping = {
-        Id: int64
+        Id: ToppingId
         Name: ShortString
         Price: Price
     } with
@@ -132,7 +160,7 @@ module Pizza =
 
     [<CLIMutable>]
     type Pizza = {
-        Id: Guid
+        Id: PizzaId
         Special: PizzaSpecial
         SpecialId: SpecialId
         Size: int64
@@ -154,7 +182,7 @@ module Pizza =
         member this.FormattedTotalPrice = this.TotalPrice.ToString()
 
         static member CreatePizzaFromSpecial(special: PizzaSpecial) = {
-            Id = Guid.NewGuid()
+            Id = Guid.NewGuid() |> PizzaId.TryCreate |> forceValidate
             Special = special
             SpecialId = special.Id
             Size = Pizza.DefaultSize

@@ -190,7 +190,7 @@ let api (config: IConfiguration) actorApi =
                         {
                                 Name = x.Name |> ShortString.TryCreate |> forceValidate
                                 Price = x.Price |> Price.TryCreate |> forceValidate
-                                Id = x.Id
+                                Id = x.Id |> ToppingId.TryCreate |> forceValidate
                         }
                         : Pizza.Topping)
                     |> List.ofSeq
