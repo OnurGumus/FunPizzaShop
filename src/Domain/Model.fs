@@ -4,6 +4,7 @@ open System
 open Fable.Validation
 open FsToolkit.ErrorHandling
 open Thoth.Json
+
 let extraEncoders = Extra.empty |> Extra.withInt64 |> Extra.withDecimal
 
 let inline forceValidate (e) =
@@ -26,6 +27,7 @@ type Predicate =
 
 type Version =
     | Version of int64
+
     member this.Value: int64 = let (Version lng) = this in lng
     member this.Zero: Version = Version 0L
 
@@ -65,61 +67,96 @@ type LongString =
 
     static member Validate(s: LongString) =
         s.Value |> LongString.TryCreate |> forceValidate
-    
+
     override this.ToString() = this.Value
 
+type PriceError =
+    | Negative
 
+type Price =
+    private
+    | Price of decimal
+
+    member this.Value = let (Price s) = this in s
+
+    static member TryCreate(s: decimal) =
+        single (fun t ->
+            t.TestOne s
+            |> t.Gte 0m Negative
+            |> t.Map Price
+            |> t.End)
+
+    static member Validate(s: Price) =
+        s.Value |> Price.TryCreate |> forceValidate
+
+    override this.ToString() = this.Value.ToString("0.00")
 
 module Pizza =
+
+    type SpecialId =
+        private
+        | SpecialId of int64
+
+        member this.Value = let (SpecialId pizzaId) = this in pizzaId
+
+        static member TryCreate(s: int64) =
+            single (fun t -> t.TestOne s |> t.Map SpecialId |> t.End)
+
+        static member Validate(s: SpecialId) =
+            s.Value |> SpecialId.TryCreate |> forceValidate
+
+        override this.ToString() = this.Value.ToString()
+
     /// <summary>
     /// Represents a pre-configured template for a pizza a user can order
     /// </summary>
     [<CLIMutable>]
-    type PizzaSpecial =
-        {
-            Id: int64
-            Name: ShortString
-            BasePrice: decimal
-            Description: ShortString
-            ImageUrl: ShortString
-        }
-        member this.FormattedBasePrice = this.BasePrice.ToString("0.00")
+    type PizzaSpecial = {
+        Id: SpecialId
+        Name: ShortString
+        BasePrice: Price
+        Description: ShortString
+        ImageUrl: ShortString
+    } with
+
+        member this.FormattedBasePrice = this.BasePrice.ToString()
 
     [<CLIMutable>]
-    type Topping =
-        {
-            Id: int64
-            Name: ShortString
-            Price: decimal
-        }
-        member this.FormattedBasePrice = this.Price.ToString("0.00")
+    type Topping = {
+        Id: int64
+        Name: ShortString
+        Price: Price
+    } with
+
+        member this.FormattedBasePrice = this.Price.ToString()
 
     [<CLIMutable>]
-    type Pizza =
-        {
-            Id: Guid
-            Special: PizzaSpecial
-            SpecialId: int64
-            Size: int64
-            Toppings: Topping list
-        }
+    type Pizza = {
+        Id: Guid
+        Special: PizzaSpecial
+        SpecialId: SpecialId
+        Size: int64
+        Toppings: Topping list
+    } with
+
         static member DefaultSize = 12
         static member MinimumSize = 9
         static member MaximumSize = 17
 
-        member this.BasePrice = (this.Size |> decimal) /  (Pizza.DefaultSize |> decimal) * this.Special.BasePrice
+        member this.BasePrice =
+            (this.Size |> decimal) / (Pizza.DefaultSize |> decimal) * this.Special.BasePrice.Value
+            |> Price.TryCreate |> forceValidate
 
         member this.TotalPrice =
-            this.BasePrice
-            + (this.Toppings |> List.sumBy(fun t -> t.Price))
+            this.BasePrice.Value + (this.Toppings |> List.sumBy (fun t -> t.Price.Value))
+            |> Price.TryCreate |> forceValidate
 
-        member this.FormattedTotalPrice = this.TotalPrice.ToString("0.00")
-        
-        static member CreatePizzaFromSpecial (special: PizzaSpecial) =
-            {
-                Id = Guid.NewGuid()
-                Special = special
-                SpecialId = special.Id
-                Size = Pizza.DefaultSize
-                Toppings = []
-            }
+        member this.FormattedTotalPrice = this.TotalPrice.ToString()
+
+        static member CreatePizzaFromSpecial(special: PizzaSpecial) = {
+            Id = Guid.NewGuid()
+            Special = special
+            SpecialId = special.Id
+            Size = Pizza.DefaultSize
+            Toppings = []
+        }

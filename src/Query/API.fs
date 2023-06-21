@@ -33,6 +33,7 @@ open FSharp.Data.Sql.Common
 open Serilog
 open System.Linq
 open FunPizzaShop.Domain
+open FunPizzaShop.Domain.Model.Pizza
 
 let api (config: IConfiguration) actorApi =
     let connString = config.GetSection(Constants.ConnectionString).Value
@@ -169,9 +170,9 @@ let api (config: IConfiguration) actorApi =
                         {
                                 Name = x.Name |> ShortString.TryCreate |> forceValidate
                                 Description = x.Description |> ShortString.TryCreate |> forceValidate
-                                BasePrice = x.BasePrice
+                                BasePrice = x.BasePrice |> Price.TryCreate |> forceValidate
                                 ImageUrl = x.ImageUrl |> ShortString.TryCreate |> forceValidate
-                                Id = x.Id
+                                Id = x.Id |> SpecialId.TryCreate |> forceValidate
                         }
                         : Pizza.PizzaSpecial)
                     |> List.ofSeq
@@ -188,7 +189,7 @@ let api (config: IConfiguration) actorApi =
                     |> Seq.map (fun x ->
                         {
                                 Name = x.Name |> ShortString.TryCreate |> forceValidate
-                                Price = x.Price
+                                Price = x.Price |> Price.TryCreate |> forceValidate
                                 Id = x.Id
                         }
                         : Pizza.Topping)

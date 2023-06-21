@@ -71,7 +71,7 @@ let view (host:LitElement) (model:Model) dispatch =
             <div class="order-total">
                 Total:
                 <span class= "total-price">
-                        { model.Pizzas |> List.sumBy (fun p -> Math.Round(p.TotalPrice,2)) |> string }
+                        { model.Pizzas |> List.sumBy (fun p -> Math.Round(p.TotalPrice.Value,2)) |> string }
                 </span>
                 <button class="btn btn-warning">Order ></button>
             </div>
