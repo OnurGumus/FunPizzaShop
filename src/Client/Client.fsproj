@@ -7,6 +7,7 @@
     <Compile Include="Navigation.fs" />
     <Compile Include="ElmishOrder.fs" />
     <Compile Include="Sidebar.fs" />
+    <Compile Include="Checkout.fs" />
     <Compile Include="PizzaItem.fs" />
     <Compile Include="PizzaMenu.fs" />
     <Compile Include="App.fs" />

@@ -5,6 +5,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="Sidebar.fs" />
+    <Compile Include="Checkout.fs" />
     <Compile Include="PizzaItem.fs" />
     <Compile Include="PizzaMenu.fs" />
     <Compile Include="App.fs" />

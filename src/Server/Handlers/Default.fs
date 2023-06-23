@@ -14,7 +14,7 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
                 return! htmlString lay next ctx
             }
 
-    choose [ routeCi "/home" >=> defaultt; routeCi "/" >=> defaultt ]
+    choose [ routeCi "/checkout" >=> defaultt; routeCi "/" >=> defaultt ]
 
 
 let webAppWrapper (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =

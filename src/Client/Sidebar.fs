@@ -16,12 +16,17 @@ open Browser.Types
 open FunPizzaShop.MVU.Sidebar
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Constants
+open Thoth.Json
+open FunPizzaShop.Domain.Model
 
 let private hmr = HMR.createToken ()
 
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     match order with
     | Order.NoOrder -> ()
+    | Order.ShowCheckout pizzas ->
+        let pizzaString = Encode.Auto.toString(pizzas,extra = extraEncoders)
+        CustomNavigation.newUrl (CustomNavigation.toPage CustomNavigation.Checkout) pizzaString |> ignore
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
@@ -73,7 +78,8 @@ let view (host:LitElement) (model:Model) dispatch =
                 <span class= "total-price">
                         { model.Pizzas |> List.sumBy (fun p -> Math.Round(p.TotalPrice.Value,2)) |> string }
                 </span>
-                <button class="btn btn-warning">Order ></button>
+                <button @click={Ev(fun _ -> dispatch (OrderReceived model.Pizzas))} 
+                    class="btn btn-warning">Order ></button>
             </div>
          """
                    

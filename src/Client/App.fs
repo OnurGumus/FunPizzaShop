@@ -6,14 +6,12 @@ open Lit.Elmish
 open Browser
 open Elmish.UrlParser
 open Elmish.Navigation
+open CustomNavigation
 
 PizzaMenu.register ()
 PizzaItem.register ()
 Sidebar.register ()
-
-type Page =
-    | Home
-    | Checkout
+Checkout.register ()
 
 type Model = Page option
 
@@ -25,9 +23,25 @@ let toPage =
 let init (result: Option<Page>) = result, Cmd.none //CustomNavigation.newUrl (toPage Home) 1
 
 let update msg (model: Model) = model, Cmd.none
-
+[<HookComponent>]
 let view (model: Model) dispatch =
-    Lit.nothing
+    Hook.useEffectOnChange (model, fun model ->
+        let nonCheckout = document.querySelectorAll "main > *:not(fps-checkout)"
+        match model with
+        | Some Checkout -> 
+            for i = 0 to nonCheckout.length - 1 do
+                nonCheckout.item(i).toggleAttribute("hidden", true) |> ignore
+        | _ -> 
+            for i = 0 to nonCheckout.length - 1 do
+                nonCheckout.item(i).toggleAttribute("hidden", false) |> ignore
+    )
+    match model with
+    | Some page ->
+        match page with
+        | Home -> Lit.nothing
+        | Checkout -> 
+            html $"""<fps-checkout></fps-checkout>"""
+    | None -> Lit.nothing
 
 let pageParser: Parser<Page -> Page, Page> =
     oneOf [
@@ -37,6 +51,7 @@ let pageParser: Parser<Page -> Page, Page> =
     ]
 
 let urlUpdate (result: Option<Page>) model =
+    printfn "urlUpdate %A" result
     match result with
     | None -> model, Cmd.none
     | Some page -> Some page, Cmd.none

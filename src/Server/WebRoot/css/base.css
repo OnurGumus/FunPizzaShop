@@ -53,3 +53,7 @@ button, input, optgroup, select, textarea {
     font-size: inherit;
     line-height: inherit;
 }
+
+[hidden]{
+    display:none !important;
+}
