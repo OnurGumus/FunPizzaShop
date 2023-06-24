@@ -37,7 +37,6 @@ type State = {
     interface IDefaultTag
 
 let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
-    let defaultCredit = config.GetSection("config:defaultCredit").Value |> int
     let log = Log.ForContext("UserActor", mailbox.Self.Path.Name)
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self

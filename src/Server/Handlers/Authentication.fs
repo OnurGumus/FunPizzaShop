@@ -19,8 +19,9 @@ open FunPizzaShop.Server.Query
 open FunPizzaShop.Domain.Model
 open System.IO
 open System.Collections.Generic
+open Serilog
 
-let lines = File.ReadAllLines("email.txt")
+let lines = [] //File.ReadAllLines("email.txt")
 let emails = HashSet<string>(lines)
 
 [<AutoOpen>]
@@ -101,7 +102,7 @@ let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
 
 let authenticationHandler (env: #_) =
     Remoting.createApi ()
-    |> Remoting.withErrorHandler (fun ex routeInfo -> Propagate ex.Message)
+    |> Remoting.withErrorHandler (fun ex routeInfo -> Log.Error(ex,"Remoting error");  Propagate ex.Message; )
     |> Remoting.withRouteBuilder API.Route.builder
     |> Remoting.fromContext (fun ctx -> authenticationAPI ctx env)
     |> Remoting.buildHttpHandler

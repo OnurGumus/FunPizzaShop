@@ -9,6 +9,8 @@ open Akkling.Streams
 open Akka.Streams
 open Thoth.Json.Net
 open Command.Serialization
+open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop
 
 
 [<Literal>]
@@ -53,7 +55,36 @@ type DataEvent = UserEvent of string
   
 
 let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
-    failwith "not implemented"
+    let ctx = Sql.GetDataContext(connectionString)
+    Log.Verbose("Handle event {@Envelope}", envelop)
+    let offsetValue = (envelop.Offset :?> Sequence).Value
+    let lastSlash = envelop.PersistenceId.LastIndexOf("/")
+
+    let userId (userId: UserId) =
+        let s = userId.Value
+        s.Replace("_at_", "@").Replace("_dot_", ".").Replace("_plus_", "+")
+
+    let id =
+        envelop.PersistenceId
+            .Substring(lastSlash + 1)
+            .Replace("_at_", "@")
+            .Replace("_dot_", ".")
+            .Replace("_plus_", "+")
+
+    let dataEvent =
+        match envelop.Event with
+  
+        | :? Command.Common.Event<Command.Domain.User.Event> as {
+                    EventDetails = eventDetails
+                    Version = v
+            } -> None
+        | _ -> None
+
+    ctx.SubmitUpdates()
+
+    match dataEvent with
+    | Some dataEvent -> subQueue.OfferAsync(dataEvent).Wait()
+    | _ -> ()
 
 
 let handleEventWrapper (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =

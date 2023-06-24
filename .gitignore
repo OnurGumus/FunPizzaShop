@@ -29,3 +29,6 @@ src/Server/WebRoot/add-credits.css
 src/Server/WebRoot/help.css
 src/Server/~$Bulk.xlsx
 src/Server/WebRoot/help.css
+src/Server/Database/FunPizzaShop.db
+src/Server/secrets.hocon
+.gitignore

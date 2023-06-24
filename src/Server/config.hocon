@@ -1,6 +1,5 @@
 config {
   connection-string = "Data Source=Database/FunPizzaShop.db;"
-  defaultCredit = 10
   admins = ["onur@outlook.com.tr"]
   akka {
     persistence {

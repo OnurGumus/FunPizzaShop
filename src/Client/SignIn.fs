@@ -17,42 +17,106 @@ open FunPizzaShop.MVU.SignIn
 open FunPizzaShop.Domain.Model
 open Pizza
 open FunPizzaShop.Domain.Constants
-
+open Authentication
 let private hmr = HMR.createToken ()
 
-let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
+
+module Server =
+    open Fable.Remoting.Client
+    open FunPizzaShop.Domain
+    let api: API.Authentication =
+        Remoting.createApi ()
+        |> Remoting.withRouteBuilder API.Route.builder
+        |> Remoting.buildProxy<API.Authentication>
+
+let rec execute (host :LitElement) order dispatch =
     match order with
+    | Order.ShowError ex ->
+        window.alert(ex)
+    | Order.Login email ->
+        async {
+            let! result = Server.api.Login email
+            match result with
+            | Ok _ -> dispatch  EmailSent
+            | Error e -> dispatch (EmailFailed (sprintf "%A" e))
+        }
+        |> Async.StartImmediate
+
+    | Order.Verify (email,code) ->
+        async {
+            try
+                let! result = Server.api.Verify (email, Some code)
+                match result with
+                | Ok _ -> 
+                    dispatch VerificationSuccessful
+                | Error e -> dispatch (VerificationFailed)
+            with :?  Fable.Remoting.Client.ProxyRequestException as ex ->
+                window.alert(ex.ResponseText)
+        }
+        |> Async.StartImmediate
+
+    | Order.Logout (email) ->
+        async {
+            let! result = Server.api.Logout email
+            match result with
+            | Ok _ -> 
+                dispatch LogoutSuccess
+            | Error e -> 
+                let errorText = sprintf "%A" e
+                let msg = Msg.LogoutError errorText
+                dispatch msg
+        }
+        |> Async.StartImmediate
     | Order.NoOrder -> ()
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
     let emailField = 
-        html $"""
-        <div class="form-field">
-            <label>Email:</label>
-            <div>
-                <input name=email placeholder="Email" type=email required  />
+        match model.Status with
+        | AskEmail -> 
+            html $"""
+            <div class="form-field">
+                <label>Email:</label>
+                <div>
+                    <input name=email placeholder="Email" type=email required  />
+                </div>
             </div>
-        </div>
-        """
+            """
+        | AskVerification -> 
+            html $"""
+            <div class="form-field">
+                <label>Verification:</label>
+                <div>
+                    <input name=verification placeholder="Verification" type=text required  />
+                </div>
+            </div>
+            """
+        | _ -> Lit.nothing
 
     match model.Status with
     | LoggedIn user -> Lit.nothing
-    | VerificationSent -> Lit.nothing
     | NotLoggedIn -> 
         html $"""
             <div class=user-info>
                 <a class=sign-in @click={Ev(fun _ -> dispatch LoginRequested )}>Sign In</a>
             </div>
         """
-    | Status.LoginRequested ->
+    | AskVerification
+    | AskEmail ->
+        let onsubmit (e: Event) =
+            e.preventDefault() |> ignore
+            let form = e.target :?> HTMLFormElement
+            let email = form?email?value
+            let userId = (UserId.TryCreate email) |> forceValidate
+            dispatch (EmailSubmitted userId)
+
         html $"""
             <div class="dialog-container">
                 <div class="dialog">
                     <div class="dialog-title">
                         <h2>Sign In</h2>
                     </div>
-                    <form id=myform class="dialog-body">
+                    <form id=myform class="dialog-body" @submit={Ev(fun e -> onsubmit(e))}>
                         { emailField }
                     </form>
 

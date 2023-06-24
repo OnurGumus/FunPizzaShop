@@ -30,12 +30,13 @@ let configBuilder =
     ConfigurationBuilder()
         .AddUserSecrets<Self>()
         .AddHoconFile(ConfigHocon)
-        // .AddHoconFile("secrets.hocon", true)
+        .AddHoconFile("secrets.hocon", true)
         .AddEnvironmentVariables()
 
 let config = configBuilder.Build()
 
 let errorHandler (ex: Exception) (ctx: HttpContext) =
+    Log.Error(ex, "Error Handler")
     match ex with
     | :? System.Text.Json.JsonException -> clearResponse >=> setStatusCode 400 >=> text ex.Message
     | _ -> clearResponse >=> setStatusCode 500 >=> text ex.Message
