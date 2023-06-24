@@ -94,7 +94,18 @@ let view (host:LitElement) (model:Model) dispatch =
         | _ -> Lit.nothing
 
     match model.Status with
-    | LoggedIn user -> Lit.nothing
+    | LoggedIn user -> 
+        html $"""
+         <div class=user-info>
+            <img src="/assets/user.svg" class="user-icon" />
+            <div>
+                <span class=username>{user.Value}</span>
+                <a class=sign-out
+                @click={Ev(fun _ -> dispatch (LogoutRequested))}>Sign Out</a>
+            </div>
+        </div>
+        """
+    
     | NotLoggedIn -> 
         html $"""
             <div class=user-info>

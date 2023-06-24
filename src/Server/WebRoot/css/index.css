@@ -110,6 +110,17 @@ animation;
         padding: 0.2rem 0.8rem 0.1rem 0.8rem;
     }
 
+    .user-info a.sign-out {
+        color: #fff2cc;
+        font-size: 0.8rem;
+        cursor: pointer;
+    }
+    
+    .user-info a.sign-out:hover {
+        text-decoration: underline;
+    }
+    
+    
     .pizza-cards {
         display: grid;
         grid-template-columns: repeat(auto-fill, 20rem);

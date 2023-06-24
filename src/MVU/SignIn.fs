@@ -19,6 +19,7 @@ type Msg =
     | EmailFailed of string
     | VerificationSuccessful 
     | VerificationFailed 
+    | LogoutRequested
     | LogoutSuccess
     | LogoutError of string
 
@@ -45,4 +46,6 @@ let update msg model =
         | VerificationFailed -> model,  Order.ShowError "Verification failed"
         | LogoutSuccess -> { model with Status =Status.NotLoggedIn }, NoOrder
         | LogoutError ex -> { model with Status =Status.NotLoggedIn }, Order.ShowError ex
+        | LogoutRequested -> 
+            model, Order.Logout model.UserId.Value
         
