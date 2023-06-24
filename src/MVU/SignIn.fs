@@ -30,7 +30,22 @@ type Order =
     | Logout of UserId
     | ShowError of string
 
-let init () = { Status = NotLoggedIn; UserId = None ; IsBusy = false} , NoOrder
+let init (userName:string option) () =
+        match userName with
+        | Some name -> 
+            let userId = name |> UserId.TryCreate |> forceValidate |> Some
+            { 
+                Status = LoggedIn (userId.Value)
+                UserId = userId ; 
+                IsBusy = false
+            } , NoOrder
+        
+        | None ->  
+            { 
+                Status = NotLoggedIn;
+                UserId = None ; 
+                IsBusy = false
+            } , NoOrder
 
 let update msg model =
       match msg with

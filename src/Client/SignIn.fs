@@ -151,10 +151,14 @@ let LitElement () =
     Hook.useHmr (hmr)
     let host, prop = LitElement.init (fun config -> 
         config.useShadowDom <- false
+        config.props <-
+        {|
+            username = Prop.Of( Option.None , attribute="username")
+        |}
     )
     let program =
         Program.mkHiddenProgramWithOrderExecute 
-            (init) (update) (execute host)
+            (init prop.username.Value ) (update) (execute host)
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace

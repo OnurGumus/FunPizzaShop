@@ -92,18 +92,24 @@ animation;
         flex-direction: row;
         align-items: center;
         justify-content: center;
-
         :is(img) {
             margin-inline-end: 0.7rem;
             inline-size: 2.6rem;
         }
 
         &.username {
-            display: block;
-            font-weight: 700;
-            line-height: 0.7rem;
-            margin-block-start: 0.5rem;
+        display: block;
+        font-weight: 700;
+        line-height: 0.7rem;
+        margin-block-start: 0.5rem;
         }
+        >div{
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+       
     }
 
     a.sign-in {
