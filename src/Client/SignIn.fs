@@ -26,6 +26,16 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
+    let emailField = 
+        html $"""
+        <div class="form-field">
+            <label>Email:</label>
+            <div>
+                <input name=email placeholder="Email" type=email required  />
+            </div>
+        </div>
+        """
+
     match model.Status with
     | LoggedIn user -> Lit.nothing
     | VerificationSent -> Lit.nothing
@@ -42,13 +52,13 @@ let view (host:LitElement) (model:Model) dispatch =
                     <div class="dialog-title">
                         <h2>Sign In</h2>
                     </div>
-                    <form class="dialog-body">
-                        $FormItems
+                    <form id=myform class="dialog-body">
+                        { emailField }
                     </form>
 
                     <div class="dialog-buttons">
                         <button id="cancelButton" @click={Ev(fun _ -> dispatch LoginCancelled )} class="btn btn-secondary mr-auto" >Cancel</button>
-                        <button id="confirmButton" class="btn btn-success ml-auto">Sign in ></button>
+                        <button id="confirmButton"  type="submit" form="myform" class="btn btn-success ml-auto">Sign in ></button>
                     </div>
                 </div>
             </div>

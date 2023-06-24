@@ -784,6 +784,7 @@ animation;
         background: rgba(255, 255, 255, 0.3);
     }
 
+
     @keyframes dialog-container-entry {
         0% {
             opacity: 0;
@@ -799,6 +800,9 @@ animation;
         box-shadow: 0 0 12px rgba(0, 0, 0, 0.6);
         animation: dialog-entry 0.4s;
         animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
+        .form-field{
+            color:black;
+        }
     }
 
     @keyframes dialog-entry {
