@@ -106,9 +106,16 @@ let view (host:LitElement) (model:Model) dispatch =
         let onsubmit (e: Event) =
             e.preventDefault() |> ignore
             let form = e.target :?> HTMLFormElement
-            let email = form?email?value
-            let userId = (UserId.TryCreate email) |> forceValidate
-            dispatch (EmailSubmitted userId)
+            match model.Status with
+            | AskEmail -> 
+                let email = form?email?value
+                let userId = (UserId.TryCreate email) |> forceValidate
+                dispatch (EmailSubmitted userId)
+            | AskVerification ->
+                let verification = form?verification?value
+                let userId = (VerificationCode.TryCreate verification) |> forceValidate
+                dispatch (VerificationSubmitted userId)
+            | _ -> ()
 
         html $"""
             <div class="dialog-container">

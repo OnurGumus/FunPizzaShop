@@ -30,6 +30,7 @@
     <ProjectReference Include="..\Domain\Domain.fsproj" />
     <ProjectReference Include="..\Command\Command.fsproj" />
     <ProjectReference Include="..\Query\Query.fsproj" />
+    <Folder Include="Database\" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>
