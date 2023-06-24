@@ -7,9 +7,13 @@
     <Compile Include="AkklingHelpers.fs" />
     <Compile Include="Common.fs" />
     <Compile Include="Actor.fs" />
+    <Compile Include="Domain\User.fs" />
     <Compile Include="Domain\Serialization.fs" />
     <Compile Include="Domain\API.fs" />
     <Compile Include="API.fs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Domain\Domain.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

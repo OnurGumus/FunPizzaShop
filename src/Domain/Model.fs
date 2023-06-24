@@ -208,5 +208,86 @@ module Pizza =
             s.Id |> PizzaId.Validate |> ignore
             s.SpecialId |> SpecialId.Validate |> ignore
 
+
 module Authentication =
-    type User = { Username: string; Password: string }
+    open System.Text.RegularExpressions
+
+    type EmailError =
+        | EmptyEmail
+        | InvalidEmailAddress
+
+    type Email =
+        private
+        | Email of string
+
+        member this.Value = let (Email email) = this in email
+
+        static member TryCreate(email: string) =
+            let regex = 
+                //regex not containing '_Saga_'
+                Regex(@"^(?!.*(_dot_|_Saga_|~)).*$", RegexOptions.IgnoreCase)
+
+            let email = email.Trim().Replace(" ", "")
+            let email = 
+                if email.Contains("@") then 
+                    email 
+                else 
+                    let email=  email.Replace("(", "").Replace(")", "").Replace("-", "")
+                    if email.StartsWith("00") then
+                        "+" + email.Substring(2)
+                    elif email.StartsWith("+") |> not then
+                        "+" + email
+                    else
+                          email
+            
+            single (fun t ->
+                t.TestOne email
+                |> t.MinLen 1 EmptyEmail
+                |> t.MaxLen 50 InvalidEmailAddress
+                |> t.Match regex InvalidEmailAddress
+                |> t.Map(fun x ->
+                    let lowerCase = x.ToLowerInvariant()
+
+                    let email =
+                        if lowerCase.Contains("@gmail") && lowerCase.Contains(".") then
+                            let left = lowerCase.Split("@").[0]
+                            let right = lowerCase.Split("@").[1]
+                            let removeDots = left.Replace(".", "")
+                            removeDots + "@" + right
+                        else
+                            lowerCase
+
+                    Email email)
+                |> t.End)
+
+        static member Validate(s: Email) =
+            s.Value |> Email.TryCreate |> forceValidate
+
+
+    type UserId = Email
+
+    type User = { Id: UserId }
+
+    type VerificationError =
+        | EmptyVerificationCode
+        | InvalidVerificationCode
+
+    type VerificationCode =
+        private
+        | VerificationCode of string
+
+        member this.Value = let (VerificationCode s) = this in s
+
+        static member TryCreate(s: string) =
+            single (fun t ->
+                t.TestOne s
+                |> t.MinLen 1 EmptyVerificationCode
+                |> t.MaxLen 6 InvalidVerificationCode
+                |> t.Map VerificationCode
+                |> t.End)
+
+    type LoginError = string
+    type LogoutError = string
+
+    type Subject = ShortString
+    type Body = LongString

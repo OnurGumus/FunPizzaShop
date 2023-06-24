@@ -7,7 +7,9 @@
     <Compile Include="Constants.fs" />
     <Compile Include="Fable.Validation.fs" />
     <Compile Include="Model.fs" />
+    <Compile Include="Command.fs" />
     <Compile Include="Query.fs" />
+    <Compile Include="API.fs" />
     <Content Include="paket.references" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
