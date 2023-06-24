@@ -35,10 +35,84 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
     let pizzas = model.Pizzas
-    let pizzaLIs = pizzas |> List.map (fun pizza -> html $"""<li>{pizza.Size.ToString()} { pizza.Special.Name.Value }</li>""")
+   
+    let pizzaTemplate (pizza: Pizza) =
+        let toppingItem (topping: Topping) =
+            html $"""<li>+ {topping.Name.Value}</li>"""
+
+        let toppingItems =
+            pizza.Toppings
+            |> List.map toppingItem
+
+        html $"""
+            <p>
+                <strong>
+                    { pizza.Size}"
+                    { pizza.Special.Name.Value }
+                    (£{ pizza.Special.FormattedBasePrice })
+                </strong>
+            </p>
+
+            <ul>
+                {toppingItems}
+            </ul>
+
+    """
+    let sum = 
+        pizzas 
+        |> List.sumBy (fun (p:Pizza) -> p.TotalPrice.Value)
+
+    let summ  = 
+        html $"""
+            <p>
+                <strong>
+                    Total price:
+                    £{ sum.ToString("0.00") }
+                </strong>
+            </p>
+        """
+    let pizzaList = 
+        pizzas 
+        |> List.map (pizzaTemplate)
+
+    let formFieldItem (label:string)=
+        html $"""
+            <div class="form-field">
+            <label>{label}:</label>
+                <div>
+                    <input class="$ValidClass" type="text"  />
+                </div>
+            </div>
+        """
+    let formItems =
+                 [
+                    formFieldItem  "Name"
+                    formFieldItem  "City"
+                    formFieldItem  "Region" 
+                    formFieldItem  "Postal Code"
+                    formFieldItem  "Address Line 1"
+                    formFieldItem  "Address Line 2"
+                ]
     html $"""
-        <h1>Checkout</h1>
-        {pizzaLIs}
+        <div class='main'>
+        <div class="checkout-cols">
+            <div class="checkout-order-details">
+                <h4>Review order</h4>
+                { pizzaList }
+                { summ }
+            </div>
+
+            <div class="checkout-delivery-address">
+                <h4>Deliver to...</h4>
+                <form>
+                { formItems}
+                </form>
+            </div>
+        </div>
+        <button class="checkout-button btn btn-warning">
+            Place order
+        </button>
+        </div>
     """
 
 [<LitElement("fps-checkout")>]
