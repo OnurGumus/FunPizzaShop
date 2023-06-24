@@ -2,6 +2,9 @@ module FunPizzaShop.Server.Environments
 open FunPizzaShop
 open Microsoft.Extensions.Configuration
 open Query
+open Command
+open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop.Domain.Command.Authentication
 
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
@@ -12,6 +15,29 @@ type AppEnv(config: IConfiguration) =
     let queryApi =
         Query.API.api config commandApi.ActorApi
         
+    interface IMailSender with
+        member _.SendVerificationMail =
+            fun (email:Email) (subject: Subject) (body: Body) ->
+                async{
+                    // MailSender.sendMessage 
+                    //     config["config:SmtpUser"]
+                    //     config.["config:SmtpPass"] 
+                    //         (email.Value) (subject.Value) (body.Value)
+                    return ()
+                }
+
+    interface IAuthentication with
+        member _.Login: Login = 
+            commandApi.Login
+            
+        member _.Logout: Logout = 
+            fun (userId: UserId) -> 
+                async { 
+                    return  Ok()
+                }
+        member _.Verify: Verify = 
+            commandApi.Verify
+
     interface IConfiguration with
         member _.Item
             with get (key: string) = config.[key]

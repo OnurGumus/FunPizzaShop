@@ -106,7 +106,7 @@ let api (env: #_) (clock: IClock) =
 
     { new IAPI with
         member this.Login: Login = 
-              failwith "Not Implemented"
+              User.login userSubs
         member this.Verify: Verify = 
               User.verify userSubs
         member _.ActorApi = actorApi

@@ -3,6 +3,7 @@ open System.Threading.Tasks
 open Giraffe
 open Microsoft.AspNetCore.Http
 open FunPizzaShop.Server.Views
+open FunPizzaShop.Server.Handlers.Authentication
 
 
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
@@ -13,8 +14,10 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
                 let! lay = (layout ctx indexView)
                 return! htmlString lay next ctx
             }
-
-    choose [ routeCi "/checkout" >=> defaultt; routeCi "/" >=> defaultt ]
+    choose [ 
+        (authenticationHandler env)
+        routeCi "/checkout" >=> defaultt; routeCi "/" >=> defaultt 
+    ]
 
 
 let webAppWrapper (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
