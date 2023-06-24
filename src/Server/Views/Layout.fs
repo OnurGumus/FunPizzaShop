@@ -96,9 +96,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
                         <img src="/assets/icons/bike.svg" alt="My Orders" />
                         <span>My Orders</span>
                     </a>
-                    <div class=user-info>
-                        <a class=sign-in>Sign In</a>
-                    </div>
+                    <fps-signin></fps-signin>
             </header>
             <main>
                 {body}

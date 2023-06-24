@@ -207,3 +207,6 @@ module Pizza =
             s.Toppings |> List.iter (fun t -> t |> Topping.Validate |> ignore)
             s.Id |> PizzaId.Validate |> ignore
             s.SpecialId |> SpecialId.Validate |> ignore
+
+module Authentication =
+    type User = { Username: string; Password: string }

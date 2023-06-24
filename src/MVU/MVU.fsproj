@@ -4,6 +4,7 @@
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="SignIn.fs" />
     <Compile Include="Sidebar.fs" />
     <Compile Include="Checkout.fs" />
     <Compile Include="PizzaItem.fs" />

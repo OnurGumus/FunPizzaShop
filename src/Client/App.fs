@@ -12,6 +12,7 @@ PizzaMenu.register ()
 PizzaItem.register ()
 Sidebar.register ()
 Checkout.register ()
+SignIn.register ()
 
 type Model = Page option
 
@@ -40,7 +41,10 @@ let view (model: Model) dispatch =
         match page with
         | Home -> Lit.nothing
         | Checkout -> 
-            html $"""<fps-checkout></fps-checkout>"""
+            
+            html $""""
+             <fps-checkout></fps-checkout>
+            """
     | None -> Lit.nothing
 
 let pageParser: Parser<Page -> Page, Page> =
