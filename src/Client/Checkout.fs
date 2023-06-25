@@ -13,11 +13,14 @@ open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
+open FunPizzaShop.MVU
 open FunPizzaShop.MVU.Checkout
 open Thoth.Json
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Model
 open FunPizzaShop.Domain.Constants
+open CustomNavigation
+open FunPizzaShop.Domain
 
 let private hmr = HMR.createToken ()
 
@@ -31,6 +34,20 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
         | Ok pizzas ->
             dispatch (SetPizzas pizzas)
         | Error err -> console.error err
+    | Order.PlaceOrder orderId ->
+        history.replaceState (null, "", sprintf "order/%s" orderId)
+        let ev = CustomEvent.Create(NavigatedEvent)
+        window.dispatchEvent ev |> ignore
+        ()
+    | Order.RequestLogin ->
+        host.dispatchCustomEvent (Constants.Events.RequestLogin, null,true,true,true)
+        
+    | Order.SubscribeToLogin ->
+        (LoginStore.store.Subscribe (fun (model:LoginStore.Model) -> dispatch (SetLoginStatus model.UserId.IsSome))  )
+        |> ignore
+    | Order.OrderList orders ->
+        orders
+        |> List.iter (fun order -> execute host order dispatch)
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
@@ -109,7 +126,7 @@ let view (host:LitElement) (model:Model) dispatch =
                 </form>
             </div>
         </div>
-        <button class="checkout-button btn btn-warning">
+        <button class="checkout-button btn btn-warning" @click={ Ev(fun _ -> dispatch(OrderPlaced "12"))  } >
             Place order
         </button>
         </div>

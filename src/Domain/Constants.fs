@@ -23,3 +23,6 @@ module Events =
 
     [<Literal>]
     let PizzaOrdered = "pizzaOrdered"
+
+    [<Literal>]
+    let RequestLogin = "requestLogin"

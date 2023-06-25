@@ -13,7 +13,8 @@ open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
-open FunPizzaShop.MVU.SignIn
+open FunPizzaShop.MVU
+open SignIn
 open FunPizzaShop.Domain.Model
 open Pizza
 open FunPizzaShop.Domain.Constants
@@ -49,6 +50,7 @@ let rec execute (host :LitElement) order dispatch =
                 match result with
                 | Ok _ -> 
                     dispatch VerificationSuccessful
+                    LoginStore.dispatcher (LoginStore.Msg.LoggedIn (email))
                 | Error e -> dispatch (VerificationFailed)
             with :?  Fable.Remoting.Client.ProxyRequestException as ex ->
                 window.alert(ex.ResponseText)
@@ -71,6 +73,13 @@ let rec execute (host :LitElement) order dispatch =
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
+    Hook.useEffectOnce (fun () ->
+    let requestLogin (e: Event) =
+        dispatch (LoginRequested)
+        
+    document.addEventListener (Events.RequestLogin, requestLogin) |> ignore
+
+    Hook.createDisposable (fun () -> document.removeEventListener (Events.RequestLogin, requestLogin)))
     let emailField = 
         match model.Status with
         | AskEmail -> 

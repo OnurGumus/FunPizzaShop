@@ -16,10 +16,8 @@ SignIn.register ()
 
 type Model = Page option
 
-let toPage =
-    function
-    | Home -> ""
-    | Checkout -> "checkout"
+
+
 
 let init (result: Option<Page>) = result, Cmd.none //CustomNavigation.newUrl (toPage Home) 1
 
@@ -40,6 +38,10 @@ let view (model: Model) dispatch =
     | Some page ->
         match page with
         | Home -> Lit.nothing
+        | Order orderId -> 
+            html $"""
+                {orderId}
+            """
         | Checkout -> 
             
             html $""""
@@ -52,6 +54,7 @@ let pageParser: Parser<Page -> Page, Page> =
         map Home (s "")
         map Home (s "/")
         map Checkout (s "checkout")
+        map (fun orderId -> Order orderId) (s "order" </> str)
     ]
 
 let urlUpdate (result: Option<Page>) model =
