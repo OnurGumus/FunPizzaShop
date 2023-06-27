@@ -12,7 +12,6 @@ open Browser
 open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
-open Browser.Types
 open FunPizzaShop.MVU
 open FunPizzaShop.MVU.Checkout
 open Thoth.Json
@@ -34,8 +33,8 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
         | Ok pizzas ->
             dispatch (SetPizzas pizzas)
         | Error err -> console.error err
-    | Order.PlaceOrder orderId ->
-        history.replaceState (null, "", sprintf "order/%s" orderId)
+    | Order.PlaceOrder order ->
+        history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
         let ev = CustomEvent.Create(NavigatedEvent)
         window.dispatchEvent ev |> ignore
         ()
@@ -43,7 +42,7 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
         host.dispatchCustomEvent (Constants.Events.RequestLogin, null,true,true,true)
         
     | Order.SubscribeToLogin ->
-        (LoginStore.store.Subscribe (fun (model:LoginStore.Model) -> dispatch (SetLoginStatus model.UserId.IsSome))  )
+        (LoginStore.store.Subscribe (fun (model:LoginStore.Model) -> dispatch (SetLoginStatus model.UserId))  )
         |> ignore
     | Order.OrderList orders ->
         orders
@@ -110,6 +109,28 @@ let view (host:LitElement) (model:Model) dispatch =
                     formFieldItem  "Address Line 1"
                     formFieldItem  "Address Line 2"
                 ]
+    let onSubmit (e:Browser.Types.Event) =
+        e.preventDefault()
+        let form = e.target :?> HTMLFormElement
+        let name = form?Name?value |> ShortString.TryCreate |> forceValidate
+        let city = form?City?value |> ShortString.TryCreate |> forceValidate
+        let region = form?Region?value |> ShortString.TryCreate |> forceValidate
+        let postalCode = form?PostalCode?value |> ShortString.TryCreate |> forceValidate
+        let addressLine1 = form?AddressLine1?value |> ShortString.TryCreate |> forceValidate
+        let addressLine2 = form?AddressLine2?value |> ShortString.TryCreate |> forceValidate
+        let address:Address =  {
+            Name = name
+            City = city
+            Region = region
+            PostalCode = postalCode
+            Line1 = addressLine1
+            Line2 = addressLine2
+        }
+        let order:OrderDetails = {
+            Pizzas = pizzas
+            Address = address
+        }
+        dispatch (OrderPlaced order)
     html $"""
         <div class='main'>
         <div class="checkout-cols">
@@ -121,12 +142,12 @@ let view (host:LitElement) (model:Model) dispatch =
 
             <div class="checkout-delivery-address">
                 <h4>Deliver to...</h4>
-                <form>
+                <form id="checkout">
                 { formItems}
                 </form>
             </div>
         </div>
-        <button class="checkout-button btn btn-warning" @click={ Ev(fun _ -> dispatch(OrderPlaced "12"))  } >
+        <button class="checkout-button btn btn-warning" form=checkout type="submit" >
             Place order
         </button>
         </div>

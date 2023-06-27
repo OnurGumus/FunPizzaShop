@@ -1,37 +1,57 @@
 module FunPizzaShop.MVU.Checkout
 open Elmish
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Domain
+open Model
+open Pizza
+open Authentication
+open System
 
-type Model = { Pizzas: Pizza list; IsLoggedIn : bool; PendingOrder : string option}
+type OrderDetails = { Address : Address; Pizzas : Pizza list }
 
-type Msg = SetPizzas of Pizza list | OrderPlaced of string | SetLoginStatus of bool
+type Model = { Pizzas: Pizza list; UserId : UserId option; PendingOrder : OrderDetails option}
+
+type Msg = SetPizzas of Pizza list | OrderPlaced of OrderDetails | SetLoginStatus of UserId option
 
 
 type Order =
       | NoOrder 
       | GetPizzas 
-      | PlaceOrder of string 
+      | PlaceOrder of Pizza.Order 
       | SubscribeToLogin 
       | OrderList of Order list
       | RequestLogin
     
 let init () =  
-      { Pizzas = []; IsLoggedIn = false; PendingOrder = None } , 
+      { Pizzas = []; UserId = None; PendingOrder = None } , 
       [GetPizzas;SubscribeToLogin] |> OrderList
 
-let update msg model =
+let rec update msg model =
       match msg with
-      | SetPizzas pizzas -> {model with Pizzas = pizzas}, NoOrder
-      | OrderPlaced orderId -> 
-            if model.IsLoggedIn |> not then
-                  {model with PendingOrder = Some orderId}, RequestLogin
+      | SetPizzas pizzas -> ({model with Pizzas = pizzas}: Model), NoOrder
+      | OrderPlaced orderDetails -> 
+            if model.UserId.IsNone then
+                  {model with PendingOrder = Some orderDetails}, RequestLogin
             else
-                  model, PlaceOrder orderId
+                  let order :FunPizzaShop.Domain.Model.Pizza.Order = {
+                        DeliveryAddress = orderDetails.Address
+                        Pizzas = orderDetails.Pizzas
+                        UserId = model.UserId.Value
+                        OrderId = Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> OrderId
+                        CreatedTime = DateTime.UtcNow
+                        DeliveryLocation =  {Latitude = 0.0; Longitude = 0.0 }
+                        Version = Model.Version 0L
+                        CurrentLocation = {Latitude = 0.0; Longitude = 0.0 }
+                        DeliveryStatus=DeliveryStatus.NotDelivered
+
+                  }
+                  model, Order.PlaceOrder order
                   
-      | SetLoginStatus isLoggedIn -> 
-            if isLoggedIn then
+      | SetLoginStatus userId -> 
+            if userId.IsSome then
                   match model.PendingOrder with
-                  | Some orderId -> {model with PendingOrder = None}, PlaceOrder orderId
+                  | Some orderDetails -> 
+                        let model = {model with PendingOrder = None}
+                        update (OrderPlaced orderDetails) model
                   | None -> model, NoOrder
             else
-            {model with IsLoggedIn = isLoggedIn}, NoOrder
+            {model with UserId = userId}, NoOrder

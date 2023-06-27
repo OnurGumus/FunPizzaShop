@@ -1,4 +1,4 @@
-module FunPizzaShop.Domain.Model
+module rec FunPizzaShop.Domain.Model
 
 open System
 open Fable.Validation
@@ -44,7 +44,7 @@ type ShortString =
     static member TryCreate(s: string) =
         single (fun t ->
             t.TestOne s
-            |> t.MinLen 1 EmptyString
+            |> t.MinLen 1 ShortStringError.EmptyString
             |> t.MaxLen 255 TooLongString
             |> t.Map ShortString
             |> t.End)
@@ -122,18 +122,8 @@ module Pizza =
         override this.ToString() = this.Value.ToString()
 
     type PizzaId =
-        private
-        | PizzaId of Guid
-
+        | PizzaId of ShortString
         member this.Value = let (PizzaId pizzaId) = this in pizzaId
-
-        static member TryCreate(s: Guid) =
-            single (fun t -> t.TestOne s |> t.Map PizzaId |> t.End)
-
-        static member Validate(s: PizzaId) =
-            s.Value |> PizzaId.TryCreate |> forceValidate
-
-        override this.ToString() = this.Value.ToString()
 
     /// <summary>
     /// Represents a pre-configured template for a pizza a user can order
@@ -195,7 +185,7 @@ module Pizza =
         member this.FormattedTotalPrice = this.TotalPrice.ToString()
 
         static member CreatePizzaFromSpecial(special: PizzaSpecial) = {
-            Id = Guid.NewGuid() |> PizzaId.TryCreate |> forceValidate
+            Id = Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> PizzaId 
             Special = special
             SpecialId = special.Id
             Size = Pizza.DefaultSize
@@ -205,8 +195,70 @@ module Pizza =
         static member Validate(s: Pizza) =
             s.Special |> PizzaSpecial.Validate |> ignore
             s.Toppings |> List.iter (fun t -> t |> Topping.Validate |> ignore)
-            s.Id |> PizzaId.Validate |> ignore
+            s.Id.Value |> ShortString.Validate |> ignore
             s.SpecialId |> SpecialId.Validate |> ignore
+    [<CLIMutable>]
+    type Address =
+        {
+            Name: ShortString
+            Line1: ShortString
+            Line2: ShortString
+            City: ShortString
+            Region: ShortString
+            PostalCode: ShortString
+        }
+        static member Validate(s: Address) =
+            s.Name |> ShortString.Validate |> ignore
+            s.Line1 |> ShortString.Validate |> ignore
+            s.Line2 |> ShortString.Validate |> ignore
+            s.City |> ShortString.Validate |> ignore
+            s.Region |> ShortString.Validate |> ignore
+            s.PostalCode |> ShortString.Validate |> ignore
+
+    [<CLIMutable>]
+    type LatLong =
+        {
+            Latitude: double
+            Longitude: double
+        }
+        static member Interpolate (start: LatLong) (endd: LatLong) proportion =
+            {
+                Latitude =
+                    start.Latitude
+                    + (endd.Latitude - start.Latitude)
+                    * proportion
+                Longitude =
+                    start.Longitude
+                    + (endd.Longitude - start.Longitude)
+                    * proportion
+            }
+
+    type DeliveryStatus =
+        | NotDelivered
+        | OutForDelivery
+        | Delivered
+
+    type OrderId =
+        | OrderId of ShortString
+        member this.Value = 
+                let (OrderId orderId) = this 
+                orderId
+
+    [<CLIMutable>]
+    type Order =
+        {
+            OrderId: OrderId
+            UserId: Authentication.UserId
+            CreatedTime: DateTime
+            DeliveryAddress: Address
+            DeliveryLocation: LatLong
+            Pizzas: Pizza list
+            Version: Version
+            CurrentLocation: LatLong
+            DeliveryStatus: DeliveryStatus
+        }
+        member this.TotalPrice = this.Pizzas |> List.sumBy (fun p -> p.TotalPrice.Value) |> Price.TryCreate |> forceValidate
+        member this.FormattedTotalPrice = this.TotalPrice.Value.ToString("0.00")
 
 
 module Authentication =
@@ -266,7 +318,7 @@ module Authentication =
 
     type UserId = Email
 
-    type User = { Id: UserId }
+    type User = { Id: UserId; Version: Version }
 
     type VerificationError =
         | EmptyVerificationCode

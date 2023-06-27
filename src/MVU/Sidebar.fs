@@ -16,7 +16,7 @@ let init () = {Pizzas = []} , NoOrder
 let update msg model =
       match msg with
       | AddPizza pizza -> 
-         {model with Pizzas = pizza :: model.Pizzas}, NoOrder
+         ({model with Pizzas = pizza :: model.Pizzas}:Model), NoOrder
          
       | RemovePizza pizza -> 
          {model with Pizzas = List.filter (fun p -> p <> pizza) model.Pizzas}, NoOrder
