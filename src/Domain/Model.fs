@@ -128,7 +128,6 @@ module Pizza =
     /// <summary>
     /// Represents a pre-configured template for a pizza a user can order
     /// </summary>
-    [<CLIMutable>]
     type PizzaSpecial = {
         Id: SpecialId
         Name: ShortString
@@ -147,7 +146,6 @@ module Pizza =
             s.Id |> SpecialId.Validate |> ignore
 
 
-    [<CLIMutable>]
     type Topping = {
         Id: ToppingId
         Name: ShortString
@@ -161,7 +159,6 @@ module Pizza =
             s.Name |> ShortString.Validate |> ignore
             s.Id |> ToppingId.Validate |> ignore
 
-    [<CLIMutable>]
     type Pizza = {
         Id: PizzaId
         Special: PizzaSpecial
@@ -197,7 +194,6 @@ module Pizza =
             s.Toppings |> List.iter (fun t -> t |> Topping.Validate |> ignore)
             s.Id.Value |> ShortString.Validate |> ignore
             s.SpecialId |> SpecialId.Validate |> ignore
-    [<CLIMutable>]
     type Address =
         {
             Name: ShortString
@@ -215,7 +211,6 @@ module Pizza =
             s.Region |> ShortString.Validate |> ignore
             s.PostalCode |> ShortString.Validate |> ignore
 
-    [<CLIMutable>]
     type LatLong =
         {
             Latitude: double
@@ -244,7 +239,6 @@ module Pizza =
                 let (OrderId orderId) = this 
                 orderId
 
-    [<CLIMutable>]
     type Order =
         {
             OrderId: OrderId

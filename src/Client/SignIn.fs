@@ -32,6 +32,9 @@ module Server =
 
 let rec execute (host :LitElement) order dispatch =
     match order with
+    | (Order.PublishLogin email) ->
+
+        LoginStore.dispatcher (LoginStore.Msg.LoggedIn (email))
     | Order.ShowError ex ->
         window.alert(ex)
     | Order.Login email ->

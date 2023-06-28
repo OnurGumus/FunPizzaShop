@@ -23,6 +23,16 @@ open FunPizzaShop.Domain
 
 let private hmr = HMR.createToken ()
 
+
+module Server =
+    open Fable.Remoting.Client
+    open FunPizzaShop.Domain
+    open FunPizzaShop.Domain.Model.Pizza
+    let api: API.Order =
+        Remoting.createApi ()
+        |> Remoting.withRouteBuilder API.Route.builder
+        |> Remoting.buildProxy<API.Order>
+
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     match order with
     | Order.NoOrder -> ()
@@ -31,13 +41,18 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
         let pizzas = Decode.Auto.fromString<Pizza list>(pizzaString,extra = extraEncoders)
         match pizzas with
         | Ok pizzas ->
-            dispatch (SetPizzas pizzas)
+            dispatch (SetPizzas pizzas) 
         | Error err -> console.error err
     | Order.PlaceOrder order ->
-        history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
-        let ev = CustomEvent.Create(NavigatedEvent)
-        window.dispatchEvent ev |> ignore
-        ()
+        async {
+            do! Server.api.OrderPizza order
+            dispatch  OrderPlaced
+            history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
+            let ev = CustomEvent.Create(NavigatedEvent)
+            window.dispatchEvent ev |> ignore
+        }
+        |> Async.StartImmediate
+      
     | Order.RequestLogin ->
         host.dispatchCustomEvent (Constants.Events.RequestLogin, null,true,true,true)
         
@@ -96,7 +111,7 @@ let view (host:LitElement) (model:Model) dispatch =
             <div class="form-field">
             <label>{label}:</label>
                 <div>
-                    <input class="$ValidClass" type="text"  />
+                    <input required name='{ label.Replace(" ","")  }' type="text"  />
                 </div>
             </div>
         """
@@ -130,7 +145,7 @@ let view (host:LitElement) (model:Model) dispatch =
             Pizzas = pizzas
             Address = address
         }
-        dispatch (OrderPlaced order)
+        dispatch (OrderCheckedOut order)
     html $"""
         <div class='main'>
         <div class="checkout-cols">
@@ -142,7 +157,7 @@ let view (host:LitElement) (model:Model) dispatch =
 
             <div class="checkout-delivery-address">
                 <h4>Deliver to...</h4>
-                <form id="checkout">
+                <form id="checkout" @submit={Ev(fun e -> onSubmit(e))}>
                 { formItems}
                 </form>
             </div>

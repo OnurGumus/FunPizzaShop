@@ -1,6 +1,7 @@
 module FunPizzaShop.Domain.API
 open Command
 open Authentication
+open Pizza
 
 type Authentication = {
     Login: Login
@@ -8,6 +9,9 @@ type Authentication = {
     Logout: Logout
 }
 
+type Order = {
+    OrderPizza: OrderPizza
+}
 
 module Client =
     /// Defines how routes are generated on server and mapped from client

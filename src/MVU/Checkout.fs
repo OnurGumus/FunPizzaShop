@@ -10,7 +10,11 @@ type OrderDetails = { Address : Address; Pizzas : Pizza list }
 
 type Model = { Pizzas: Pizza list; UserId : UserId option; PendingOrder : OrderDetails option}
 
-type Msg = SetPizzas of Pizza list | OrderPlaced of OrderDetails | SetLoginStatus of UserId option
+type Msg = 
+      SetPizzas of Pizza list 
+      | OrderCheckedOut of OrderDetails 
+      | SetLoginStatus of UserId option
+      | OrderPlaced
 
 
 type Order =
@@ -27,8 +31,9 @@ let init () =
 
 let rec update msg model =
       match msg with
+      | OrderPlaced -> model, NoOrder
       | SetPizzas pizzas -> ({model with Pizzas = pizzas}: Model), NoOrder
-      | OrderPlaced orderDetails -> 
+      | OrderCheckedOut orderDetails -> 
             if model.UserId.IsNone then
                   {model with PendingOrder = Some orderDetails}, RequestLogin
             else
@@ -47,11 +52,12 @@ let rec update msg model =
                   model, Order.PlaceOrder order
                   
       | SetLoginStatus userId -> 
+            let model = {model with UserId = userId}
             if userId.IsSome then
                   match model.PendingOrder with
                   | Some orderDetails -> 
                         let model = {model with PendingOrder = None}
-                        update (OrderPlaced orderDetails) model
+                        update (OrderCheckedOut orderDetails) model
                   | None -> model, NoOrder
             else
-            {model with UserId = userId}, NoOrder
+            model, NoOrder

@@ -4,6 +4,8 @@ open Giraffe
 open Microsoft.AspNetCore.Http
 open FunPizzaShop.Server.Views
 open FunPizzaShop.Server.Handlers.Authentication
+open FunPizzaShop.Server.Handlers.Pizza
+open Microsoft.AspNetCore.Authentication.Cookies
 
 
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
@@ -16,7 +18,10 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
             }
     choose [ 
         (authenticationHandler env)
-        routeCi "/checkout" >=> defaultt; routeCi "/" >=> defaultt 
+        routeCi "/checkout" >=> defaultt; routeCi "/" >=> defaultt
+        routex "^.*OrderPizza.*$"
+        >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
+        >=>(pizzaHandler env)
     ]
 
 

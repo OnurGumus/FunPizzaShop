@@ -29,6 +29,7 @@ type Order =
     | Verify of UserId * VerificationCode
     | Logout of UserId
     | ShowError of string
+    | PublishLogin of UserId
 
 let init (userName:string option) () =
         match userName with
@@ -38,7 +39,7 @@ let init (userName:string option) () =
                 Status = LoggedIn (userId.Value)
                 UserId = userId ; 
                 IsBusy = false
-            } , NoOrder
+            } , (PublishLogin (userId.Value))
         
         | None ->  
             { 
