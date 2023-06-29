@@ -9,7 +9,9 @@ open System
 open Microsoft.Extensions.Configuration
 open FunPizzaShop.Command.Domain.API
 open FunPizzaShop.Domain.Command.Authentication
+open FunPizzaShop.Domain.Command.Pizza
 open FunPizzaShop.Command.Domain
+open FunPizzaShop.Domain.Model.Pizza
 
 let createCommandSubscription (domainApi: IDomain) factory (id: string) command filter =
     let vid =
@@ -40,7 +42,7 @@ module User =
     let login (createSubs) : Login =
         fun userId  ->
             async {
-                Log.Debug("Inside login {@userId} {@otherMeta}", userId)
+                Log.Debug("Inside login {@userId}", userId)
 
                 let subscribA =
                     createSubs (userId.Value) (User.Login) (function
@@ -67,7 +69,7 @@ module User =
     let verify (createSubs) : Verify =
         fun (userId, verCode) ->
             async {
-                Log.Debug("Inside Verify {@userId} {@otherMeta}", userId, verCode)
+                Log.Debug("Inside Verify {@userId} {@verCode}", userId, verCode)
 
                 let subscribA =
                     createSubs (userId.Value) (User.VefifyLogin verCode) (function
@@ -91,23 +93,52 @@ module User =
                 | other -> return failwithf "unexpected event %A" other
             }
 
+module Pizza =
+    open FunPizzaShop.Domain.Model.Pizza
+
+    let order (createSubs) : OrderPizza =
+        fun order  ->
+            async {
+                Log.Debug("Inside order {@order}", order)
+
+                let subscribA =
+                    createSubs (order.OrderId.Value.Value) (Order.PlaceOrder order) (function
+                        | Order.OrderPlaced _ ->true
+                        | _ -> false)
+
+                let! subscrib = subscribA
+
+                match subscrib with
+                | {
+                      EventDetails = Order.OrderPlaced _
+                      Version = v
+                  } -> return ()
+
+                | other -> return failwithf "unexpected event %A" other
+            }
+
+   
+
 [<Interface>]
 type IAPI =
     abstract ActorApi: IActor
     abstract Login: Login
     abstract Verify: Verify
+    abstract OrderPizza: OrderPizza
 
 
 let api (env: #_) (clock: IClock) =
     let config = env :> IConfiguration
     let actorApi = Actor.api config
     let domainApi = Domain.API.api env clock actorApi
-    let userSubs = createCommandSubscription domainApi domainApi.UserFactory
-
+    let userSubs =  createCommandSubscription domainApi domainApi.UserFactory
+    let pizzaSubs = createCommandSubscription domainApi domainApi.OrderFactory
     { new IAPI with
         member this.Login: Login = 
               User.login userSubs
         member this.Verify: Verify = 
               User.verify userSubs
         member _.ActorApi = actorApi
+        member _.OrderPizza = 
+              Pizza.order pizzaSubs
     }

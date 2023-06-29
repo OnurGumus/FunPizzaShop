@@ -32,8 +32,19 @@ let userMessageEncode =
 let userMessageDecode =
     Decode.Auto.generateDecoder<Common.Event<User.Event>> (extra = extraThoth)
 
+
+let orderMessageEncode =
+    Encode.Auto.generateEncoder<Common.Event<Order.Event>> (extra = extraThoth)
+
+let orderMessageDecode =
+    Decode.Auto.generateDecoder<Common.Event<Order.Event>> (extra = extraThoth)
+
+
 let userStateEncode = Encode.Auto.generateEncoder<User.State> (extra = extraThoth)
 let userStateDecode = Decode.Auto.generateDecoder<User.State> (extra = extraThoth)
+
+let orderStateEncode = Encode.Auto.generateEncoder<Order.State> (extra = extraThoth)
+let orderStateDecode = Decode.Auto.generateDecoder<Order.State> (extra = extraThoth)
 
 type ThothSerializer(system: ExtendedActorSystem) =
     inherit SerializerWithStringManifest(system)
@@ -44,7 +55,9 @@ type ThothSerializer(system: ExtendedActorSystem) =
 
         match o with
         | :? Common.Event<User.Event> as mesg -> mesg |> userMessageEncode
+        | :? Common.Event<Order.Event> as mesg -> mesg |> orderMessageEncode
 
+        | :? Order.State as mesg -> mesg |> orderStateEncode
         | :? User.State as mesg -> mesg |> userStateEncode
         | e ->
             Log.Fatal("shouldn't happen {e}", e)
@@ -57,6 +70,8 @@ type ThothSerializer(system: ExtendedActorSystem) =
         match o with
         | :? Common.Event<User.Event> -> "UserMessage"
         | :? User.State -> "UserState"
+        | :? Common.Event<Order.Event> -> "OrderMessage"
+        | :? Order.State -> "OrderState"
         | _ -> o.GetType().FullName
 
     override _.FromBinary(bytes: byte[], manifest: string) : obj =
@@ -69,8 +84,10 @@ type ThothSerializer(system: ExtendedActorSystem) =
 
         match manifest with
         | "UserState" -> upcast decode userStateDecode
+        | "OrderState" -> upcast decode orderMessageDecode
 
         | "UserMessage" -> upcast decode userMessageDecode
+        | "OrderMessage" -> upcast decode orderMessageDecode
         | _ ->
             Log.Fatal("manifest {manifest} not found", manifest)
             Environment.FailFast("shouldn't happen")
