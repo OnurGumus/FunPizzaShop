@@ -11,6 +11,7 @@ open Thoth.Json.Net
 open Command.Serialization
 open FunPizzaShop.Domain.Model.Authentication
 open FunPizzaShop
+open FunPizzaShop.Domain.Model.Pizza
 
 
 [<Literal>]
@@ -49,9 +50,9 @@ let inline encoder<'T> =
 let inline decoder<'T> =
     Decode.Auto.generateDecoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
 
+type OrderEvent = OrderPlaced of Order
 
-
-type DataEvent = UserEvent of string
+type DataEvent = OrderEvent of OrderEvent
   
 
 let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
@@ -78,6 +79,28 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     EventDetails = eventDetails
                     Version = v
             } -> None
+        | :? Command.Common.Event<Command.Domain.Order.Event> as {
+                    EventDetails = eventDetails
+                    Version = v
+            } -> 
+                match eventDetails with
+                | Command.Domain.Order.OrderPlaced order ->
+                    let encoded= Encode.Auto.toString(order.Pizzas, extra = extraThoth)
+                    let row = ctx.Main.Orders.``Create(CreatedTime, CurrentLocation, DeliveryAddress, DeliveryLocation, DeliveryStatus, Offset, Pizzas, UserId, Version)``(
+                        order.CreatedTime,
+                        order.CurrentLocation.ToString(),
+                        order.DeliveryAddress.ToString(),
+                        order.DeliveryLocation.ToString(),
+                        order.DeliveryStatus.ToString(),
+                        offsetValue,
+                        encoded,
+                        order.UserId.Value,
+                        v
+                    )
+                    row.OrderId <- order.OrderId.Value.Value
+                    Some(OrderEvent(OrderPlaced order))
+
+
         | _ -> None
 
     ctx.SubmitUpdates()

@@ -153,7 +153,26 @@ type AddSeedData() =
            
         override this.Down() =  () |> ignore
 
-        
+[<MigrationAttribute(2023_06_29_0301L)>]
+type AddOrdersTable() =
+    inherit Migration()
+    
+    override this.Up() =
+        this.Create
+            .Table("Orders")
+            .WithColumn("OrderId").AsString().PrimaryKey()
+            .WithColumn("Version").AsInt64().NotNullable().Indexed().WithDefaultValue(0)
+            .WithColumn("Offset").AsInt64().NotNullable().Unique().WithDefaultValue(0)
+            .WithColumn("UserId").AsString().Indexed()
+            .WithColumn("CreatedTime").AsDateTime()
+            .WithColumn("DeliveryAddress").AsString()
+            .WithColumn("DeliveryLocation").AsString()
+            .WithColumn("CurrentLocation").AsString()
+            .WithColumn("DeliveryStatus").AsString()
+            .WithColumn("Pizzas").AsString()
+        |> ignore
+
+    override this.Down() =  this.Delete.Table("Orders") |> ignore
 
                         
 let updateDatabase (serviceProvider: IServiceProvider) =
