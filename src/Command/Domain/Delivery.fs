@@ -23,7 +23,7 @@ type Command =
 type Event =
     | LocationUpdated of OrderId * LatLong
     | Delivered of OrderId
-    | DeliveryStarted of OrderId
+    | DeliveryStarted of Order
 
 type State = {
     Order: Order option
@@ -43,9 +43,10 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
         | LocationUpdated (_, latlong) ->
             { state with Order = Some { state.Order.Value with DeliveryLocation = latlong } }
         | Delivered _  -> { state with Order = Some { state.Order.Value with DeliveryStatus = DeliveryStatus.Delivered } }
-        | DeliveryStarted _ ->
-            { state with Order = Some { state.Order.Value with DeliveryStatus = DeliveryStatus.OutForDelivery } }
-
+        | DeliveryStarted order ->
+            let order = { order with DeliveryStatus = DeliveryStatus.OutForDelivery }
+            { state with Order = Some order }
+            
     let rec set (state: State) =
         actor {
             let! msg = mailbox.Receive()
@@ -87,7 +88,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                     match commandDetails with
                     | (StartDelivery order) ->
                         return!
-                            toEvent ci (v + 1L) (DeliveryStarted order.OrderId) |> sendToSagaStarter ci |> box |> Persist
+                            toEvent ci (v + 1L) (DeliveryStarted order) |> sendToSagaStarter ci |> box |> Persist
 
                     | (UpdateLocation (location:LatLong)) ->
                         return!

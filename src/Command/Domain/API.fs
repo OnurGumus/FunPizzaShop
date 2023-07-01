@@ -17,6 +17,11 @@ open Microsoft.Extensions.Configuration
 
 let sagaCheck (env:#_) toEvent actorApi (clock: IClock) (o: obj) =
     match o with
+    | :? (Event<Order.Event>) as e ->
+        match e with
+        | { EventDetails = Order.OrderPlaced _  } ->
+            [ (OrderSaga.factory env toEvent actorApi clock, "OrderSaga") ]
+        | _ -> []
     | _ -> []
 
 [<Interface>]

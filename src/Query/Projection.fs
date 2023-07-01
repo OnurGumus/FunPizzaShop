@@ -103,6 +103,15 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
 
 
         | _ -> None
+    let user =
+        query {
+            for o in ctx.Main.Offsets do
+                where (o.OffsetName = "Users")
+                select o
+                exactlyOne
+        }
+
+    user.OffsetCount <- offsetValue
 
     ctx.SubmitUpdates()
 

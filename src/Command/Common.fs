@@ -129,9 +129,9 @@ module SagaStarter =
     let removeSaga (name: string) =
         let first = name.Replace("_Saga_","")
         let index = first.IndexOf('_')
-        let lastIndex = first.LastIndexOf('_')
+      //  let lastIndex = first.LastIndexOf('_')
 
-        if index <> lastIndex then
+        if index >0 then
             first.Substring(index + 1)
         else
             first
