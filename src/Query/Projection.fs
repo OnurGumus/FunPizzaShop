@@ -99,6 +99,7 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     )
                     row.OrderId <- order.OrderId.Value.Value
                     Some(OrderEvent(OrderPlaced order))
+                | _ -> None
 
 
         | _ -> None

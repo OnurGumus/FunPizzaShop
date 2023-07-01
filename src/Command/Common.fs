@@ -59,6 +59,9 @@ type STJSerializer(system: ExtendedActorSystem) =
     override this.FromBinary(bytes: byte[], manifest: string) : obj =
         JsonSerializer.Deserialize(new MemoryStream(bytes), Type.GetType(manifest), jsonOptions)
 
+type OriginatorName = 
+    | OriginatorName of string
+    member this.Value = let (OriginatorName on) = this in on
 
 type IDefaultTag =
     interface
@@ -124,20 +127,17 @@ let shardResolver = fun _ -> DEFAULT_SHARD
 module SagaStarter =
 
     let removeSaga (name: string) =
-        // let first = name.Replace("_Saga_","")
-        // let index = first.IndexOf('_')
-        // let lastIndex = first.LastIndexOf('_')
+        let first = name.Replace("_Saga_","")
+        let index = first.IndexOf('_')
+        let lastIndex = first.LastIndexOf('_')
 
-        // if index <> lastIndex then
-        //     first.Substring(index + 1)
-        // else
-        //     first
-        name.Replace("_Saga_","")
+        if index <> lastIndex then
+            first.Substring(index + 1)
+        else
+            first
+      //  name.Replace("_Saga_","")
 
     let toOriginatorName (name: string) =
-        if name.StartsWith "CalculationQueueSaga" then
-            "GlobalCalculationQueue"
-        else
         let sagaRemoved = removeSaga name
         let bang = sagaRemoved.IndexOf('~')
         sagaRemoved.Substring(0, bang)

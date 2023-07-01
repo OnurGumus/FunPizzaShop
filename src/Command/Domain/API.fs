@@ -25,6 +25,7 @@ type IDomain =
     abstract Clock: IClock
     abstract UserFactory: string -> IEntityRef<obj>
     abstract OrderFactory: string -> IEntityRef<obj>
+    abstract DeliveryFactory: string -> IEntityRef<obj>
 
 let api (env: #_) (clock: IClock) (actorApi: IActor) =
 
@@ -32,6 +33,7 @@ let api (env: #_) (clock: IClock) (actorApi: IActor) =
     SagaStarter.init actorApi.System actorApi.Mediator (sagaCheck env toEvent actorApi clock)
     User.init env toEvent actorApi |> sprintf "User initialized: %A" |> Log.Debug
     Order.init env toEvent actorApi |> sprintf "Order initialized: %A" |> Log.Debug
+    Delivery.init env toEvent actorApi |> sprintf "Delivery initialized: %A" |> Log.Debug
 
     // EmailService.init actorApi.System actorApi.Mediator sendEmail
     System.Threading.Thread.Sleep(1000)
@@ -43,4 +45,7 @@ let api (env: #_) (clock: IClock) (actorApi: IActor) =
             User.factory env toEvent actorApi entityId
         member _.OrderFactory entityId =
             Order.factory env toEvent actorApi entityId
+        member _.DeliveryFactory entityId =
+            Delivery.factory env toEvent actorApi entityId
+
     }

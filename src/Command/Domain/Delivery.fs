@@ -1,4 +1,4 @@
-module FunPizzaShop.Command.Domain.Order
+module FunPizzaShop.Command.Domain.Delivery
 
 open Command
 open Akkling
@@ -16,23 +16,23 @@ open FunPizzaShop.Domain.Model
 
 
 type Command =
-    | PlaceOrder of Order
-    | SetDeliveryStatus of DeliveryStatus
+    | StartDelivery of Order
+    | UpdateLocation of LatLong
+    | SetAsDelivered
 
 type Event =
-    | OrderPlaced of Order
-    | DeliveryStatusSet of DeliveryStatus
+    | LocationUpdated of OrderId * LatLong
+    | Delivered of OrderId
+    | DeliveryStarted of OrderId
 
 type State = {
-    DeliveryStatus: DeliveryStatus
     Order: Order option
     Version: int64
 } with
-
     interface IDefaultTag
 
 let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
-    let log = Log.ForContext("OrderActor", mailbox.Self.Path.Name)
+    let log = Log.ForContext("DeliveryActor", mailbox.Self.Path.Name)
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self
 
@@ -40,11 +40,11 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
         log.Verbose("Apply Message {@Event}, State: @{State}", event, state)
 
         match event with
-        | OrderPlaced order -> { state with Order = Some order }
-        | DeliveryStatusSet status ->
-            {
-                state with DeliveryStatus = status
-            }
+        | LocationUpdated (_, latlong) ->
+            { state with Order = Some { state.Order.Value with DeliveryLocation = latlong } }
+        | Delivered _  -> { state with Order = Some { state.Order.Value with DeliveryStatus = DeliveryStatus.Delivered } }
+        | DeliveryStarted _ ->
+            { state with Order = Some { state.Order.Value with DeliveryStatus = DeliveryStatus.OutForDelivery } }
 
     let rec set (state: State) =
         actor {
@@ -85,12 +85,19 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                     let v = state.Version
 
                     match commandDetails with
-                    | (PlaceOrder order) ->
+                    | (StartDelivery order) ->
                         return!
-                            toEvent ci (v + 1L) (OrderPlaced order) |> sendToSagaStarter ci |> box |> Persist
-                    | (SetDeliveryStatus status) ->
+                            toEvent ci (v + 1L) (DeliveryStarted order.OrderId) |> sendToSagaStarter ci |> box |> Persist
+
+                    | (UpdateLocation (location:LatLong)) ->
                         return!
-                            toEvent ci (v + 1L) (DeliveryStatusSet status) |> sendToSagaStarter ci |> box |> Persist
+                            toEvent ci (v + 1L) (LocationUpdated (state.Order.Value.OrderId, location)) |> sendToSagaStarter ci |> box |> Persist
+                    | SetAsDelivered ->
+                        let order = { state.Order.Value with DeliveryStatus = DeliveryStatus.Delivered }
+                        return!
+                            toEvent ci (v + 1L) (Delivered state.Order.Value.OrderId) |> sendToSagaStarter ci |> box |> Persist
+         
+
                 | _ ->
                     log.Debug("Unhandled Message {@MSG}", box msg)
                     return Unhandled
@@ -98,12 +105,11 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
 
     set {
         Version = 0L
-        DeliveryStatus = NotDelivered
         Order = None
     }
 
 let init (env: #_) toEvent (actorApi: IActor) =
-    AkklingHelpers.entityFactoryFor actorApi.System shardResolver "Order"
+    AkklingHelpers.entityFactoryFor actorApi.System shardResolver "Delivery"
     <| propsPersist (actorProp env toEvent (typed actorApi.Mediator))
     <| false
 
