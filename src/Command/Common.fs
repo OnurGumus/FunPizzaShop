@@ -143,10 +143,16 @@ module SagaStarter =
         sagaRemoved.Substring(0, bang)
 
     let toRawGuid (name: string) =
+        let name  = name.Replace("_Saga_","")
         let index = name.IndexOf('~')
         name.Substring(index + 1)
 
     let toNewCid name = name + "~" + Guid.NewGuid().ToString()
+
+    let toCidWithExisting (name: string) (existing: string) =
+        let originator = name
+        let guid = existing |> toRawGuid
+        originator + "~" + guid
 
     let toCid name =
         let originator = (name |> toOriginatorName)
@@ -175,7 +181,8 @@ module SagaStarter =
     let toCheckSagas (event, originator, cid) =
         ((event |> box), originator, cid) |> CheckSagas |> Command
 
-    let toSendMessage mediator (originator) cid event =
+    let toSendMessage mediator (originator:IActorRef<_>) cid event =
+        let cid = toCidWithExisting (originator.Path.Name) event.CorrelationId 
         let message =
             Send(SagaStarterPath, (event, untyped originator, cid) |> toCheckSagas)
 
@@ -256,7 +263,6 @@ module SagaStarter =
                         return! set state
                     else
                         let (originator, subscribers) = state.[originName]
-
                         let newList = subscribers |> List.filter (fun a -> a <> sender.Path.Name)
 
                         match newList with

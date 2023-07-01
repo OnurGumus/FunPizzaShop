@@ -1,4 +1,4 @@
-module  FunPizzaShop.Command.Domain.OrderSaga
+module  FunPizzaShop.Command.Domain.DeliverySaga
 
 open Command
 open Akkling
@@ -21,9 +21,9 @@ open Command.Common.SagaStarter
 type State =
     | NotStarted
     | Started 
-    | WaitingForOrderPlaced of OrderId
-    | WaitingForDeliveryStart of DeliveryId * Order
-    | WaitingForOrderDeliveryStatusSet of DeliveryStatus
+    | WaitingForDeliveryStart of DeliveryId
+    | WaitingForOrderDeliveryCompleted  of OrderId
+    | WaitingForOrderDeliveryStatusSet
     | Completed
    
     interface IDefaultTag
@@ -32,7 +32,7 @@ type Event =
     | StateChanged of State
 
     interface IDefaultTag
-type SagaData = { DeliveryId : DeliveryId option; Order: Order option}
+type SagaData = { DeliveryId : DeliveryId option; Order: OrderId option}
 type SagaState = { Data : SagaData; State: State}
 
 let actorProp
@@ -44,9 +44,8 @@ let actorProp
     (mailbox: Eventsourced<obj>)
     =
     let cid = (mailbox.Self.Path.Name |> SagaStarter.toCid)
-    let log = Log.ForContext("OrderSaga", mailbox.Self.Path.Name)
+    let log = Log.ForContext("DeliverySaga", mailbox.Self.Path.Name)
     let config = env :> IConfiguration
-    let apiKey = config.GetSection("config:APIKEY").Value
 
     let rec set (state: SagaState) =
 
@@ -56,11 +55,11 @@ let actorProp
             CorrelationId = cid
         }
 
-        let setDeliveryStatus (deliveryStatus) =
+        let setDeliveryStatusForOrder (deliveryStatus) =
             Order.SetDeliveryStatus deliveryStatus |> createCommand
 
-        let startDelivery (order:Order) =
-            Delivery.StartDelivery order |> createCommand
+        let completeDelivery () =
+            Delivery.SetAsDelivered |> createCommand
       
         let orderActor (orderId: OrderId) =
             let toEvent ci = Common.toEvent clockInstance ci
@@ -72,8 +71,12 @@ let actorProp
 
         let apply (state:SagaState) =
             match state.State with
-            | WaitingForDeliveryStart (deliveryId, order) ->
-                { state.Data with DeliveryId = Some deliveryId ; Order =Some order}
+            | WaitingForDeliveryStart (deliveryId) ->
+                { state.Data with DeliveryId = Some deliveryId }
+            | WaitingForOrderDeliveryCompleted (orderId) ->
+                { state.Data with Order = Some orderId }
+            | WaitingForOrderDeliveryStatusSet ->
+                state.Data
             | _ -> state.Data
 
         let applySideEffects (state:SagaState) =
@@ -81,28 +84,32 @@ let actorProp
             | NotStarted -> Started |> Some
             | Started ->
                 SagaStarter.cont mediator
-                let orderId = 
+                let deliveryId = 
                     mailbox.Self.Path.Name 
                     |> toOriginatorName 
                     |> ShortString.TryCreate 
-                    |> forceValidate |> OrderId
-                (WaitingForOrderPlaced orderId) |> Some
-            | WaitingForDeliveryStart (deliveryId,order) ->
-                deliveryActor(deliveryId) <! startDelivery(order)
+                    |> forceValidate |> DeliveryId
+                (WaitingForDeliveryStart deliveryId) |> Some
+
+            | WaitingForDeliveryStart _ ->
+               None
+
+            | WaitingForOrderDeliveryCompleted _ ->
+                let deliveryId = state.Data.DeliveryId.Value
+                deliveryActor(deliveryId) <! completeDelivery()
                 None
-            | WaitingForOrderDeliveryStatusSet (status) ->
-                orderActor (state.Data.Order.Value.OrderId) <! setDeliveryStatus status
+            | WaitingForOrderDeliveryStatusSet ->
+                orderActor(state.Data.Order.Value) <! setDeliveryStatusForOrder(DeliveryStatus.Delivered)
                 None
             | Completed -> 
                 mailbox.Parent() <! Passivate(Actor.PoisonPill.Instance)
                 None
-            | WaitingForOrderPlaced _ -> None
 
         actor {
             let! msg = mailbox.Receive()
 
             log.Information(
-                "OrderSaga Message {MSG}, State: {@State}, name:{@name}",
+                "DeliverySaga Message {MSG}, State: {@State}, name:{@name}",
                 msg,
                 state,
                 mailbox.Self.Path.Name
@@ -144,21 +151,26 @@ let actorProp
               
                 | :? (Common.Event<Order.Event>) as {EventDetails = orderEvent;}, state ->
                     match orderEvent, state with
-                    | Order.OrderPlaced order, _ ->
-                        let state = WaitingForDeliveryStart (DeliveryId.CreateNew(), order) |> StateChanged
-                        return! state |> box |> Persist
                     | Order.DeliveryStatusSet _, _ ->
                         let state = Completed |> StateChanged
                         return! state |> box |> Persist
+                    | e ->
+                        log.Warning("Unhandled event in delivery saga {@Event}", box e)
+                        return! set state
+                    
 
                 | :? (Common.Event<Delivery.Event>) as { EventDetails = deliveryEvent }, _ ->
                     match deliveryEvent with
-                    | Delivery.DeliveryStarted(_) ->
+                    | Delivery.DeliveryStarted(order) ->
                         let state =
-                            WaitingForOrderDeliveryStatusSet(DeliveryStatus.OutForDelivery) |> StateChanged
+                            WaitingForOrderDeliveryCompleted order.OrderId |> StateChanged
+                        return! state |> box |> Persist
+                    | Delivery.Delivered _ ->
+                        let state =
+                            WaitingForOrderDeliveryStatusSet  |> StateChanged
                         return! state |> box |> Persist
                     | e ->
-                        log.Warning("Unhandled event in calculation queue {@Event}", box e)
+                        log.Warning("Unhandled event in delivery saga {@Event}", box e)
                         return! set state
 
                 | e ->
@@ -169,7 +181,7 @@ let actorProp
     set { State = NotStarted; Data = { DeliveryId = None; Order = None} }
 
 let init (env: #_) toEvent (actorApi: IActor) (clock: IClock) =
-    (AkklingHelpers.entityFactoryFor actorApi.System shardResolver "OrderSaga"
+    (AkklingHelpers.entityFactoryFor actorApi.System shardResolver "DeliverySaga"
      <| propsPersist (actorProp env toEvent actorApi clock (typed actorApi.Mediator))
      <| true)
 

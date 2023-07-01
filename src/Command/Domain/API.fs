@@ -22,6 +22,11 @@ let sagaCheck (env:#_) toEvent actorApi (clock: IClock) (o: obj) =
         | { EventDetails = Order.OrderPlaced _  } ->
             [ (OrderSaga.factory env toEvent actorApi clock, "OrderSaga") ]
         | _ -> []
+    | :? (Event<Delivery.Event>) as e ->
+        match e with
+        | { EventDetails = Delivery.DeliveryStarted _  } ->
+            [ (DeliverySaga.factory env toEvent actorApi clock, "DeliverySaga") ]
+        | _ -> []
     | _ -> []
 
 [<Interface>]
@@ -40,6 +45,7 @@ let api (env: #_) (clock: IClock) (actorApi: IActor) =
     Order.init env toEvent actorApi |> sprintf "Order initialized: %A" |> Log.Debug
     Delivery.init env toEvent actorApi |> sprintf "Delivery initialized: %A" |> Log.Debug
     OrderSaga.init env toEvent actorApi clock |> sprintf "OrderSaga initialized: %A" |> Log.Debug
+    DeliverySaga.init env toEvent actorApi clock |> sprintf "DeliverySaga initialized: %A" |> Log.Debug
 
     // EmailService.init actorApi.System actorApi.Mediator sendEmail
     System.Threading.Thread.Sleep(1000)

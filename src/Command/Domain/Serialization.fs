@@ -47,6 +47,11 @@ let orderSagaMessageEncode =
 let orderSagaMessageDecode =
     Decode.Auto.generateDecoder<OrderSaga.Event> (extra = extraThoth)
 
+let deliverySagaMessageEncode =
+    Encode.Auto.generateEncoder<DeliverySaga.Event> (extra = extraThoth)
+let deliverySagaMessageDecode =
+    Decode.Auto.generateDecoder<DeliverySaga.Event> (extra = extraThoth)
+
 /// State encoding
 let userStateEncode = Encode.Auto.generateEncoder<User.State> (extra = extraThoth)
 let userStateDecode = Decode.Auto.generateDecoder<User.State> (extra = extraThoth)
@@ -59,6 +64,9 @@ let deliveryStateDecode = Decode.Auto.generateDecoder<Delivery.State> (extra = e
 
 let orderSagaStateEncode = Encode.Auto.generateEncoder<OrderSaga.State> (extra = extraThoth)
 let orderSagaStateDecode = Decode.Auto.generateDecoder<OrderSaga.State> (extra = extraThoth)
+
+let deliverySagaStateEncode = Encode.Auto.generateEncoder<DeliverySaga.State> (extra = extraThoth)
+let deliverySagaStateDecode = Decode.Auto.generateDecoder<DeliverySaga.State> (extra = extraThoth)
 
 
 
@@ -74,11 +82,15 @@ type ThothSerializer(system: ExtendedActorSystem) =
         | :? Common.Event<Order.Event> as mesg -> mesg |> orderMessageEncode
         | :? Common.Event<Delivery.Event> as mesg -> mesg |> deliveryMessageEncode
         | :? OrderSaga.Event as mesg -> mesg |> orderSagaMessageEncode
+        | :? DeliverySaga.Event as mesg -> mesg |> deliverySagaMessageEncode
+
 
         | :? Order.State as mesg -> mesg |> orderStateEncode
         | :? User.State as mesg -> mesg |> userStateEncode
         | :? Delivery.State as mesg -> mesg |> deliveryStateEncode
         | :? OrderSaga.State as mesg -> mesg |> orderSagaStateEncode
+        | :? DeliverySaga.State as mesg -> mesg |> deliverySagaStateEncode
+
         | e ->
             Log.Fatal("shouldn't happen {e}", e)
             Environment.FailFast("shouldn't happen")
@@ -96,6 +108,8 @@ type ThothSerializer(system: ExtendedActorSystem) =
         | :? Delivery.State -> "DeliveryState"
         | :? OrderSaga.Event -> "OrderSagaMessage"
         | :? OrderSaga.State -> "OrderSagaState"
+        | :? DeliverySaga.Event -> "DeliverySagaMessage"
+        | :? DeliverySaga.State -> "DeliverySagaState"
         | _ -> o.GetType().FullName
 
     override _.FromBinary(bytes: byte[], manifest: string) : obj =
@@ -118,6 +132,9 @@ type ThothSerializer(system: ExtendedActorSystem) =
 
         | "OrderSagaMessage" -> upcast decode orderSagaMessageDecode
         | "OrderSagaState" -> upcast decode orderSagaStateDecode
+
+        | "DeliverySagaMessage" -> upcast decode deliverySagaMessageDecode
+        | "DeliverySagaState" -> upcast decode deliverySagaStateDecode
 
         | _ ->
             Log.Fatal("manifest {manifest} not found", manifest)

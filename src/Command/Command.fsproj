@@ -10,6 +10,7 @@
     <Compile Include="Domain\User.fs" />
     <Compile Include="Domain\Order.fs" />
     <Compile Include="Domain\Delivery.fs" />
+    <Compile Include="Domain\DeliverySaga.fs" />
     <Compile Include="Domain\OrderSaga.fs" />
     <Compile Include="Domain\Serialization.fs" />
     <Compile Include="Domain\API.fs" />

@@ -81,7 +81,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
 
                 | :? (Common.Command<Command>) as msg ->
 
-                    let ci = msg.CorrelationId
+                    let ci = msg.CorrelationId 
                     let commandDetails = msg.CommandDetails
                     let v = state.Version
 
@@ -94,7 +94,6 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                         return!
                             toEvent ci (v + 1L) (LocationUpdated (state.Order.Value.OrderId, location)) |> sendToSagaStarter ci |> box |> Persist
                     | SetAsDelivered ->
-                        let order = { state.Order.Value with DeliveryStatus = DeliveryStatus.Delivered }
                         return!
                             toEvent ci (v + 1L) (Delivered state.Order.Value.OrderId) |> sendToSagaStarter ci |> box |> Persist
          
