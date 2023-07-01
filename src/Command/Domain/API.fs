@@ -39,6 +39,7 @@ let api (env: #_) (clock: IClock) (actorApi: IActor) =
     User.init env toEvent actorApi |> sprintf "User initialized: %A" |> Log.Debug
     Order.init env toEvent actorApi |> sprintf "Order initialized: %A" |> Log.Debug
     Delivery.init env toEvent actorApi |> sprintf "Delivery initialized: %A" |> Log.Debug
+    OrderSaga.init env toEvent actorApi clock |> sprintf "OrderSaga initialized: %A" |> Log.Debug
 
     // EmailService.init actorApi.System actorApi.Mediator sendEmail
     System.Threading.Thread.Sleep(1000)
