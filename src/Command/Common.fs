@@ -122,45 +122,48 @@ let toEvent (clockInstance: IClock) ci version event = {
 [<Literal>]
 let DEFAULT_SHARD = "default-shard"
 
+[<Literal>]
+let SAGA_Suffix = "~Saga~"
+
+[<Literal>]
+let CID_Seperator = "~"
+
 let shardResolver = fun _ -> DEFAULT_SHARD
 
 module SagaStarter =
 
     let removeSaga (name: string) =
-        let first = name.Replace("_Saga_","")
+        let first = name.Replace(SAGA_Suffix,"")
         let index = first.IndexOf('_')
-      //  let lastIndex = first.LastIndexOf('_')
-
         if index >0 then
             first.Substring(index + 1)
         else
             first
-      //  name.Replace("_Saga_","")
 
     let toOriginatorName (name: string) =
         let sagaRemoved = removeSaga name
-        let bang = sagaRemoved.IndexOf('~')
-        sagaRemoved.Substring(0, bang)
+        let index = sagaRemoved.IndexOf(CID_Seperator)
+        sagaRemoved.Substring(0, index)
 
     let toRawGuid (name: string) =
-        let name  = name.Replace("_Saga_","")
-        let index = name.IndexOf('~')
+        let name  = name.Replace(SAGA_Suffix,"")
+        let index = name.LastIndexOf(CID_Seperator)
         name.Substring(index + 1)
 
-    let toNewCid name = name + "~" + Guid.NewGuid().ToString()
+    let toNewCid name = name + CID_Seperator + Guid.NewGuid().ToString()
 
     let toCidWithExisting (name: string) (existing: string) =
         let originator = name
         let guid = existing |> toRawGuid
-        originator + "~" + guid
+        originator + CID_Seperator + guid
 
     let toCid name =
         let originator = (name |> toOriginatorName)
         let guid = name |> toRawGuid
-        originator + "~" + guid
+        originator + CID_Seperator + guid
 
-    let cidToSagaName (name: string) = name + "_Saga_"
-    let isSaga (name: string) = name.Contains("_Saga_")
+    let cidToSagaName (name: string) = name + SAGA_Suffix
+    let isSaga (name: string) = name.Contains(SAGA_Suffix)
 
     [<Literal>]
     let SagaStarterName = "SagaStarter"
@@ -184,7 +187,7 @@ module SagaStarter =
     let toSendMessage mediator (originator:IActorRef<_>) cid event =
         let cid = toCidWithExisting (originator.Path.Name) event.CorrelationId 
         let message =
-            Send(SagaStarterPath, (event, untyped originator, cid) |> toCheckSagas)
+            Send(SagaStarterPath, (event, untyped originator, cid) |> toCheckSagas,true)
 
         (mediator <? (message)) |> Async.RunSynchronously |> ignore
         event
@@ -201,7 +204,7 @@ module SagaStarter =
                 sender <! (event)
 
         mediator <! Publish(self.Path.Name, event)
-        mediator <! Publish(self.Path.Name + "~" + cid, event)
+        mediator <! Publish(self.Path.Name + CID_Seperator + cid, event)
 
     let cont (mediator) =
         mediator <! box (Send(SagaStarterPath, Continue |> Command,true))
@@ -326,7 +329,7 @@ module CommandHandler =
                             | Execute cd ->
                                 mediator
                                 <! box (
-                                    Subscribe(cd.EntityRef.EntityId + "~" + cd.Cmd.CorrelationId, untyped mailbox.Self)
+                                    Subscribe(cd.EntityRef.EntityId + CID_Seperator + cd.Cmd.CorrelationId, untyped mailbox.Self)
                                 )
                                 cd
 
