@@ -130,25 +130,25 @@ let CID_Seperator = "~"
 
 let shardResolver = fun _ -> DEFAULT_SHARD
 
+type PrefixConversion = PrefixConversion of ((string -> string) option)
 module SagaStarter =
 
     let removeSaga (name: string) =
-        let first = name.Replace(SAGA_Suffix,"")
-        let index = first.IndexOf('_')
-        if index >0 then
-            first.Substring(index + 1)
+        let index = name.IndexOf(SAGA_Suffix)
+        if index > 0 then
+            name.Substring(0,index)
         else
-            first
+            name
 
     let toOriginatorName (name: string) =
         let sagaRemoved = removeSaga name
-        let index = sagaRemoved.IndexOf(CID_Seperator)
-        sagaRemoved.Substring(0, index)
+        // let index = sagaRemoved.IndexOf(CID_Seperator)
+        // sagaRemoved.Substring(0, index)
+        sagaRemoved
 
     let toRawGuid (name: string) =
-        let name  = name.Replace(SAGA_Suffix,"")
         let index = name.LastIndexOf(CID_Seperator)
-        name.Substring(index + 1)
+        name.Substring(index + 1).Replace(SAGA_Suffix,"")
 
     let toNewCid name = name + CID_Seperator + Guid.NewGuid().ToString()
 
@@ -163,7 +163,7 @@ module SagaStarter =
         originator + CID_Seperator + guid
 
     let cidToSagaName (name: string) = name + SAGA_Suffix
-    let isSaga (name: string) = name.Contains(SAGA_Suffix)
+    let isSaga (name: string) = name.EndsWith(SAGA_Suffix)
 
     [<Literal>]
     let SagaStarterName = "SagaStarter"
@@ -221,22 +221,21 @@ module SagaStarter =
         | :? SubscribeAck as s when s.Subscribe.Topic = originatorName -> Some msg
         | _ -> None
 
-    let actorProp (sagaCheck: obj -> (((string -> IEntityRef<_>) * string) list)) (mailbox: Actor<_>) =
+    let actorProp (sagaCheck: obj -> (((string -> IEntityRef<_>) * PrefixConversion) list)) (mailbox: Actor<_>) =
         let rec set (state: Map<string, (Actor.IActorRef * string list)>) =
 
-            let startSaga cid (originator: Actor.IActorRef) (list: ((string -> IEntityRef<_>) * string) list) =
+            let startSaga cid (originator: Actor.IActorRef) (list: ((string -> IEntityRef<_>) * PrefixConversion) list) =
                 let sender = untyped <| mailbox.Sender()
 
                 let sagas = [
                     for (factory, prefix) in list do
                         let saga =
                             cid
-                            |> cidToSagaName
                             |> fun name ->
                                 match prefix with
-                                | null
-                                | "" -> name
-                                | other -> sprintf "%s_%s" other name
+                                | PrefixConversion None -> name
+                                | PrefixConversion (Some f) -> 
+                                      originator.Path.Name + SAGA_Suffix + (f (name |> toRawGuid))
                             |> factory
 
                         saga <! box (ShardRegion.StartEntity(saga.EntityId))
