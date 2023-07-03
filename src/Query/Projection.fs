@@ -51,7 +51,7 @@ let inline encoder<'T> =
 let inline decoder<'T> =
     Decode.Auto.generateDecoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
 
-type OrderEvent = OrderPlaced of Order
+type OrderEvent = OrderPlaced of Order | DeliveryStatusSet of DeliveryStatus
 
 type DataEvent = OrderEvent of OrderEvent
   
@@ -84,10 +84,10 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     let encoded= Encode.Auto.toString(order.Pizzas, extra = extraThoth)
                     let row = ctx.Main.Orders.``Create(CreatedTime, CurrentLocation, DeliveryAddress, DeliveryLocation, DeliveryStatus, Offset, Pizzas, UserId, Version)``(
                         order.CreatedTime,
-                        order.CurrentLocation.ToString(),
-                        order.DeliveryAddress.ToString(),
-                        order.DeliveryLocation.ToString(),
-                        order.DeliveryStatus.ToString(),
+                        order.CurrentLocation |> Encode.Auto.toString,
+                        order.DeliveryAddress |> Encode.Auto.toString,
+                        order.DeliveryLocation|> Encode.Auto.toString,
+                        order.DeliveryStatus|> Encode.Auto.toString,
                         offsetValue,
                         encoded,
                         order.UserId.Value,
@@ -95,9 +95,16 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     )
                     row.OrderId <- order.OrderId.Value.Value
                     Some(OrderEvent(OrderPlaced order))
-                | _ -> None
-
-
+                | Command.Domain.Order.DeliveryStatusSet status ->
+                    let order = 
+                        query {
+                            for o in ctx.Main.Orders do
+                                where (o.OrderId = id)
+                                exactlyOne
+                        }
+                    order.DeliveryStatus <- status |> Encode.Auto.toString
+                    Some(OrderEvent(DeliveryStatusSet status))
+                    
         | _ -> None
     let user =
         query {
