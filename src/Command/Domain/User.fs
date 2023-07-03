@@ -101,7 +101,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                     match commandDetails with
                     | (VefifyLogin incomingCode) ->
                         let verficiationEvent =
-                            if mailbox.Pid.Contains(@"_at_") then
+                            if mailbox.Pid.Contains("@" |> Uri.EscapeDataString) then
                                 if incomingCode.IsNone then VerificationSucceeded
                                 else
                                 match state.Verification with
@@ -113,9 +113,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                                 let id =
                                     mailbox.Pid
                                         .Substring(lastSlash + 1)
-                                        .Replace("_at_", "@")
-                                        .Replace("_dot_", ".")
-                                        .Replace("_plus_", "+")
+                                        |> Uri.UnescapeDataString
 
                                 if
                                     //(BestFitBox.Command.MailSender.checkSMSVerification config id incomingCode.Value.Value) = "approved"
@@ -144,9 +142,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                             let id =
                                 mailbox.Pid
                                     .Substring(lastSlash + 1)
-                                    .Replace("_at_", "@")
-                                    .Replace("_dot_", ".")
-                                    .Replace("_plus_", "+")
+                                    |> Uri.UnescapeDataString
 
                             // BestFitBox.Command.MailSender.sendMessage
                             //     config

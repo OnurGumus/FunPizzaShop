@@ -12,6 +12,7 @@ open Command.Serialization
 open FunPizzaShop.Domain.Model.Authentication
 open FunPizzaShop
 open FunPizzaShop.Domain.Model.Pizza
+open Command.Common
 
 
 [<Literal>]
@@ -61,16 +62,11 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
     let offsetValue = (envelop.Offset :?> Sequence).Value
     let lastSlash = envelop.PersistenceId.LastIndexOf("/")
 
-    let userId (userId: UserId) =
-        let s = userId.Value
-        s.Replace("_at_", "@").Replace("_dot_", ".").Replace("_plus_", "+")
 
     let id =
         envelop.PersistenceId
             .Substring(lastSlash + 1)
-            .Replace("_at_", "@")
-            .Replace("_dot_", ".")
-            .Replace("_plus_", "+")
+            |> System.Uri.UnescapeDataString
 
     let dataEvent =
         match envelop.Event with

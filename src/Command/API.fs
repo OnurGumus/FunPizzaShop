@@ -14,11 +14,7 @@ open FunPizzaShop.Command.Domain
 open FunPizzaShop.Domain.Model.Pizza
 
 let createCommandSubscription (domainApi: IDomain) factory (id: string) command filter =
-    let id =
-        (id.Replace(".", "_dot_").Replace("@", "_at_").Replace("+", "_plus_"))
-        |> Uri.EscapeDataString
-
-    let corID = id |> SagaStarter.toNewCid
+    let corID = id |> Uri.EscapeDataString |> SagaStarter.toNewCid
     let actor = factory id
 
     let commonCommand: Command<_> = {

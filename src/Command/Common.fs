@@ -133,18 +133,12 @@ let shardResolver = fun _ -> DEFAULT_SHARD
 type PrefixConversion = PrefixConversion of ((string -> string) option)
 module SagaStarter =
 
-    let removeSaga (name: string) =
+    let toOriginatorName (name: string) =
         let index = name.IndexOf(SAGA_Suffix)
         if index > 0 then
             name.Substring(0,index)
         else
             name
-
-    let toOriginatorName (name: string) =
-        let sagaRemoved = removeSaga name
-        // let index = sagaRemoved.IndexOf(CID_Seperator)
-        // sagaRemoved.Substring(0, index)
-        sagaRemoved
 
     let toRawGuid (name: string) =
         let index = name.LastIndexOf(CID_Seperator)
@@ -328,7 +322,7 @@ module CommandHandler =
                             | Execute cd ->
                                 mediator
                                 <! box (
-                                    Subscribe(cd.EntityRef.EntityId + CID_Seperator + cd.Cmd.CorrelationId, untyped mailbox.Self)
+                                    Subscribe((cd.EntityRef.EntityId |> System.Uri.EscapeDataString) + CID_Seperator + cd.Cmd.CorrelationId, untyped mailbox.Self)
                                 )
                                 cd
 
