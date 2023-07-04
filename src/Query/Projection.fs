@@ -38,7 +38,7 @@ let connectionStringReal = @"Data Source=" + @"Database/FunPizzaShop.db;"
 
 type Sql =
     SqlDataProvider<DatabaseProviderTypes.SQLITE, SQLiteLibrary=SQLiteLibrary.MicrosoftDataSqlite, ConnectionString=connectionString, ResolutionPath=resolutionPath,
-  //  ContextSchemaPath=schemaLocation,
+    ContextSchemaPath=schemaLocation,
     CaseSensitivityChange=CaseSensitivityChange.ORIGINAL>
 
 let ctx = Sql.GetDataContext(connectionString)
