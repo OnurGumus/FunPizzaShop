@@ -17,7 +17,8 @@ open Thoth.Json.Net
 open NodaTime
 open FunPizzaShop.Domain.Model.Pizza
 open Command.Common.SagaStarter
-
+open System
+open Akkling.Cluster.Sharding
 type State =
     | NotStarted
     | Started 
@@ -60,6 +61,9 @@ let actorProp
 
         let completeDelivery () =
             Delivery.SetAsDelivered |> createCommand
+
+        let updateLocation (latLong) =
+            Delivery.UpdateLocation(latLong )  |> createCommand
       
         let orderActor (orderId: OrderId) =
             let toEvent ci = Common.toEvent clockInstance ci
@@ -96,7 +100,27 @@ let actorProp
 
             | WaitingForOrderDeliveryCompleted _ ->
                 let deliveryId = state.Data.DeliveryId.Value
-                deliveryActor(deliveryId) <! completeDelivery()
+                let target =  (deliveryActor(deliveryId))
+                let shard = ClusterSharding.Get(mailbox.System).ShardRegion("Delivery")       
+
+                let message = { 
+                    ShardId = target.ShardId; 
+                    EntityId = target.EntityId; 
+                    Message = completeDelivery() } :ShardEnvelope
+                mailbox.System.Scheduler.
+                    ScheduleTellOnceCancelable((TimeSpan.FromSeconds(20)), shard, message, mailbox.UntypedContext.Self) 
+                    |> ignore
+                for i = 0 to 5 do 
+                    let latLong = { Latitude = (i * 10)|> float; Longitude = (i * 10) |> float }:LatLong
+                    let message = { 
+                        ShardId = target.ShardId; 
+                        EntityId = target.EntityId; 
+                        Message = updateLocation(latLong) } :ShardEnvelope
+                    mailbox.System.Scheduler.
+                        ScheduleTellOnceCancelable (TimeSpan.FromSeconds(3. * float(i)), shard, message, mailbox.UntypedContext.Self) 
+                        |> ignore
+                    
+               
                 None
             | WaitingForOrderDeliveryStatusSet ->
                 orderActor(state.Data.Order.Value) <! setDeliveryStatusForOrder(DeliveryStatus.Delivered)
@@ -169,9 +193,11 @@ let actorProp
                         let state =
                             WaitingForOrderDeliveryStatusSet  |> StateChanged
                         return! state |> box |> Persist
-                    | e ->
-                        log.Warning("Unhandled event in delivery saga {@Event}", box e)
+                    | Delivery.LocationUpdated _ ->
                         return! set state
+                    // | e ->
+                    //     log.Warning("Unhandled event in delivery saga {@Event}", box e)
+                    //     return! set state
 
                 | e ->
                     log.Warning("Unhandled event in global {@Event}", e)
