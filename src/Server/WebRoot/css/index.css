@@ -427,6 +427,73 @@ animation;
     }
 
 
+    .orders-list .list-group-item {
+        display: flex;
+        border:1px solid #eee;
+        border-top: none;
+    }
+    .orders-list .list-group-item:first-child {
+        border-top: 1px solid #eee;
+    }
+
+    .orders-list .col {
+        margin: auto;
+    }
+
+    .orders-list h5 {
+        color: #c03939;
+        font-size: 1.3rem;
+        font-weight: 300;
+        margin: 0.2rem 0 0 0;
+        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+        text-transform: uppercase;
+    }
+
+    .track-order {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .track-order > div {
+        overflow-y: hidden;
+    }
+
+    .track-order-title {
+        background-color: #eee;
+        display: flex;
+        align-items: center;
+        padding: 1rem 3rem;
+    }
+
+    .track-order-title h2 {
+        color: #c03939;
+        font-size: 1.3rem;
+        font-weight: 300;
+        margin: 0rem;
+        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+        text-transform: uppercase;
+    }
+
+    .track-order-body {
+        flex-grow: 1;
+        display: flex;
+    }
+
+    .track-order-details {
+        overflow-y: auto;
+        padding: 1.5rem 3rem;
+        flex-grow: 1;
+    }
+
+    .track-order-map {
+        width: 350px;
+        flex-shrink: 0;
+    }
+
+
     @media (width < 768px) {
         main {
             flex-direction: column;

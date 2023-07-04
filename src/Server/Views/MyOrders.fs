@@ -13,15 +13,31 @@ let view (ctx:HttpContext) (env:#_) (dataLevel: int) = task{
     let li = 
         orders |> List.map(fun order ->
             html $"""
-                <li>
-                  { order.CreatedTime }  { order.DeliveryStatus }
-                </li>
+            <div class="list-group-item">
+                <div class="col">
+                    <h5> { order.CreatedTime } </h5>
+                    Items:
+                    <strong> { order.Pizzas.Length } </strong>;
+                    Total price:
+                    <strong>£{ order.FormattedTotalPrice }</strong>
+                </div>
+                <div class="col">
+                    Status: <strong>{ order.DeliveryStatus }</strong>
+                </div>
+                <div class="col flex-grow-0">
+                    <a href='myOrders/{ order.OrderId.Value }/{ order.Version.Value }/+' class="btn btn-success">
+                        Track &gt;
+                    </a>
+                </div>
+            </div>
             """)
         |> String.concat "\r\n"
     return
         html $""" 
-            <ul class="pizza-cards">
-                    {li}
-            </ul>
+        <div class=main>
+        <div class="list-group orders-list">
+            {li}
+        </div>
+        </div>
         """
 }
