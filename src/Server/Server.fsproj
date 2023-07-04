@@ -15,6 +15,7 @@
     <Compile Include="Query.fs" />
     <Compile Include="Command.fs" />
     <Compile Include="Views\Common.fs" />
+    <Compile Include="Views\MyOrders.fs" />
     <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />
     <Compile Include="Handlers\Authentication.fs" />

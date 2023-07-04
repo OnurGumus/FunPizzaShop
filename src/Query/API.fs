@@ -34,6 +34,8 @@ open Serilog
 open System.Linq
 open FunPizzaShop.Domain
 open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Domain.Model.Authentication
+open Command.Serialization
 
 let api (config: IConfiguration) actorApi =
     let connString = config.GetSection(Constants.ConnectionString).Value
@@ -196,6 +198,29 @@ let api (config: IConfiguration) actorApi =
                     |> List.ofSeq
                     |> box
 
+                elif typeof<'t> = typeof<Order> then
+                    let items =
+                        query {
+                            for c in ctx.Main.Orders do
+                                select c
+                        }
+
+                    augment <@ items @>
+                    |> Seq.map (fun x ->
+                        {
+                                OrderId = x.OrderId |> ShortString.TryCreate |> forceValidate |> OrderId
+                                UserId = x.UserId  |> UserId.TryCreate |> forceValidate
+                                CreatedTime = x.CreatedTime 
+                                DeliveryAddress = x.DeliveryAddress |>  Decode.Auto.fromString |> forceValidateWithString
+                                DeliveryLocation = x.DeliveryLocation |>  Decode.Auto.fromString |> forceValidateWithString
+                                Pizzas =  Decode.Auto.fromString (x.Pizzas, extra = extraThoth) |> forceValidateWithString
+                                Version = x.Version |> Version
+                                CurrentLocation = x.CurrentLocation |>  Decode.Auto.fromString |> forceValidateWithString
+                                DeliveryStatus = x.DeliveryStatus |>  Decode.Auto.fromString |> forceValidateWithString
+                        }
+                        : Order)
+                    |> List.ofSeq
+                    |> box
                
                 else
                     failwith "not implemented"

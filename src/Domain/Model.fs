@@ -13,6 +13,12 @@ let inline forceValidate (e) =
     | Error x ->
         let errors = x |> List.map (fun x -> x.ToString()) |> String.concat ", "
         invalidOp errors
+        
+let inline forceValidateWithString (e) =
+    match e with
+    | Ok x -> x
+    | Error x ->
+        invalidOp x
 
 type Predicate =
     | Greater of string * int64
