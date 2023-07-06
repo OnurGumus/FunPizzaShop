@@ -427,27 +427,30 @@ animation;
     }
 
 
-    .orders-list .list-group-item {
-        display: flex;
-        border:1px solid #eee;
-        border-top: none;
-    }
-    .orders-list .list-group-item:first-child {
-        border-top: 1px solid #eee;
-    }
-
-    .orders-list .col {
-        margin: auto;
+    .orders-list {
+        .list-group-item {
+            display: flex;
+            border:1px solid #eee;
+            border-top: none;
+            &:first-child {
+                border-top: 1px solid #eee;
+            }
+        }
     }
 
-    .orders-list h5 {
-        color: #c03939;
-        font-size: 1.3rem;
-        font-weight: 300;
-        margin: 0.2rem 0 0 0;
-        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
+    .orders-list {
+        .col {
+            margin: auto;
+        }
+        :is(h5) {
+            color: #c03939;
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin: 0.2rem 0 0 0;
+            text-transform: uppercase;
+        }
     }
+
 
     .track-order {
         background-color: white;
@@ -455,27 +458,26 @@ animation;
         height: 100%;
         display: flex;
         flex-direction: column;
+        > div {
+            overflow-y: hidden;
+        }
     }
 
-    .track-order > div {
-        overflow-y: hidden;
-    }
 
     .track-order-title {
         background-color: #eee;
         display: flex;
         align-items: center;
         padding: 1rem 3rem;
+        :is(h2) {
+            color: #c03939;
+            font-size: 1.3rem;
+            font-weight: 300;
+            margin: 0rem;
+            text-transform: uppercase;
+        }
     }
 
-    .track-order-title h2 {
-        color: #c03939;
-        font-size: 1.3rem;
-        font-weight: 300;
-        margin: 0rem;
-        font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
-        text-transform: uppercase;
-    }
 
     .track-order-body {
         flex-grow: 1;
@@ -489,7 +491,7 @@ animation;
     }
 
     .track-order-map {
-        width: 350px;
+        inline-size: 350px;
         flex-shrink: 0;
     }
 
