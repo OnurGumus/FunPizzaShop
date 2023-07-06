@@ -24,6 +24,13 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
                 let! lay = (layout ctx view)
                 return! htmlString lay next ctx
             }
+    let trackOrder =
+        fun (next: HttpFunc) (ctx: HttpContext) ->
+            task {
+                let view = TrackOrder.view ctx env
+                let! lay = (layout ctx view)
+                return! htmlString lay next ctx
+            }
 
     choose [ 
         (authenticationHandler env)
@@ -36,6 +43,10 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
             >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
             >=> routeCi "/myOrders"
             >=>(myOrders)
+        routeCi "/trackOrder"
+            >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
+            >=>(trackOrder)
+        
     ]
 
 
