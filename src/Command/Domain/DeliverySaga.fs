@@ -128,9 +128,9 @@ let actorProp
                 orderActor(state.Data.Order.Value) <! setDeliveryStatusForOrder(DeliveryStatus.Delivered)
                 None
             | Completed -> 
-                mailbox.Parent() <! Passivate(Actor.PoisonPill.Instance)
+                mailbox.Parent() <! Akka.Cluster.Sharding.Passivate(Actor.PoisonPill.Instance)
+                log.Info("DeliverySaga Completed")
                 None
-
         actor {
             let! msg = mailbox.Receive()
 

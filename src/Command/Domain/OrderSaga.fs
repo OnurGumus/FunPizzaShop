@@ -96,6 +96,7 @@ let actorProp
                 None
             | Completed -> 
                 mailbox.Parent() <! Passivate(Actor.PoisonPill.Instance)
+                log.Info("OrderSaga Completed")
                 None
             | WaitingForOrderPlaced _ -> None
 

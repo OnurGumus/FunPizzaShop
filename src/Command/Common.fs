@@ -157,7 +157,7 @@ module SagaStarter =
         originator + CID_Seperator + guid
 
     let cidToSagaName (name: string) = name + SAGA_Suffix
-    let isSaga (name: string) = name.EndsWith(SAGA_Suffix)
+    let isSaga (name: string) = name.Contains(SAGA_Suffix)
 
     [<Literal>]
     let SagaStarterName = "SagaStarter"
@@ -189,9 +189,10 @@ module SagaStarter =
     let publishEvent (mailbox: Actor<_>) (mediator) event (cid) =
         let sender = mailbox.Sender()
         let self = mailbox.Self
-        Log.Debug("Publishing event {event} to {self}", event, self.Path.Name)
-
+        Log.Debug("Publishing event {event} from {self}", event, self.Path.ToString())
+        Log.Debug("sender: {sender}", sender.Path.ToString())
         if sender.Path.Name |> isSaga then
+           
             let originatorName = sender.Path.Name |> toOriginatorName
 
             if originatorName <> self.Path.Name then
