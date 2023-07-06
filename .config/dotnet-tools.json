@@ -15,13 +15,13 @@
       ]
     },
     "telplin": {
-      "version": "0.7.0",
+      "version": "8.0.1",
       "commands": [
         "telplin"
       ]
     },
     "fantomas": {
-      "version": "6.0.5",
+      "version": "6.1.1",
       "commands": [
         "fantomas"
       ]
