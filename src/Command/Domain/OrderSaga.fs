@@ -17,6 +17,7 @@ open Thoth.Json.Net
 open NodaTime
 open FunPizzaShop.Domain.Model.Pizza
 open Command.Common.SagaStarter
+open Akka.Event
 
 type State =
     | NotStarted
@@ -44,7 +45,7 @@ let actorProp
     (mailbox: Eventsourced<obj>)
     =
     let cid = (mailbox.Self.Path.Name |> SagaStarter.toCid)
-    let log = Log.ForContext("OrderSaga", mailbox.Self.Path.Name)
+    let log = mailbox.UntypedContext.GetLogger()
     let config = env :> IConfiguration
     let apiKey = config.GetSection("config:APIKEY").Value
 
@@ -101,7 +102,7 @@ let actorProp
         actor {
             let! msg = mailbox.Receive()
 
-            log.Information(
+            log.Info(
                 "OrderSaga Message {MSG}, State: {@State}, name:{@name}",
                 msg,
                 state,

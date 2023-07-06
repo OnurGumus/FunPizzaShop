@@ -43,19 +43,23 @@ type Sql =
 
 let ctx = Sql.GetDataContext(connectionString)
 
-
-
-let inline encoder<'T> =
+let inline encode<'T> =
     Encode.Auto.generateEncoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
+    >> Encode.toString 0
 
-let inline decoder<'T> =
+let inline decode<'T> =
     Decode.Auto.generateDecoderCached<'T> (caseStrategy = CamelCase, extra = extraThoth)
+    |> Decode.fromString
 
-type OrderEvent = OrderPlaced of Order | DeliveryStatusSet of DeliveryStatus
+
+type OrderEvent = 
+    | OrderPlaced of Order 
+    | DeliveryStatusSet of DeliveryStatus
+    | LocationUpdated of OrderId * LatLong
 
 type DataEvent = OrderEvent of OrderEvent
   
-
+open FunPizzaShop.Command.Domain
 let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
     let ctx = Sql.GetDataContext(connectionString)
     Log.Verbose("Handle event {@Envelope}", envelop)
@@ -71,23 +75,20 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
     let dataEvent =
         match envelop.Event with
   
-        | :? Command.Common.Event<Command.Domain.User.Event> as {
-                    EventDetails = eventDetails
-                    Version = v
-            } -> None
-        | :? Command.Common.Event<Command.Domain.Order.Event> as {
+        | :? Command.Common.Event<User.Event> -> None
+        | :? Command.Common.Event<Order.Event> as {
                     EventDetails = eventDetails
                     Version = v
             } -> 
                 match eventDetails with
-                | Command.Domain.Order.OrderPlaced order ->
-                    let encoded= Encode.Auto.toString(order.Pizzas, extra = extraThoth)
+                | Order.OrderPlaced order ->
+                    let encoded=  order.Pizzas |> encode
                     let row = ctx.Main.Orders.``Create(CreatedTime, CurrentLocation, DeliveryAddress, DeliveryLocation, DeliveryStatus, Offset, Pizzas, UserId, Version)``(
                         order.CreatedTime,
-                        order.CurrentLocation |> Encode.Auto.toString,
-                        order.DeliveryAddress |> Encode.Auto.toString,
-                        order.DeliveryLocation|> Encode.Auto.toString,
-                        order.DeliveryStatus|> Encode.Auto.toString,
+                        order.CurrentLocation |> encode,
+                        order.DeliveryAddress |> encode,
+                        order.DeliveryLocation|> encode,
+                        order.DeliveryStatus |> encode,
                         offsetValue,
                         encoded,
                         order.UserId.Value,
@@ -95,15 +96,33 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     )
                     row.OrderId <- order.OrderId.Value.Value
                     Some(OrderEvent(OrderPlaced order))
-                | Command.Domain.Order.DeliveryStatusSet status ->
+                | Order.DeliveryStatusSet status ->
                     let order = 
                         query {
                             for o in ctx.Main.Orders do
                                 where (o.OrderId = id)
                                 exactlyOne
                         }
-                    order.DeliveryStatus <- status |> Encode.Auto.toString
+                    order.DeliveryStatus <- status |> encode
                     Some(OrderEvent(DeliveryStatusSet status))
+
+        | :? Command.Common.Event<Delivery.Event> as {
+                    EventDetails = eventDetails
+                    Version = v
+            } -> 
+                match eventDetails with
+                | Delivery.LocationUpdated (orderId, location) ->
+                    let order = 
+                        query {
+                            for o in ctx.Main.Orders do
+                                where (o.OrderId = orderId.Value.Value)
+                                exactlyOne
+                        }
+                    order.CurrentLocation <- location |> encode
+                    Some(OrderEvent(LocationUpdated(orderId, location)))
+                | Delivery.DeliveryStarted _ 
+                | Delivery.Delivered _ ->
+                    None
                     
         | _ -> None
     let user =
@@ -122,16 +141,15 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
     | Some dataEvent -> subQueue.OfferAsync(dataEvent).Wait()
     | _ -> ()
 
-
-let handleEventWrapper (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
+open Command.Actor
+let handleEventWrapper (connectionString: string) (actorApi:IActor) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
     try
         handleEvent connectionString subQueue envelop
     with ex ->
         Log.Error(ex, "Error during event handling")
+        actorApi.System.Terminate().Wait()
+        Log.CloseAndFlush()
         System.Environment.FailFast("Failfasting Error during event handling")
-
-open Akkling.Streams
-open Command.Actor
 
 let readJournal system =
     PersistenceQuery
@@ -150,7 +168,6 @@ let init (connectionString: string) (actorApi: IActor) =
                 select o.OffsetCount
                 exactlyOne
         }
-
     let source =
         (readJournal actorApi.System)
             .EventsByTag("default", Offset.Sequence(offsetCount))
@@ -158,9 +175,9 @@ let init (connectionString: string) (actorApi: IActor) =
     System.Threading.Thread.Sleep(100)
 
     Log.Information("Journal started")
-    let subQueue = Source.queue OverflowStrategy.Fail 256
+    let subQueue = Source.queue OverflowStrategy.Fail 1024
 
-    let subSink = (Sink.broadcastHub 256)
+    let subSink = (Sink.broadcastHub 1024)
 
     let runnableGraph = subQueue |> Source.toMat subSink Keep.both
 
@@ -170,7 +187,7 @@ let init (connectionString: string) (actorApi: IActor) =
     |> Source.recover (fun ex ->
         Log.Error(ex, "Error during event reading pipeline")
         None)
-    |> Source.runForEach actorApi.Materializer (handleEventWrapper connectionString queue)
+    |> Source.runForEach actorApi.Materializer (handleEventWrapper connectionString actorApi queue)
     |> Async.StartAsTask
     |> ignore
 

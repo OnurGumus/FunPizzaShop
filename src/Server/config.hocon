@@ -45,6 +45,7 @@ config {
     loglevel = INFO
     log-config-on-start = false
     loggers=["Akka.Logger.Serilog.SerilogLogger, Akka.Logger.Serilog"]
+    logger-formatter="Akka.Logger.Serilog.SerilogLogMessageFormatter, Akka.Logger.Serilog"
 
     actor {
       debug {

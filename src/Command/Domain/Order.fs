@@ -13,7 +13,7 @@ open Actor
 open Microsoft.Extensions.Configuration
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.Model
-
+open Akka.Event
 
 type Command =
     | PlaceOrder of Order
@@ -32,12 +32,12 @@ type State = {
     interface IDefaultTag
 
 let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
-    let log = Log.ForContext("OrderActor", mailbox.Self.Path.Name)
+    let log = mailbox.UntypedContext.GetLogger()
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self
 
     let apply (event: Event) (state:State) =
-        log.Verbose("Apply Message {@Event}, State: @{State}", event, state)
+        log.Debug("Apply Message {@Event}, State: @{State}", event, state)
 
         match event with
         | OrderPlaced order -> { state with Order = Some order }
@@ -49,7 +49,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
     let rec set (state: State) =
         actor {
             let! msg = mailbox.Receive()
-            log.Information("Message {MSG}, State: {@State}", box msg, state)
+            log.Debug("Message {MSG}, State: {@State}", box msg, state)
 
             match msg with
             | PersistentLifecycleEvent _

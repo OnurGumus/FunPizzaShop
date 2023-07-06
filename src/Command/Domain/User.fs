@@ -13,8 +13,8 @@ open Actor
 open Microsoft.Extensions.Configuration
 open FunPizzaShop.Domain.Model.Authentication
 open FunPizzaShop.Domain.Model
-
-
+open Akka.Logger.Serilog
+open Akka.Event
 type Command =
     | Login
     | VefifyLogin of VerificationCode option
@@ -37,12 +37,12 @@ type State = {
     interface IDefaultTag
 
 let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
-    let log = Log.ForContext("UserActor", mailbox.Self.Path.Name)
+    let log = mailbox.UntypedContext.GetLogger()
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self
 
     let apply (event: Event) (state:State) =
-        log.Verbose("Apply Message {@Event}, State: @{State}", event, state)
+        log.Debug("Apply Message {@Event}, State: @{State}", event, state)
 
         match event with
         | LoginSucceeded(code) ->
@@ -56,7 +56,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
     let rec set (state: State) =
         actor {
             let! msg = mailbox.Receive()
-            log.Information("Message {MSG}, State: {@State}", box msg, state)
+            log.Debug("Message {MSG}, State: {@State}", box msg, state)
 
             match msg with
             | PersistentLifecycleEvent _
@@ -154,7 +154,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                             let e = LoginSucceeded( Some verificationCode)
                             return! toEvent ci v e |> box |> Persist
                         with ex ->
-                            Log.Error(ex, "Error sending verification code")
+                            log.Error(ex, "Error sending verification code")
                             let e2 = LoginFailed
                             return! toEvent ci v e2 |> box |> Persist
 

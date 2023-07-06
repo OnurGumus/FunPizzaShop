@@ -33,7 +33,6 @@ nuget FluentMigrator.Runner.SQLite
 nuget FluentMigrator.Runner
 nuget FluentMigrator
 nuget Giraffe.SerilogExtensions
-nuget SwaggerProvider 2.0.0-beta9
 nuget FsToolkit.ErrorHandling
 nuget FsConfig
 nuget Stripe.net

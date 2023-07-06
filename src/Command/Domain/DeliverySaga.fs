@@ -19,6 +19,8 @@ open FunPizzaShop.Domain.Model.Pizza
 open Command.Common.SagaStarter
 open System
 open Akkling.Cluster.Sharding
+open Akka.Event
+
 type State =
     | NotStarted
     | Started 
@@ -45,7 +47,7 @@ let actorProp
     (mailbox: Eventsourced<obj>)
     =
     let cid = (mailbox.Self.Path.Name |> SagaStarter.toCid)
-    let log = Log.ForContext("DeliverySaga", mailbox.Self.Path.Name)
+    let log = mailbox.UntypedContext.GetLogger()
     let config = env :> IConfiguration
 
     let rec set (state: SagaState) =
@@ -132,7 +134,7 @@ let actorProp
         actor {
             let! msg = mailbox.Receive()
 
-            log.Information(
+            log.Info(
                 "DeliverySaga Message {MSG}, State: {@State}, name:{@name}",
                 msg,
                 state,

@@ -211,12 +211,12 @@ let api (config: IConfiguration) actorApi =
                                 OrderId = x.OrderId |> ShortString.TryCreate |> forceValidate |> OrderId
                                 UserId = x.UserId  |> UserId.TryCreate |> forceValidate
                                 CreatedTime = x.CreatedTime 
-                                DeliveryAddress = x.DeliveryAddress |>  Decode.Auto.fromString |> forceValidateWithString
-                                DeliveryLocation = x.DeliveryLocation |>  Decode.Auto.fromString |> forceValidateWithString
-                                Pizzas =  Decode.Auto.fromString (x.Pizzas, extra = extraThoth) |> forceValidateWithString
+                                DeliveryAddress = x.DeliveryAddress |> decode |> forceValidateWithString
+                                DeliveryLocation = x.DeliveryLocation |> decode |> forceValidateWithString
+                                Pizzas =  x.Pizzas |> decode |> forceValidateWithString
                                 Version = x.Version |> Version
-                                CurrentLocation = x.CurrentLocation |>  Decode.Auto.fromString |> forceValidateWithString
-                                DeliveryStatus = x.DeliveryStatus |>  Decode.Auto.fromString |> forceValidateWithString
+                                CurrentLocation = x.CurrentLocation |> decode |> forceValidateWithString
+                                DeliveryStatus = x.DeliveryStatus |>  decode |> forceValidateWithString
                         }
                         : Order)
                     |> List.ofSeq
