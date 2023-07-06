@@ -19,12 +19,11 @@ let inline forceValidateWithString (e) =
     | Ok x -> x
     | Error x ->
         invalidOp x
-
 type Predicate =
-    | Greater of string * int64
-    | GreaterOrEqual of string * int64
-    | Smaller of string * int64
-    | SmallerOrEqual of string * int64
+    | Greater of string * IComparable
+    | GreaterOrEqual of string * IComparable
+    | Smaller of string * IComparable
+    | SmallerOrEqual of string * IComparable
     | Equal of string * obj
     | NotEqual of string * obj
     | And of Predicate * Predicate

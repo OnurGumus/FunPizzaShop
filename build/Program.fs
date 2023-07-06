@@ -77,7 +77,6 @@ let initTargets () =
 
 
     Target.create "RunServer" (fun _ ->
-        let runTool = runTool Proc.run
         runDotNet "watch run" serverPath 
      )
 

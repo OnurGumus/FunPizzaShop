@@ -8,7 +8,7 @@ open Command.Serialization
 
 let view (env:#_) (dataLevel: int) = task{
     let query = env :> IQuery
-    let! pizzas = query.Query<PizzaSpecial> () 
+    let! pizzas = query.Query<PizzaSpecial> (filter = Greater("BasePrice",1m)) 
     let! toppings = query.Query<Topping> ()
     let serializedToppings = Encode.Auto.toString (toppings, extra = extraThoth)
     let li = 
