@@ -41,7 +41,7 @@ let rec update msg model =
                         DeliveryAddress = orderDetails.Address
                         Pizzas = orderDetails.Pizzas
                         UserId = model.UserId.Value
-                        OrderId = Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> OrderId
+                        OrderId =  OrderId.CreateNew()
                         CreatedTime = DateTime.UtcNow
                         DeliveryLocation =  {Latitude = 0.0; Longitude = 0.0 }
                         Version = Model.Version 0L

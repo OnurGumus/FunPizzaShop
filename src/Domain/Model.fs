@@ -243,14 +243,16 @@ module Pizza =
         member this.Value = 
                 let (OrderId orderId) = this 
                 orderId
-
+        static member CreateNew() =
+                    "Order_" + Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> OrderId
+        
     type DeliveryId =
-        | DeliveryId of ShortString
+        |DeliveryId of ShortString
         member this.Value = 
                 let (DeliveryId deliveryId) = this 
                 deliveryId
         static member CreateNew() =
-            Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> DeliveryId
+            "Delivery_" + Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> DeliveryId
 
     type Order =
         {
