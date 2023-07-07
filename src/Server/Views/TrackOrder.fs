@@ -7,7 +7,7 @@ open Thoth.Json.Net
 open Command.Serialization
 open Microsoft.AspNetCore.Http
 
-let view (ctx:HttpContext) (env:#_) (dataLevel: int) = task{
+let view  (env:#_) (ctx:HttpContext) (dataLevel: int) = task{
     
     return
         html $""" 

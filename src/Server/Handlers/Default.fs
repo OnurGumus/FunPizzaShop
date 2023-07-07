@@ -15,6 +15,7 @@ open Elmish
 type ServerMsg =
     | Remote of ClientToServer.Msg
     | SomeMsg
+    | ClientDisconnected
     
 type Model = NoModel
 
@@ -31,46 +32,44 @@ let update (clientDispatch:Dispatch<ServerToClient.Msg>) (msg:ServerMsg) (model:
 let brideServer =
     Bridge.mkServer endpoint init update
     |> Bridge.withConsoleTrace
+    |> Bridge.whenDown ClientDisconnected
     |> Bridge.run Giraffe.server
 
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
-    let defaultRoute =
+
+    let viewRoute view = 
         fun (next: HttpFunc) (ctx: HttpContext) ->
             task {
-                let view = Index.view env
-                let! lay = (layout ctx view)
-                return! htmlString lay next ctx
-            }
-            
-    let myOrders =
-        fun (next: HttpFunc) (ctx: HttpContext) ->
-            task {
-                let view = MyOrders.view ctx env
-                let! lay = (layout ctx view)
-                return! htmlString lay next ctx
-            }
-    let trackOrder =
-        fun (next: HttpFunc) (ctx: HttpContext) ->
-            task {
-                let view = TrackOrder.view ctx env
-                let! lay = (layout ctx view)
+                let! lay = (layout ctx (view ctx))
                 return! htmlString lay next ctx
             }
 
+    let defaultRoute = viewRoute (Index.view env)
+        
+    let myOrders = viewRoute (MyOrders.view env)
+    
+    let trackOrder = viewRoute (TrackOrder.view env)
+    let auth = requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
     choose [ 
-        brideServer
+        
         (authenticationHandler env)
         routeCi "/checkout" >=> defaultRoute 
         routeCi "/" >=> defaultRoute
+        
         routex "^.*OrderPizza.*$"
-            >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
+            >=> auth
             >=>(pizzaHandler env)
-        routex "^.*myOrders.*$"
-            >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
-            >=> routeCi "/myOrders"
+
+        routeCi "/myOrders"
+            >=> auth
             >=>(myOrders)
+
+        routex "^.*socket.*$"
+            >=> auth
+            >=> brideServer
+
         routeCi "/trackOrder"
-            >=>requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
+            >=> auth
             >=>(trackOrder)
         
     ]
