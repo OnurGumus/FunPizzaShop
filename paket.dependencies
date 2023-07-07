@@ -51,6 +51,8 @@ nuget Twilio
 nuget ThrottlingTroll
 nuget Google.Apis.Auth
 nuget Thoth.Json
+nuget Elmish.Bridge.Giraffe
+nuget FSharp.SystemTextJson
 
 group Client
     source https://api.nuget.org/v3/index.json
@@ -73,6 +75,8 @@ group Client
     nuget Fable.Promise
     nuget FSharp.Control.AsyncRx
     nuget Fable.Elmish.Browser
+    nuget Elmish.Bridge.Client
+
 
 group Build
     source https://api.nuget.org/v3/index.json

@@ -27,7 +27,6 @@ FluentMigrator.Runner
 FluentMigrator
 Serilog
 Giraffe.SerilogExtensions
-SwaggerProvider
 FsToolkit.ErrorHandling
 Stripe.net
 FSharp.Data
@@ -37,4 +36,5 @@ ExcelProvider
 Serilog.Sinks.Seq
 Microsoft.ApplicationInsights.AspNetCore
 ThrottlingTroll
+Elmish.Bridge.Giraffe
 Google.Apis.Auth

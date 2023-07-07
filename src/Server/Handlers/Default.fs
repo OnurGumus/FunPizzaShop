@@ -6,7 +6,32 @@ open FunPizzaShop.Server.Views
 open FunPizzaShop.Server.Handlers.Authentication
 open FunPizzaShop.Server.Handlers.Pizza
 open Microsoft.AspNetCore.Authentication.Cookies
+open FunPizzaShop.Domain.Constants
+open Elmish.Bridge
+open FunPizzaShop.Domain.API
+open Elmish
 
+
+type ServerMsg =
+    | Remote of ClientToServer.Msg
+    | SomeMsg
+    
+type Model = NoModel
+
+let init (clientDispatch:Dispatch<ServerToClient.Msg>) () =
+    printfn "init!!!!!!!!"
+    clientDispatch ServerToClient.ServerConnected
+    NoModel, Cmd.none
+
+let update (clientDispatch:Dispatch<ServerToClient.Msg>) (msg:ServerMsg) (model:Model) =
+    //hub.SendClientIf (fun x -> x < 3) ServerToClient.ServerConnected
+    NoModel, Cmd.none
+    
+   
+let brideServer =
+    Bridge.mkServer endpoint init update
+    |> Bridge.withConsoleTrace
+    |> Bridge.run Giraffe.server
 
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
     let defaultRoute =
@@ -33,6 +58,7 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
             }
 
     choose [ 
+        brideServer
         (authenticationHandler env)
         routeCi "/checkout" >=> defaultRoute 
         routeCi "/" >=> defaultRoute

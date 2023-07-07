@@ -20,22 +20,14 @@ open FunPizzaShop.Domain.Model
 open FunPizzaShop.Domain.Constants
 open CustomNavigation
 open FunPizzaShop.Domain
+open Elmish.Bridge
+open FunPizzaShop.Domain.API
 
 let private hmr = HMR.createToken ()
-
-module Server =
-    open Fable.Remoting.Client
-    open FunPizzaShop.Domain
-    open FunPizzaShop.Domain.Model.Pizza
-    let api: API.Order =
-        Remoting.createApi ()
-        |> Remoting.withRouteBuilder API.Route.builder
-        |> Remoting.buildProxy<API.Order>
 
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     match order with
     | Order.NoOrder -> ()
-   
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
@@ -44,6 +36,15 @@ let view (host:LitElement) (model:Model) dispatch =
             TrackOrder
         </div>
     """
+let mapClientMsg msg =
+    match msg with
+    | _ -> Remote msg
+
+let bc = 
+    Bridge.endpoint 
+        endpoint 
+        |>  Bridge.withUrlMode UrlMode.Replace 
+        |>  Bridge.withMapping mapClientMsg 
 
 [<LitElement("fps-trackorder")>]
 let LitElement () =
@@ -53,6 +54,7 @@ let LitElement () =
     )
     let program =
         Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
+        |> Program.withBridgeConfig bc
 #if DEBUG
         |> Program.withDebugger
         |> Program.withConsoleTrace

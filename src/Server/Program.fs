@@ -41,6 +41,7 @@ let errorHandler (ex: Exception) (ctx: HttpContext) =
     | :? System.Text.Json.JsonException -> clearResponse >=> setStatusCode 400 >=> text ex.Message
     | _ -> clearResponse >=> setStatusCode 500 >=> text ex.Message
 
+
 let configureCors (builder: CorsPolicyBuilder) =
     #if DEBUG
     builder
@@ -68,9 +69,10 @@ let configureApp (app: IApplicationBuilder) =
     |> ignore
 
     let layout ctx = Layout.view ctx (appEnv) (env.IsDevelopment())
-
+    let webApp  =
+            webAppWrapper appEnv layout
     let sConfig = Serilog.configure errorHandler 
-    let handler = SerilogAdapter.Enable(webAppWrapper appEnv layout, sConfig)
+    let handler = SerilogAdapter.Enable(webApp, sConfig)
 
     (match isDevelopment with
      | true -> app.UseDeveloperExceptionPage()
@@ -78,6 +80,7 @@ let configureApp (app: IApplicationBuilder) =
         .UseCors(configureCors)
         .UseStaticFiles(staticFileOptions)
         .UseThrottlingTroll(Throttling.setOptions)
+        .UseWebSockets() 
         .UseGiraffe(handler)
 
     if env.IsDevelopment() then

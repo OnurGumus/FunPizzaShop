@@ -14,9 +14,7 @@ FSharp.Interop.Dynamic
 Microsoft.Extensions.Configuration
 Serilog
 FsHttp
-FSharp.SystemTextJson
 Thoth.Json.Net
-ExcelProvider
-SwaggerProvider
 FsToolkit.ErrorHandling
 Twilio
+FSharp.SystemTextJson

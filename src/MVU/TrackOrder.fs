@@ -1,13 +1,11 @@
 module FunPizzaShop.MVU.TrackOrder
 open Elmish
 open FunPizzaShop.Domain.Model.Pizza
-
+open FunPizzaShop.Domain.API
 type Model = { Pizzas: Pizza list}
 
 type Msg = 
-   | AddPizza of Pizza
-   | RemovePizza of Pizza
-   | OrderReceived of Pizza list
+   | Remote of ServerToClient.Msg
 
 type Order = NoOrder
     
