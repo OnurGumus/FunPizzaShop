@@ -13,25 +13,22 @@ type Order = {
     OrderPizza: OrderPizza
 }
 
+module TrackOrder =
+    open Model.Pizza
 
-// Messages processed on the server
-module ServerToClient =
-    type CounterMsg = CounterValue of int
+    // Messages processed on the server
+    module ServerToClient =
 
-    type Msg =
-        | ServerConnected
-        | CounterAdded of int
-        | CounterMessage of CounterMsg * int
+        type Msg =
+            | ServerConnected
+            | OrderFound of Order
+            | LocationUpdated of LatLong
 
-module ClientToServer =
-    type CounterMsg =
-        | StartCounter
-        | StopCounter
-    type Msg =
-        | AddCounter
-        | CounterMessage of CounterMsg * int
+    module ClientToServer =
+        type Msg =
+            | TrackOrder of OrderId
 
-let endpoint = "/socket/track-order"
+    let endpoint = "/socket/track-order"
 
 
 module Route =

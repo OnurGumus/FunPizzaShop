@@ -22,6 +22,7 @@ open CustomNavigation
 open FunPizzaShop.Domain
 open Elmish.Bridge
 open FunPizzaShop.Domain.API
+open TrackOrder
 
 let private hmr = HMR.createToken ()
 

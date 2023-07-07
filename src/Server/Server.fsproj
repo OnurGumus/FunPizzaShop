@@ -20,6 +20,7 @@
     <Compile Include="Views\Index.fs" />
     <Compile Include="Views\Layout.fs" />
     <Compile Include="Handlers\Authentication.fs" />
+    <Compile Include="Handlers\TrackOrder.fs" />
     <Compile Include="Handlers\Pizza.fs" />
     <Compile Include="Handlers\Default.fs" />
     <Compile Include="DB.fs" />

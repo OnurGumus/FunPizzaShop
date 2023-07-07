@@ -18,7 +18,7 @@ open Serilog
 open Hocon.Extensions.Configuration
 open ThrottlingTroll
 open FunPizzaShop.Server.Views
-open BestFitBox.Server.Handlers.Default
+open FunPizzaShop.Server.Handlers.Default
 open HTTP
 open FunPizzaShop.Domain.Constants
 

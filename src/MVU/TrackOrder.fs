@@ -3,7 +3,7 @@ open Elmish
 open FunPizzaShop.Domain.Model.Pizza
 open FunPizzaShop.Domain.API
 type Model = { Pizzas: Pizza list}
-
+open TrackOrder
 type Msg = 
    | Remote of ServerToClient.Msg
 
