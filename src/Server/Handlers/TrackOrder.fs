@@ -33,7 +33,7 @@ let init () =
 let update (msg:ServerMsg) (model:Model) =
     match msg with
     | Remote (ClientToServer.Msg.TrackOrder orderId) ->
-        NoModel, NoOrder
+        NoModel, TrackOrder(orderId)
     | _ ->
     NoModel,NoOrder
 
@@ -42,11 +42,14 @@ let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order)
     | ConnectToClient -> 
         clientDispatch ServerToClient.ServerConnected
     | TrackOrder orderId ->
+        printfn "TrackOrder1: %A\n" orderId
         let query = env :> IQuery
         async {
+            printfn "TrackOrder2: %A\n" orderId
             let! orders = 
-                query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value), take = 1)
+                query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value.Value), take = 1)
             orders |> Seq.head |> ServerToClient.OrderFound |> clientDispatch
+            printfn "TrackOrder3: %A\n" orderId
         } |> Async.StartImmediate
     | _ -> ()
 

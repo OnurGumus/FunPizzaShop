@@ -26,15 +26,17 @@ open TrackOrder
 
 let private hmr = HMR.createToken ()
 
-let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
+let rec execute (host: LitElement) (bridgeSend: ClientToServer.Msg ->unit) order (dispatch: Msg -> unit) =
     match order with
     | Order.NoOrder -> ()
+    | Order.TrackOrder orderId ->
+        bridgeSend (ClientToServer.Msg.TrackOrder orderId)
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
     html $"""
         <div class='main'>
-            TrackOrder
+            { model.Order}
         </div>
     """
 let mapClientMsg msg =
@@ -54,7 +56,7 @@ let LitElement () =
         config.useShadowDom <- false
     )
     let program =
-        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
+        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host Bridge.Send)
         |> Program.withBridgeConfig bc
 #if DEBUG
         |> Program.withDebugger
