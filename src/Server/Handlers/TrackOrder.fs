@@ -8,6 +8,7 @@ open TrackOrder
 open FunPizzaShop.Server.Query
 open FunPizzaShop.Domain.Model
 open FunPizzaShop.Domain.Model.Pizza
+open Akka.Streams
 
 let mkBridgeProgramWithOrderExecute endpoint
     (init: 'arg -> 'model * 'order)
@@ -22,36 +23,47 @@ let mkBridgeProgramWithOrderExecute endpoint
 type ServerMsg =
         | Remote of ClientToServer.Msg
         | ClientDisconnected
+        | SetKillSwitch of IKillSwitch
     
-type Model = NoModel
+type Model = { KillSwitch: IKillSwitch option}
 
 type Order = NoOrder | ConnectToClient | TrackOrder of OrderId
 
 let init () =
-    NoModel, ConnectToClient
+    {KillSwitch = None }, ConnectToClient
 
 let update (msg:ServerMsg) (model:Model) =
     match msg with
     | Remote (ClientToServer.Msg.TrackOrder orderId) ->
-        NoModel, TrackOrder(orderId)
-    | _ ->
-    NoModel,NoOrder
+        model, TrackOrder(orderId)
+    | SetKillSwitch ks ->
+        { model with KillSwitch = Some ks }, NoOrder
+    | ClientDisconnected ->
+        if model.KillSwitch.IsSome then
+            model.KillSwitch.Value.Shutdown()
+        { model with KillSwitch = None }, NoOrder
+
 
 let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order) dispatch =
     match order with
     | ConnectToClient -> 
         clientDispatch ServerToClient.ServerConnected
     | TrackOrder orderId ->
-        printfn "TrackOrder1: %A\n" orderId
         let query = env :> IQuery
         async {
-            printfn "TrackOrder2: %A\n" orderId
             let! orders = 
                 query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value.Value), take = 1)
             orders |> Seq.head |> ServerToClient.OrderFound |> clientDispatch
-            printfn "TrackOrder3: %A\n" orderId
+
+            let ks =
+                query.Subscribe(fun event -> 
+                   // dispatcher (DataEventOccurred event))
+                   printfn "Event: %A" event
+                   ()
+                )
+            SetKillSwitch ks |> dispatch
         } |> Async.StartImmediate
-    | _ -> ()
+    | NoOrder -> ()
 
 let brideServer (env:#_) : HttpHandler =
     mkBridgeProgramWithOrderExecute TrackOrder.endpoint init update (execute env)
