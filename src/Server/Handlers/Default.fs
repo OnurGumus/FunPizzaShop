@@ -11,7 +11,6 @@ open Elmish.Bridge
 open FunPizzaShop.Domain.API
 open Elmish
 
-
 type ServerMsg =
     | Remote of ClientToServer.Msg
     | SomeMsg
@@ -27,7 +26,6 @@ let init (clientDispatch:Dispatch<ServerToClient.Msg>) () =
 let update (clientDispatch:Dispatch<ServerToClient.Msg>) (msg:ServerMsg) (model:Model) =
     //hub.SendClientIf (fun x -> x < 3) ServerToClient.ServerConnected
     NoModel, Cmd.none
-    
    
 let brideServer =
     Bridge.mkServer endpoint init update
@@ -55,7 +53,7 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
         (authenticationHandler env)
         routeCi "/checkout" >=> defaultRoute 
         routeCi "/" >=> defaultRoute
-        
+
         routex "^.*OrderPizza.*$"
             >=> auth
             >=>(pizzaHandler env)
@@ -71,9 +69,7 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
         routeCi "/trackOrder"
             >=> auth
             >=>(trackOrder)
-        
     ]
-
 
 let webAppWrapper (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
     fun (next: HttpFunc) (context: HttpContext) -> task { 
