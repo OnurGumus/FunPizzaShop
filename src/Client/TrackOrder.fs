@@ -10,7 +10,7 @@ open ElmishOrder
 open FunPizzaShop.MVU
 open FunPizzaShop.MVU.TrackOrder
 open Elmish.Bridge
-open FunPizzaShop.Domain.API
+open FunPizzaShop.Shared.API
 open TrackOrder
 open Fable.Core
 open Fable.Core.JS

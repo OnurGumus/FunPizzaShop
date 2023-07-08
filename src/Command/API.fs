@@ -8,10 +8,10 @@ open NodaTime
 open System
 open Microsoft.Extensions.Configuration
 open FunPizzaShop.Command.Domain.API
-open FunPizzaShop.Domain.Command.Authentication
-open FunPizzaShop.Domain.Command.Pizza
+open FunPizzaShop.Shared.Command.Authentication
+open FunPizzaShop.Shared.Command.Pizza
 open FunPizzaShop.Command.Domain
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 
 let createCommandSubscription (domainApi: IDomain) factory (id: string) command filter =
     let corID = id |> Uri.EscapeDataString |> SagaStarter.toNewCid
@@ -33,7 +33,7 @@ let createCommandSubscription (domainApi: IDomain) factory (id: string) command 
     ex |> domainApi.ActorApi.SubscribeForCommand
 
 module User =
-    open FunPizzaShop.Domain.Model.Authentication
+    open FunPizzaShop.Shared.Model.Authentication
 
     let login (createSubs) : Login =
         fun userId  ->
@@ -90,7 +90,7 @@ module User =
             }
 
 module Pizza =
-    open FunPizzaShop.Domain.Model.Pizza
+    open FunPizzaShop.Shared.Model.Pizza
 
     let order (createSubs) : OrderPizza =
         fun order  ->

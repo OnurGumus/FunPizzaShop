@@ -9,9 +9,9 @@ open Akkling.Streams
 open Akka.Streams
 open Thoth.Json.Net
 open Command.Serialization
-open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop.Shared.Model.Authentication
 open FunPizzaShop
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 open Command.Common
 
 

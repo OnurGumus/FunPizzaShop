@@ -1,7 +1,7 @@
 module FunPizzaShop.MVU.PizzaMenu
 
 open Elmish
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 
 
 type Model = {

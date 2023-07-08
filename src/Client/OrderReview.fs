@@ -1,7 +1,7 @@
 module FunPizzaShop.Client.OrderReview
 
 open Lit
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 
 let pizzaTemplate (pizza: Pizza) =
     let toppingItem (topping: Topping) =

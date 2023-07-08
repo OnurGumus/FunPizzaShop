@@ -15,16 +15,16 @@ open ElmishOrder
 open Browser.Types
 open FunPizzaShop.MVU
 open SignIn
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 open Pizza
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Constants
 open Authentication
 let private hmr = HMR.createToken ()
 
 
 module Server =
     open Fable.Remoting.Client
-    open FunPizzaShop.Domain
+    open FunPizzaShop.Shared
     let api: API.Authentication =
         Remoting.createApi ()
         |> Remoting.withRouteBuilder API.Route.builder

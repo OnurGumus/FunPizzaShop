@@ -5,7 +5,7 @@ open Akka.Streams.Dsl
 open Akka.Persistence.Query
 open Akka.Streams
 open Akkling.Streams
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 open Thoth.Json.Net
 open Projection
 
@@ -32,9 +32,9 @@ let subscribeToStream source mat (sink:Sink<DataEvent,_>) =
 open FSharp.Data.Sql.Common
 open Serilog
 open System.Linq
-open FunPizzaShop.Domain
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop.Shared
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.Model.Authentication
 open Command.Serialization
 
 let api (config: IConfiguration) actorApi =

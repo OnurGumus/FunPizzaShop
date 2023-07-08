@@ -1,4 +1,4 @@
-module FunPizzaShop.Domain.Command
+module FunPizzaShop.Shared.Command
 
 module Authentication = 
     open Model.Authentication

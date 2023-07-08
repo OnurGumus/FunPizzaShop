@@ -3,9 +3,9 @@ open FunPizzaShop
 open Microsoft.Extensions.Configuration
 open Query
 open Command
-open FunPizzaShop.Domain.Model.Authentication
-open FunPizzaShop.Domain.Command.Authentication
-open FunPizzaShop.Domain.Command.Pizza
+open FunPizzaShop.Shared.Model.Authentication
+open FunPizzaShop.Shared.Command.Authentication
+open FunPizzaShop.Shared.Command.Pizza
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration) =

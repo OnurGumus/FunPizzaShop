@@ -435,8 +435,9 @@ animation;
         .list-group-item {
             display: flex;
             border:1px solid #eee;
+            background: white;
             border-top: none;
-            &:first-child {
+            first-child {
                 border-top: 1px solid #eee;
             }
         }

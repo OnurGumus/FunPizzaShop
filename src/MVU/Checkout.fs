@@ -1,6 +1,6 @@
 module FunPizzaShop.MVU.Checkout
 open Elmish
-open FunPizzaShop.Domain
+open FunPizzaShop.Shared
 open Model
 open Pizza
 open Authentication
@@ -37,7 +37,7 @@ let rec update msg model =
             if model.UserId.IsNone then
                   {model with PendingOrder = Some orderDetails}, RequestLogin
             else
-                  let order :FunPizzaShop.Domain.Model.Pizza.Order = {
+                  let order :FunPizzaShop.Shared.Model.Pizza.Order = {
                         DeliveryAddress = orderDetails.Address
                         Pizzas = orderDetails.Pizzas
                         UserId = model.UserId.Value

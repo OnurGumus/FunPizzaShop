@@ -2,12 +2,12 @@ module FunPizzaShop.Server.Handlers.TrackOrder
 open FunPizzaShop.Server.Views
 open Giraffe
 open Elmish.Bridge
-open FunPizzaShop.Domain.API
+open FunPizzaShop.Shared.API
 open Elmish
 open TrackOrder
 open FunPizzaShop.Server.Query
-open FunPizzaShop.Domain.Model
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model
+open FunPizzaShop.Shared.Model.Pizza
 open Akka.Streams
 open FunPizzaShop.Query.Projection
 

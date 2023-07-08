@@ -1,6 +1,6 @@
 module FunPizzaShop.Server.Command
-open FunPizzaShop.Domain.Command.Authentication
-open FunPizzaShop.Domain.Command.Pizza
+open FunPizzaShop.Shared.Command.Authentication
+open FunPizzaShop.Shared.Command.Pizza
 
 [<Interface>]
 type IAuthentication =

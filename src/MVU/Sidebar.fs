@@ -1,6 +1,6 @@
 module FunPizzaShop.MVU.Sidebar
 open Elmish
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 
 type Model = { Pizzas: Pizza list}
 

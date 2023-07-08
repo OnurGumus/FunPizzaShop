@@ -1,6 +1,6 @@
 module FunPizzaShop.MVU.LoginStore
 open ElmishStore
-open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop.Shared.Model.Authentication
 
 type Model = { UserId: UserId option }
 

@@ -20,7 +20,7 @@ open ThrottlingTroll
 open FunPizzaShop.Server.Views
 open FunPizzaShop.Server.Handlers.Default
 open HTTP
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Constants
 
 bootstrapLogger()
         

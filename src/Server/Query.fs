@@ -1,5 +1,5 @@
 module FunPizzaShop.Server.Query
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 open Akka.Streams.Dsl
 open Akka.Streams
 open FunPizzaShop.Query.Projection

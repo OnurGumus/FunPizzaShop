@@ -1,4 +1,4 @@
-module FunPizzaShop.Domain.API
+module FunPizzaShop.Shared.API
 open Command
 open Authentication
 open Pizza

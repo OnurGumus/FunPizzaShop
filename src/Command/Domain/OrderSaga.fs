@@ -10,12 +10,12 @@ open Serilog
 open Akka.Cluster.Tools.PublishSubscribe
 open Actor
 open Microsoft.Extensions.Configuration
-open FunPizzaShop.Domain.Model.Authentication
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model.Authentication
+open FunPizzaShop.Shared.Model
 open Akka.Cluster.Sharding
 open Thoth.Json.Net
 open NodaTime
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 open Command.Common.SagaStarter
 open Akka.Event
 

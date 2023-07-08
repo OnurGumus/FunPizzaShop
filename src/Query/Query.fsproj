@@ -8,7 +8,7 @@
     <Compile Include="API.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.fsproj" />
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
     <Content Include="paket.references" />
   </ItemGroup>
   <ItemGroup>

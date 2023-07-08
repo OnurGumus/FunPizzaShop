@@ -6,7 +6,7 @@ open FunPizzaShop.Server.Views
 open FunPizzaShop.Server.Handlers.Authentication
 open FunPizzaShop.Server.Handlers.Pizza
 open Microsoft.AspNetCore.Authentication.Cookies
-open FunPizzaShop.Domain.API
+open FunPizzaShop.Shared.API
 
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
 

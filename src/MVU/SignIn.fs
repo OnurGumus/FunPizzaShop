@@ -1,6 +1,6 @@
 module FunPizzaShop.MVU.SignIn
 open Elmish
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 open Authentication
 
 type Status = NotLoggedIn | LoggedIn of UserId | AskEmail | AskVerification 

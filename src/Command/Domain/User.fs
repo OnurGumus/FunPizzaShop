@@ -11,8 +11,8 @@ open System
 open Akka.Cluster.Tools.PublishSubscribe
 open Actor
 open Microsoft.Extensions.Configuration
-open FunPizzaShop.Domain.Model.Authentication
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model.Authentication
+open FunPizzaShop.Shared.Model
 open Akka.Logger.Serilog
 open Akka.Event
 type Command =
@@ -36,7 +36,8 @@ type State = {
 
     interface IDefaultTag
 
-let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
+let actorProp (env:#_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
+    let config  = env :> IConfiguration
     let log = mailbox.UntypedContext.GetLogger()
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self

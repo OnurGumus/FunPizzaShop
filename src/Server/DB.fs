@@ -182,7 +182,7 @@ let updateDatabase (serviceProvider: IServiceProvider) =
 
 let createServices (config: IConfiguration) =
     let connString =
-        config.GetSection(FunPizzaShop.Domain.Constants.ConnectionString).Value
+        config.GetSection(FunPizzaShop.Shared.Constants.ConnectionString).Value
 
     ServiceCollection()
         .AddFluentMigratorCore()

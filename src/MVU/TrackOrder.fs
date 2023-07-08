@@ -1,9 +1,9 @@
 module FunPizzaShop.MVU.TrackOrder
 open Elmish
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.API
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.API
 open TrackOrder
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 type Msg = 
    | Remote of ServerToClient.Msg
 

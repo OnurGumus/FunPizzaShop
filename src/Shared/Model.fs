@@ -1,4 +1,4 @@
-module rec FunPizzaShop.Domain.Model
+module rec FunPizzaShop.Shared.Model
 
 open System
 open Fable.Validation

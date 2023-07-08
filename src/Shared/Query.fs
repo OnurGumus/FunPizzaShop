@@ -1,4 +1,4 @@
-module FunPizzaShop.Domain.Query
+module FunPizzaShop.Shared.Query
 
 module Pizza =
     open Model

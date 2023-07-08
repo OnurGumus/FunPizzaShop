@@ -11,8 +11,8 @@ open System
 open Akka.Cluster.Tools.PublishSubscribe
 open Actor
 open Microsoft.Extensions.Configuration
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.Model
 open Akka.Event
 
 type Command =

@@ -15,9 +15,9 @@ open ElmishOrder
 open Browser.Types
 open FunPizzaShop.MVU.PizzaItem
 open Thoth.Json
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Model
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.Model
+open FunPizzaShop.Shared.Constants
 
 let private hmr = HMR.createToken ()
 

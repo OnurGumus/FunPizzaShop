@@ -24,7 +24,7 @@
     <Compile Include="Program.fs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Domain\Domain.fsproj" />
+    <ProjectReference Include="..\Shared\Shared.fsproj" />
     <ProjectReference Include="..\Command\Command.fsproj" />
     <ProjectReference Include="..\Query\Query.fsproj" />
     <Folder Include="Database\" />

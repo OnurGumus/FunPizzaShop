@@ -1,4 +1,4 @@
-﻿module FunPizzaShop.Domain.Constants
+﻿module FunPizzaShop.Shared.Constants
 
 
 [<Literal>]

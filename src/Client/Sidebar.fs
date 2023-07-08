@@ -14,10 +14,10 @@ open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
 open FunPizzaShop.MVU.Sidebar
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.Constants
 open Thoth.Json
-open FunPizzaShop.Domain.Model
+open FunPizzaShop.Shared.Model
 
 let private hmr = HMR.createToken ()
 

@@ -1,6 +1,6 @@
 module FunPizzaShop.MVU.PizzaItem
 open Elmish
-open FunPizzaShop.Domain.Model.Pizza
+open FunPizzaShop.Shared.Model.Pizza
 
 type Model = { PizzaSpecial: PizzaSpecial }
 
