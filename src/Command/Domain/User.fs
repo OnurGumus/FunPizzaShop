@@ -15,6 +15,7 @@ open FunPizzaShop.Shared.Model.Authentication
 open FunPizzaShop.Shared.Model
 open Akka.Logger.Serilog
 open Akka.Event
+open FunPizzaShop.ServerInterfaces.Command
 type Command =
     | Login
     | VefifyLogin of VerificationCode option
@@ -38,6 +39,7 @@ type State = {
 
 let actorProp (env:#_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
     let config  = env :> IConfiguration
+    let mailSender = env:> IMailSender
     let log = mailbox.UntypedContext.GetLogger()
     let mediatorS = retype mediator
     let sendToSagaStarter = SagaStarter.toSendMessage mediatorS mailbox.Self

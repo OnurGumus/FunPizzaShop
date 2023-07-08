@@ -9,12 +9,12 @@ open FunPizzaShop.Shared.Command.Authentication
 open FunPizzaShop.Shared.Command.Pizza
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
-type AppEnv(config: IConfiguration) =
+type AppEnv(config: IConfiguration) as self =
     let commandApi =
-        Command.API.api config NodaTime.SystemClock.Instance
+        lazy(Command.API.api self NodaTime.SystemClock.Instance)
 
     let queryApi =
-        Query.API.api config commandApi.ActorApi
+        lazy(Query.API.api config commandApi.Value.ActorApi)
         
     interface IMailSender with
         member _.SendVerificationMail =
@@ -29,7 +29,7 @@ type AppEnv(config: IConfiguration) =
 
     interface IAuthentication with
         member _.Login: Login = 
-            commandApi.Login
+            commandApi.Value.Login
             
         member _.Logout: Logout = 
             fun (userId: UserId) -> 
@@ -37,11 +37,11 @@ type AppEnv(config: IConfiguration) =
                     return  Ok()
                 }
         member _.Verify: Verify = 
-            commandApi.Verify
+            commandApi.Value.Verify
 
     interface IPizza with
         member _.Order: OrderPizza = 
-            commandApi.OrderPizza
+            commandApi.Value.OrderPizza
 
     interface IConfiguration with
         member _.Item
@@ -55,8 +55,8 @@ type AppEnv(config: IConfiguration) =
     
     interface IQuery with
         member _.Query(?filter, ?orderby,?orderbydesc, ?thenby, ?thenbydesc, ?take, ?skip) =
-            queryApi.Query(?filter = filter, ?orderby = orderby, ?orderbydesc = orderbydesc, ?thenby = thenby, ?thenbydesc = thenbydesc,  ?take = take, ?skip = skip)
+            queryApi.Value.Query(?filter = filter, ?orderby = orderby, ?orderbydesc = orderbydesc, ?thenby = thenby, ?thenbydesc = thenbydesc,  ?take = take, ?skip = skip)
 
-        member _.Subscribe(cb) = queryApi.Subscribe(cb)
+        member _.Subscribe(cb) = queryApi.Value.Subscribe(cb)
 
     
