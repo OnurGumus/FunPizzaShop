@@ -12,6 +12,9 @@ open FunPizzaShop.MVU.TrackOrder
 open Elmish.Bridge
 open FunPizzaShop.Domain.API
 open TrackOrder
+open Fable.Core
+open Fable.Core.JS
+open Fable.Core.JsInterop
 
 #if DEBUG
 let private hmr = HMR.createToken ()
@@ -34,9 +37,16 @@ let bc =
         |> Bridge.withMapping mapClientMsg 
         |> Bridge.withName "TrackOrder"
 
+[<Global>]
+let L :obj  = jsNative
+
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
     Hook.useEffectOnce (fun () -> 
+        let map = L?map("map")?setView(([|51.505; -0.09|]:obj array), 13);
+        L?tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {|
+            maxZoom = 19;
+            attribution = "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"|})?addTo(map);
         Hook.createDisposable(fun () ->  
         (bc :> IDisposable).Dispose()
         match Elmish.Bridge.Helpers.mappings.Value with
@@ -44,32 +54,37 @@ let view (host:LitElement) (model:Model) dispatch =
             Elmish.Bridge.Helpers.mappings.Value <- Some (map.Remove("TrackOrder" |> Some))
         | None -> ())
     )
-    match model.Order with
-    | Some order ->
-        let pizzas = order.Pizzas
-        html $"""
+    let orderDetails = 
+        match model.Order with
+        | Some order -> 
+         
+            let pizzas = order.Pizzas
+            [ OrderReview.pizzaList pizzas @ [OrderReview.summ pizzas] ]
+        | _ -> []
+    html $"""
         <div class="track-order">
         <div class="track-order-title">
             <h2>
-                Order placed { model.Order.Value.CreatedTime }
+                Order placed { if model.Order.IsSome then model.Order.Value.CreatedTime.ToString() else "" }
             </h2>
             <p class="ml-auto mb-0">
-                Status: <strong> { order.DeliveryStatus }</strong>
+                Status: <strong> { if model.Order.IsSome  then model.Order.Value.DeliveryStatus.ToString()  else ""}</strong>
             </p>
         </div>
         <div class="track-order-body">
             <div class="track-order-details">
-                { OrderReview.pizzaList pizzas }
-                { OrderReview.summ pizzas }
+                { orderDetails}
             </div>
             <div class="track-order-map">
-                <!-- ${Map} -->
+                <div id="map" class="map">
+
+                </div>
             </div>
         </div>
     </div>
        
     """
-    | _ -> Lit.nothing
+    
 
 [<LitElement("fps-trackorder")>]
 let LitElement () =

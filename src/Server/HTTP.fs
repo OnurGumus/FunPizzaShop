@@ -10,6 +10,7 @@ let srciptSrcElem =
         """data:"""
         """'nonce-110888888'"""
         """https://cdnjs.cloudflare.com/ajax/libs/dompurify/"""
+        """https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"""
     |]
     |> String.concat " "
 
@@ -31,6 +32,7 @@ let styleSrc =
         """'sha256-0fbn1I45Wm0gd77UCbWHVcVY1tcwwo/EfrGEzMR7dN8='"""
         """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
         """https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"""
+        """https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"""
     |]
     |> String.concat " "
 
@@ -38,6 +40,7 @@ let styleSrcElem =
     [|
         """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
         """https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"""
+        """https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"""
 
     |]
     |> String.concat " "
@@ -56,7 +59,7 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             "Content-Security-Policy",
             $"default-src 'none';\
             font-src 'self';\
-            img-src 'self';\
+            img-src 'self' https://tile.openstreetmap.org ;\
             manifest-src 'self';\
             script-src-elem 'self' {srciptSrcElem} ;\
             connect-src 'self' localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\
