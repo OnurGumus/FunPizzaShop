@@ -9,6 +9,7 @@ open FunPizzaShop.Server.Query
 open FunPizzaShop.Domain.Model
 open FunPizzaShop.Domain.Model.Pizza
 open Akka.Streams
+open FunPizzaShop.Query.Projection
 
 let mkBridgeProgramWithOrderExecute endpoint
     (init: 'arg -> 'model * 'order)
@@ -57,9 +58,12 @@ let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order)
 
             let ks =
                 query.Subscribe(fun event -> 
-                   // dispatcher (DataEventOccurred event))
-                   printfn "Event: %A" event
-                   ()
+                    match event with
+                    | OrderEvent (LocationUpdated(orderId, loc)) when orderId = orderId ->
+                         ServerToClient.LocationUpdated (orderId,loc) |> clientDispatch
+                    | OrderEvent (DeliveryStatusSet(orderId, status)) when orderId = orderId ->
+                        ServerToClient.DeliveryStatusSet(orderId,status) |> clientDispatch
+                    | _ -> ()
                 )
             SetKillSwitch ks |> dispatch
         } |> Async.StartImmediate

@@ -67,44 +67,7 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
 let view (host:LitElement) (model:Model) dispatch =
     let pizzas = model.Pizzas
    
-    let pizzaTemplate (pizza: Pizza) =
-        let toppingItem (topping: Topping) =
-            html $"""<li>+ {topping.Name.Value}</li>"""
-
-        let toppingItems =
-            pizza.Toppings
-            |> List.map toppingItem
-
-        html $"""
-            <p>
-                <strong>
-                    { pizza.Size}"
-                    { pizza.Special.Name.Value }
-                    (£{ pizza.Special.FormattedBasePrice })
-                </strong>
-            </p>
-
-            <ul>
-                {toppingItems}
-            </ul>
-
-    """
-    let sum = 
-        pizzas 
-        |> List.sumBy (fun (p:Pizza) -> p.TotalPrice.Value)
-
-    let summ  = 
-        html $"""
-            <p>
-                <strong>
-                    Total price:
-                    £{ sum.ToString("0.00") }
-                </strong>
-            </p>
-        """
-    let pizzaList = 
-        pizzas 
-        |> List.map (pizzaTemplate)
+    
 
     let formFieldItem (label:string)=
         html $"""
@@ -151,8 +114,8 @@ let view (host:LitElement) (model:Model) dispatch =
         <div class="checkout-cols">
             <div class="checkout-order-details">
                 <h4>Review order</h4>
-                { pizzaList }
-                { summ }
+                { OrderReview.pizzaList pizzas }
+                { OrderReview.summ pizzas }
             </div>
 
             <div class="checkout-delivery-address">

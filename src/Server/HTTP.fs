@@ -29,6 +29,8 @@ let styleSrc =
         """'sha256-uPWqoOqJlYRh4vuSeJqL7+v95llQo6xvHZ87qSOUfR8='"""
         """'sha256-aRsWYqZCaVHt8N5HotM+QdQl721qCNtGAH5KpRp19+g='"""
         """'sha256-0fbn1I45Wm0gd77UCbWHVcVY1tcwwo/EfrGEzMR7dN8='"""
+        """https://unpkg.com/open-props@1.5.9/open-props.min.css"""
+        """https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"""
     |]
     |> String.concat " "
 

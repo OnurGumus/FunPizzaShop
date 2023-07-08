@@ -21,7 +21,7 @@ type Command =
 
 type Event =
     | OrderPlaced of Order
-    | DeliveryStatusSet of DeliveryStatus
+    | DeliveryStatusSet of OrderId * DeliveryStatus
 
 type State = {
     DeliveryStatus: DeliveryStatus
@@ -41,7 +41,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
 
         match event with
         | OrderPlaced order -> { state with Order = Some order }
-        | DeliveryStatusSet status ->
+        | DeliveryStatusSet (_,status) ->
             {
                 state with DeliveryStatus = status
             }
@@ -90,7 +90,7 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
                             toEvent ci (v + 1L) (OrderPlaced order) |> sendToSagaStarter ci |> box |> Persist
                     | (SetDeliveryStatus status) ->
                         return!
-                            toEvent ci (v + 1L) (DeliveryStatusSet status) |> sendToSagaStarter ci |> box |> Persist
+                            toEvent ci (v + 1L) (DeliveryStatusSet (state.Order.Value.OrderId,status)) |> sendToSagaStarter ci |> box |> Persist
                 | _ ->
                     log.Debug("Unhandled Message {@MSG}", box msg)
                     return Unhandled

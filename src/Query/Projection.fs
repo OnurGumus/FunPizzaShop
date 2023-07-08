@@ -54,7 +54,7 @@ let inline decode<'T> =
 
 type OrderEvent = 
     | OrderPlaced of Order 
-    | DeliveryStatusSet of DeliveryStatus
+    | DeliveryStatusSet of OrderId * DeliveryStatus
     | LocationUpdated of OrderId * LatLong
 
 type DataEvent = OrderEvent of OrderEvent
@@ -96,7 +96,7 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                     )
                     row.OrderId <- order.OrderId.Value.Value
                     Some(OrderEvent(OrderPlaced order))
-                | Order.DeliveryStatusSet status ->
+                | Order.DeliveryStatusSet (orderId,status) ->
                     let order = 
                         query {
                             for o in ctx.Main.Orders do
@@ -104,7 +104,7 @@ let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop:
                                 exactlyOne
                         }
                     order.DeliveryStatus <- status |> encode
-                    Some(OrderEvent(DeliveryStatusSet status))
+                    Some(OrderEvent(DeliveryStatusSet (orderId, status)))
 
         | :? Command.Common.Event<Delivery.Event> as {
                     EventDetails = eventDetails

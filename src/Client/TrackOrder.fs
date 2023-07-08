@@ -4,22 +4,11 @@ open Elmish
 open Elmish.HMR
 open Lit
 open Lit.Elmish
-open Browser.Types
-open Fable.Core.JsInterop
-open Fable.Core
 open System
-open Browser
 open Elmish.Debug
-open FsToolkit.ErrorHandling
 open ElmishOrder
 open FunPizzaShop.MVU
 open FunPizzaShop.MVU.TrackOrder
-open Thoth.Json
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Model
-open FunPizzaShop.Domain.Constants
-open CustomNavigation
-open FunPizzaShop.Domain
 open Elmish.Bridge
 open FunPizzaShop.Domain.API
 open TrackOrder
@@ -55,12 +44,32 @@ let view (host:LitElement) (model:Model) dispatch =
             Elmish.Bridge.Helpers.mappings.Value <- Some (map.Remove("TrackOrder" |> Some))
         | None -> ())
     )
-    html $"""
-        <div class='main'>
-            { model.Order}
+    match model.Order with
+    | Some order ->
+        let pizzas = order.Pizzas
+        html $"""
+        <div class="track-order">
+        <div class="track-order-title">
+            <h2>
+                Order placed { model.Order.Value.CreatedTime }
+            </h2>
+            <p class="ml-auto mb-0">
+                Status: <strong> { order.DeliveryStatus }</strong>
+            </p>
         </div>
+        <div class="track-order-body">
+            <div class="track-order-details">
+                { OrderReview.pizzaList pizzas }
+                { OrderReview.summ pizzas }
+            </div>
+            <div class="track-order-map">
+                <!-- ${Map} -->
+            </div>
+        </div>
+    </div>
+       
     """
-
+    | _ -> Lit.nothing
 
 [<LitElement("fps-trackorder")>]
 let LitElement () =

@@ -22,7 +22,8 @@ module TrackOrder =
         type Msg =
             | ServerConnected
             | OrderFound of Order
-            | LocationUpdated of LatLong
+            | LocationUpdated of OrderId * LatLong
+            | DeliveryStatusSet of OrderId * DeliveryStatus
 
     module ClientToServer =
         type Msg =
