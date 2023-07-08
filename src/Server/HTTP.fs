@@ -59,7 +59,7 @@ let headerMiddleware = fun (context: HttpContext) (next: Func<Task>) ->
             "Content-Security-Policy",
             $"default-src 'none';\
             font-src 'self';\
-            img-src 'self' https://tile.openstreetmap.org https://unpkg.com/leaflet@1.9.4/;\
+            img-src 'self' data: https://tile.openstreetmap.org https://unpkg.com/leaflet@1.9.4/;\
             manifest-src 'self';\
             script-src-elem 'self' {srciptSrcElem} ;\
             connect-src 'self' localhost ws://192.168.50.236:* ws://localhost:* http://localhost:*/dist/ https://localhost:*/dist/;\

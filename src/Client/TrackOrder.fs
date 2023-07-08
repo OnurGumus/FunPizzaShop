@@ -50,7 +50,10 @@ let view (host:LitElement) (model:Model) dispatch =
 
         | _, Some order-> 
             let coords = marker?getLatLng()
-            marker?setLatLng([|coords?lat + 0.0001; coords?lng|]:obj array)
+            let loc = order.CurrentLocation
+            let newCoords = [|coords?lat + 0.00005 * loc.Latitude  ; coords?lng + 0.00005 * loc.Longitude |]:obj array
+            printfn "newCoords %A" newCoords
+            marker?setLatLng(newCoords)
         Hook.emptyDisposable
     )
     Hook.useEffectOnce (fun () -> 
