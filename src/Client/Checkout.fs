@@ -26,8 +26,6 @@ let private hmr = HMR.createToken ()
 
 module Server =
     open Fable.Remoting.Client
-    open FunPizzaShop.Domain
-    open FunPizzaShop.Domain.Model.Pizza
     let api: API.Order =
         Remoting.createApi ()
         |> Remoting.withRouteBuilder API.Route.builder
@@ -46,10 +44,11 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
     | Order.PlaceOrder order ->
         async {
             do! Server.api.OrderPizza order
-            dispatch  OrderPlaced
-            history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
-            let ev = CustomEvent.Create(NavigatedEvent)
-            window.dispatchEvent ev |> ignore
+            dispatch OrderPlaced
+            window.location.href <- sprintf "/trackOrder/%s" order.OrderId.Value.Value
+            // history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
+            // let ev = CustomEvent.Create(NavigatedEvent)
+            // window.dispatchEvent ev |> ignore
         }
         |> Async.StartImmediate
       
@@ -67,8 +66,6 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
 let view (host:LitElement) (model:Model) dispatch =
     let pizzas = model.Pizzas
    
-    
-
     let formFieldItem (label:string)=
         html $"""
             <div class="form-field">

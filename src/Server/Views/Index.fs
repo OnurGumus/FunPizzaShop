@@ -37,5 +37,8 @@ let view (env:#_) (ctx:HttpContext) (dataLevel: int) = task{
                     {li}
                 </ul>
             </fps-pizza-menu>
+            <div class="sidebar">
+                <fps-side-bar></fps-side-bar>
+            </div>
         """
 }

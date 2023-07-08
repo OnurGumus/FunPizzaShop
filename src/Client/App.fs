@@ -17,12 +17,10 @@ TrackOrder.register ()
 
 type Model = Page option
 
-
-
-
 let init (result: Option<Page>) = result, Cmd.none //CustomNavigation.newUrl (toPage Home) 1
 
 let update msg (model: Model) = model, Cmd.none
+
 [<HookComponent>]
 let view (model: Model) dispatch =
     Hook.useEffectOnChange (model, fun model ->
@@ -39,12 +37,7 @@ let view (model: Model) dispatch =
     | Some page ->
         match page with
         | Home -> Lit.nothing
-        | Order orderId -> 
-            html $"""
-                {orderId}
-            """
         | Checkout -> 
-            
             html $""""
              <fps-checkout></fps-checkout>
             """
@@ -55,7 +48,6 @@ let pageParser: Parser<Page -> Page, Page> =
         map Home (s "")
         map Home (s "/")
         map Checkout (s "checkout")
-        map (fun orderId -> Order orderId) (s "order" </> str)
     ]
 
 let urlUpdate (result: Option<Page>) model =

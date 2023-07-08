@@ -25,10 +25,8 @@ let jump (n: int) : Cmd<_> = [
 type Page =
     | Home
     | Checkout
-    | Order of string
     
 let toPage =
     function
     | Home -> ""
     | Checkout -> "checkout"
-    | Order orderId -> sprintf "order/%s" orderId

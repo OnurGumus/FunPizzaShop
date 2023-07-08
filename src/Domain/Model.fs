@@ -19,6 +19,7 @@ let inline forceValidateWithString (e) =
     | Ok x -> x
     | Error x ->
         invalidOp x
+        
 type Predicate =
     | Greater of string * IComparable
     | GreaterOrEqual of string * IComparable
@@ -199,6 +200,7 @@ module Pizza =
             s.Toppings |> List.iter (fun t -> t |> Topping.Validate |> ignore)
             s.Id.Value |> ShortString.Validate |> ignore
             s.SpecialId |> SpecialId.Validate |> ignore
+
     type Address =
         {
             Name: ShortString
@@ -221,17 +223,6 @@ module Pizza =
             Latitude: double
             Longitude: double
         }
-        static member Interpolate (start: LatLong) (endd: LatLong) proportion =
-            {
-                Latitude =
-                    start.Latitude
-                    + (endd.Latitude - start.Latitude)
-                    * proportion
-                Longitude =
-                    start.Longitude
-                    + (endd.Longitude - start.Longitude)
-                    * proportion
-            }
 
     type DeliveryStatus =
         | NotDelivered
@@ -241,16 +232,16 @@ module Pizza =
     type OrderId =
         | OrderId of ShortString
         member this.Value = 
-                let (OrderId orderId) = this 
-                orderId
+            let (OrderId orderId) = this in orderId
+
         static member CreateNew() =
-                    "Order_" + Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> OrderId
+            "Order_" + Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> OrderId
         
     type DeliveryId =
         |DeliveryId of ShortString
         member this.Value = 
-                let (DeliveryId deliveryId) = this 
-                deliveryId
+            let (DeliveryId deliveryId) = this in deliveryId
+
         static member CreateNew() =
             "Delivery_" + Guid.NewGuid().ToString() |> ShortString.TryCreate |> forceValidate |> DeliveryId
 
@@ -268,7 +259,6 @@ module Pizza =
         }
         member this.TotalPrice = this.Pizzas |> List.sumBy (fun p -> p.TotalPrice.Value) |> Price.TryCreate |> forceValidate
         member this.FormattedTotalPrice = this.TotalPrice.Value.ToString("0.00")
-
 
 module Authentication =
     open System.Text.RegularExpressions
@@ -293,7 +283,7 @@ module Authentication =
                 if email.Contains("@") then 
                     email 
                 else 
-                    let email=  email.Replace("(", "").Replace(")", "").Replace("-", "")
+                    let email = email.Replace("(", "").Replace(")", "").Replace("-", "")
                     if email.StartsWith("00") then
                         "+" + email.Substring(2)
                     elif email.StartsWith("+") |> not then

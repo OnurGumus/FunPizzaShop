@@ -40,6 +40,10 @@ animation;
             overflow-y: auto;
         }
     }
+    
+    fps-side-bar{
+        display:contents;
+    }
 
     fps-pizza-menu {
         padding: var(--size-5);
@@ -657,13 +661,6 @@ animation;
         font-size: 1.2rem;
     }
 
-    .empty-cart {
-        text-align: center;
-        font-size: 1.5rem;
-        font-weight: 100;
-        color: #676767;
-    }
-
     .item-price {
         font-weight: 500;
         &::before {
@@ -849,9 +846,13 @@ animation;
 
     .empty-cart {
         text-align: center;
+        block-size: 100%;
         font-size: 1.5rem;
         font-weight: 100;
         color: #676767;
+        display: flex;
+        flex-direction: column;
+        place-content: center;
     }
 
     .valid.modified:not([type=checkbox]) {

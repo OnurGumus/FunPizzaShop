@@ -37,16 +37,15 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
                         $"""
                     <script type="module" src="/dist/assets/{path}" ></script>
                     """)
-
             String.Join("\r\n", scripts)
+            
     let! body = body 0
                 
     let signin = 
-        
-                        if ctx.User.Identity.IsAuthenticated then
-                            html $"""<fps-signin username={ ctx.User.Identity.Name }></fps-signin>"""
-                        else
-                            html $"""<fps-signin></fps-signin>"""
+        if ctx.User.Identity.IsAuthenticated then
+            html $"""<fps-signin username={ ctx.User.Identity.Name }></fps-signin>"""
+        else
+            html $"""<fps-signin></fps-signin>"""
                     
     return
         html $"""
@@ -113,10 +112,6 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
             </header>
             <main>
                 {body}
-                <div class="sidebar">
-                    <fps-side-bar></fps-side-bar>
-                </div>
-
             </main>
         </body>
     </html>"""
