@@ -44,6 +44,20 @@ let update (msg:ServerMsg) (model:Model) =
             model.KillSwitch.Value.Shutdown()
         { model with KillSwitch = None }, NoOrder
 
+let retry f =
+    let rec retryInner attempt =
+        async {
+            if (attempt > 128) then
+                return None
+            else
+                match! f () with
+                | Some res -> return Some res
+                | _ ->
+                    do! Async.Sleep(100 * attempt)
+                    return! retryInner (attempt * 2)
+        }
+
+    retryInner 1
 
 let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order) dispatch =
     match order with
@@ -51,10 +65,16 @@ let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order)
         clientDispatch ServerToClient.ServerConnected
     | TrackOrder orderId ->
         let query = env :> IQuery
+
         async {
-            let! orders = 
-                query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value.Value), take = 1)
-            orders |> Seq.head |> ServerToClient.OrderFound |> clientDispatch
+            let getOrder () = async{
+                let! orders = 
+                    query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value.Value), take = 1)
+                return orders |> Seq.tryHead
+            }
+            let! order = retry getOrder
+
+            order.Value |> ServerToClient.OrderFound |> clientDispatch
 
             let ks =
                 query.Subscribe(fun event -> 
@@ -67,6 +87,7 @@ let execute (env:#_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order)
                 )
             SetKillSwitch ks |> dispatch
         } |> Async.StartImmediate
+
     | NoOrder -> ()
 
 let brideServer (env:#_) : HttpHandler =
