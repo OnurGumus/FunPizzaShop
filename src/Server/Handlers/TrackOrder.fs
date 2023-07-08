@@ -5,7 +5,7 @@ open Elmish.Bridge
 open FunPizzaShop.Shared.API
 open Elmish
 open TrackOrder
-open FunPizzaShop.Server.Query
+open FunPizzaShop.ServerInterfaces.Query
 open FunPizzaShop.Shared.Model
 open FunPizzaShop.Shared.Model.Pizza
 open Akka.Streams

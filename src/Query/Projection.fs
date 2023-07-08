@@ -13,6 +13,7 @@ open FunPizzaShop.Shared.Model.Authentication
 open FunPizzaShop
 open FunPizzaShop.Shared.Model.Pizza
 open Command.Common
+open FunPizzaShop.ServerInterfaces.Query
 
 
 [<Literal>]
@@ -52,12 +53,6 @@ let inline decode<'T> =
     |> Decode.fromString
 
 
-type OrderEvent = 
-    | OrderPlaced of Order 
-    | DeliveryStatusSet of OrderId * DeliveryStatus
-    | LocationUpdated of OrderId * LatLong
-
-type DataEvent = OrderEvent of OrderEvent
   
 open FunPizzaShop.Command.Domain
 let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =

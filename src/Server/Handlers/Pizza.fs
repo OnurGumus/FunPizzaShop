@@ -13,8 +13,8 @@ open Fable.Remoting.Server
 open Fable.Remoting.Giraffe
 open FunPizzaShop.Shared
 open Microsoft.Extensions.Configuration
-open FunPizzaShop.Server.Command
-open FunPizzaShop.Server.Query
+open FunPizzaShop.ServerInterfaces.Command
+open FunPizzaShop.ServerInterfaces.Query
 open FunPizzaShop.Shared.Model
 open System.IO
 open System.Collections.Generic

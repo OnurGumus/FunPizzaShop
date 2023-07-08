@@ -1,6 +1,6 @@
 module FunPizzaShop.Server.Views.TrackOrder
 open Common
-open FunPizzaShop.Server.Query
+open FunPizzaShop.Server
 open FunPizzaShop.Shared.Model.Pizza
 open FunPizzaShop.Shared.Model
 open Thoth.Json.Net

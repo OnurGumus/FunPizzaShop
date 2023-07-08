@@ -1,6 +1,7 @@
 module FunPizzaShop.Server.Views.MyOrders
 open Common
-open FunPizzaShop.Server.Query
+open FunPizzaShop.Server
+open FunPizzaShop.ServerInterfaces.Query
 open FunPizzaShop.Shared.Model.Pizza
 open FunPizzaShop.Shared.Model
 open Thoth.Json.Net

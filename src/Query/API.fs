@@ -8,6 +8,7 @@ open Akkling.Streams
 open FunPizzaShop.Shared.Model
 open Thoth.Json.Net
 open Projection
+open FunPizzaShop.ServerInterfaces.Query
 
 [<Interface>]
 type IAPI =

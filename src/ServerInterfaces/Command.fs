@@ -1,4 +1,4 @@
-module FunPizzaShop.Server.Command
+module FunPizzaShop.ServerInterfaces.Command
 open FunPizzaShop.Shared.Command.Authentication
 open FunPizzaShop.Shared.Command.Pizza
 

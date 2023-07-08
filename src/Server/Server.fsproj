@@ -5,8 +5,6 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="Query.fs" />
-    <Compile Include="Command.fs" />
     <Compile Include="Views\Common.fs" />
     <Compile Include="Views\TrackOrder.fs" />
     <Compile Include="Views\MyOrders.fs" />
@@ -40,6 +38,9 @@
     <Content Include="Database\**">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ServerInterfaces\ServerInterfaces.fsproj" />
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -1,6 +1,6 @@
 module FunPizzaShop.Server.Views.Index
 open Common
-open FunPizzaShop.Server.Query
+open FunPizzaShop.ServerInterfaces.Query
 open FunPizzaShop.Shared.Model.Pizza
 open FunPizzaShop.Shared.Model
 open Thoth.Json.Net
