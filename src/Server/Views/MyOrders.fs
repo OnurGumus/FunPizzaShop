@@ -25,7 +25,7 @@ let view (env:#_) (ctx:HttpContext)  (dataLevel: int) = task{
                     Status: <strong>{ order.DeliveryStatus }</strong>
                 </div>
                 <div class="col flex-grow-0">
-                    <a href='myOrders/{ order.OrderId.Value }/{ order.Version.Value }/+' class="btn btn-success">
+                    <a href='trackOrder/{ order.OrderId.Value }' class="btn btn-success">
                         Track &gt;
                     </a>
                 </div>

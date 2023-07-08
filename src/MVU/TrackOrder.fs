@@ -9,16 +9,17 @@ type Msg =
 
 type Order = NoOrder | TrackOrder of OrderId
 
-type Model = { Order: Pizza.Order option}
+type Model = { Order: Pizza.Order option; OrderId : OrderId }
 
 
-let init () = 
-   {Order = None}, NoOrder
+let init (orderId:string) () =
+   let orderId = orderId |> ShortString.TryCreate |> forceValidate |> OrderId
+   {Order = None; OrderId = orderId}, NoOrder
   
 let update (msg:Msg) (model:Model) =
    match msg with
    | Remote (ServerToClient.Msg.OrderFound order) ->
-       { Order = Some order }, NoOrder
+       { model with  Order = Some order }, NoOrder
 
    | Remote (ServerToClient.Msg.LocationUpdated(_, loc)) ->
          let order = { model.Order.Value with CurrentLocation = loc }
@@ -28,4 +29,4 @@ let update (msg:Msg) (model:Model) =
          { model with Order = Some order }, NoOrder
 
    | Remote (ServerToClient.Msg.ServerConnected) ->
-      model, TrackOrder("Order_f829deac-4193-4bc6-9f1f-be61c6a69458" |>ShortString.TryCreate|> forceValidate |> OrderId)
+      model, TrackOrder(model.OrderId)

@@ -8,8 +8,6 @@ open FunPizzaShop.Server.Handlers.Pizza
 open Microsoft.AspNetCore.Authentication.Cookies
 open FunPizzaShop.Domain.API
 
-
-
 let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =
 
     let viewRoute view = 
@@ -23,7 +21,8 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
         
     let myOrders = viewRoute (MyOrders.view env)
     
-    let trackOrder = viewRoute (TrackOrder.view env)
+    let trackOrder orderId = 
+        viewRoute (TrackOrder.view env orderId)
     let auth = requiresAuthentication (challenge CookieAuthenticationDefaults.AuthenticationScheme)
     choose [ 
         (authenticationHandler env)
@@ -41,9 +40,7 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
         routex "^.*socket.*$"
             >=> auth
             >=>  TrackOrder.brideServer env
-        routeCi "/trackOrder"
-            >=> auth
-            >=>(trackOrder)
+        routeCif "/trackOrder/%s"  (fun orderId -> auth >=>(trackOrder orderId))
     ]
 
 let webAppWrapper (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Task) =

@@ -42,11 +42,25 @@ let L :obj  = jsNative
 
 [<HookComponent>]
 let view (host:LitElement) (model:Model) dispatch =
+    Hook.useEffectOnChange(model.Order, fun (order) -> 
+        let marker = host?marker
+        match marker, order with
+        | _ , None
+        | null, _ -> ()
+
+        | _, Some order-> 
+            let coords = marker?getLatLng()
+            marker?setLatLng([|coords?lat + 0.0001; coords?lng|]:obj array)
+        Hook.emptyDisposable
+    )
     Hook.useEffectOnce (fun () -> 
         let map = L?map("map")?setView(([|51.505; -0.09|]:obj array), 13);
         L?tileLayer("https://tile.openstreetmap.org/{z}/{x}/{y}.png", {|
             maxZoom = 19;
             attribution = "&copy; <a href='http://www.openstreetmap.org/copyright'>OpenStreetMap</a>"|})?addTo(map);
+
+        host?marker <- L?marker([|51.515; -0.09|]:obj array)?addTo(map);
+
         Hook.createDisposable(fun () ->  
         (bc :> IDisposable).Dispose()
         match Elmish.Bridge.Helpers.mappings.Value with
@@ -54,13 +68,14 @@ let view (host:LitElement) (model:Model) dispatch =
             Elmish.Bridge.Helpers.mappings.Value <- Some (map.Remove("TrackOrder" |> Some))
         | None -> ())
     )
+
     let orderDetails = 
         match model.Order with
         | Some order -> 
-         
             let pizzas = order.Pizzas
             [ OrderReview.pizzaList pizzas @ [OrderReview.summ pizzas] ]
         | _ -> []
+
     html $"""
         <div class="track-order">
         <div class="track-order-title">
@@ -93,11 +108,15 @@ let LitElement () =
     Hook.useHmr (hmr)
 #endif
 
-    let host, _ = LitElement.init (fun config -> 
+    let host, props = LitElement.init (fun config -> 
         config.useShadowDom <- false
+        config.props <-
+        {|
+            orderId = Prop.Of("" , attribute="orderid")
+        |}
     )
     let program =
-        Program.mkHiddenProgramWithOrderExecute (init) (update) (execute host)
+        Program.mkHiddenProgramWithOrderExecute (init props.orderId.Value) (update) (execute host)
         |> Program.withBridgeConfig bc
 #if DEBUG
         |> Program.withDebugger
