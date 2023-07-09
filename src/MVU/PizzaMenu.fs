@@ -42,7 +42,7 @@ let update msg model =
     | ToppingAdded index ->
         match model.Pizza with
         | Some pizza ->
-            let topping = List.item index model.Toppings
+            let topping = model.Toppings[index]
 
             let newPizza = {
                 pizza with

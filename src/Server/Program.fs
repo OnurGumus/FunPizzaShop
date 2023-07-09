@@ -21,6 +21,10 @@ open FunPizzaShop.Server.Views
 open FunPizzaShop.Server.Handlers.Default
 open HTTP
 open FunPizzaShop.Shared.Constants
+open System.Globalization
+
+CultureInfo.DefaultThreadCurrentCulture <- CultureInfo.InvariantCulture
+CultureInfo.DefaultThreadCurrentUICulture <- CultureInfo.InvariantCulture
 
 bootstrapLogger()
         
