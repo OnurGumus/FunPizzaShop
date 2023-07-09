@@ -196,6 +196,7 @@ animation;
         align-self: center;
         margin: auto;
         width: 700px !important;
+        max-width: 95vi;
         max-height: calc(100% - 3rem);
     }
 
@@ -285,7 +286,7 @@ animation;
         overflow-y: auto;
         padding: 2rem 1.5rem 1.5rem 1.5rem;
         flex-grow: 1;
-
+        max-height: 30vb;
         :is(h2) {
             color: #fff2cc;
             font-size: 1.3rem;
@@ -507,7 +508,7 @@ animation;
         }
 
         .sidebar {
-            inline-size: 110vi;
+            inline-size: 100vi;
         }
 
         .user-info {

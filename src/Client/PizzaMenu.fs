@@ -42,7 +42,7 @@ let view (host:LitElement) (model: Model) dispatch =
     let topicOption (index: int) (topping: Topping) =
         html
             $"""
-            <option value={index}> {topping.Name.Value} - {topping.FormattedBasePrice}</option>
+            <option value={index}> {topping.Name.Value} - £{topping.FormattedBasePrice}</option>
         """
 
     let toppings =
@@ -51,7 +51,7 @@ let view (host:LitElement) (model: Model) dispatch =
 
         html
             $"""
-            <select class="custom-select" @input={Ev(fun e -> dispatch (ToppingAdded(e.target?value)))}>
+            <select class="custom-select" @input={Ev(fun e -> dispatch (ToppingAdded(e.target?value |> System.Int32.Parse)))}>
                 <option value="-1">Choose a topping</option>
                 {toppingOptions}
             </select>
