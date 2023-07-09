@@ -286,7 +286,6 @@ animation;
         overflow-y: auto;
         padding: 2rem 1.5rem 1.5rem 1.5rem;
         flex-grow: 1;
-        max-height: 30vb;
         :is(h2) {
             color: #fff2cc;
             font-size: 1.3rem;
@@ -528,6 +527,10 @@ animation;
         }
         .checkout-cols>div {
             margin-inline: 0;
+        }
+
+        .order-contents {
+            max-height: 30vb;
         }
     }
 

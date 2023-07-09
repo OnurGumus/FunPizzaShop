@@ -38,7 +38,7 @@ let view (model: Model) dispatch =
         match page with
         | Home -> Lit.nothing
         | Checkout -> 
-            html $""""
+            html $"""
              <fps-checkout></fps-checkout>
             """
     | None -> Lit.nothing
