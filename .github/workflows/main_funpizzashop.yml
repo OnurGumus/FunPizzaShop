@@ -9,30 +9,33 @@ on:
       - main
   workflow_dispatch:
 
+
 jobs:
   build:
     runs-on: windows-latest
-
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
       - name: Set up .NET Core
-        uses: actions/setup-dotnet@v1
+        uses: actions/setup-dotnet@v3
         with:
           dotnet-version: '7.x'
-          include-prerelease: true
+      - name: Tool restore
+        run: dotnet tool restore
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Release
-
-      - name: dotnet publish
-        run: dotnet publish -c Release -o ${{env.DOTNET_ROOT}}/myapp
+      - name: Build release
+        run:  dotnet run --project build/ -- -t PublishServer
 
       - name: Upload artifact for deployment job
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
+          retention-days: 5
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: deploy
+
 
   deploy:
     runs-on: windows-latest
@@ -43,7 +46,7 @@ jobs:
 
     steps:
       - name: Download artifact from build job
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v3
         with:
           name: .net-app
 
