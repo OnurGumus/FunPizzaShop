@@ -142,17 +142,18 @@ let actorProp (env:#_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventso
 
                             let lastSlash = mailbox.Pid.LastIndexOf("/")
 
-                            let id =
+                            let email =
                                 mailbox.Pid
                                     .Substring(lastSlash + 1)
                                     |> Uri.UnescapeDataString
-
-                            // BestFitBox.Command.MailSender.sendMessage
-                            //     config
-                            //     id
-                            //     "Verification Code"
-                            //     $"Your verification code is <b>{verificationCode.Value}</b>"
-                            //     verificationCode.Value
+                                    |> UserId.TryCreate
+                                    |> forceValidate
+                            let body =  
+                                $"Your verification code is <b>{verificationCode.Value}</b>" 
+                                |> LongString.TryCreate |> forceValidate
+                            let subject = "Verification Code" |> ShortString.TryCreate |> forceValidate
+                            (mailSender.SendVerificationMail email subject body) |> Async.Start
+                               
 
                             let e = LoginSucceeded( Some verificationCode)
                             return! toEvent ci v e |> box |> Persist

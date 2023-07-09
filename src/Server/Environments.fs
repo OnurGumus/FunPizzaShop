@@ -7,6 +7,8 @@ open Command
 open FunPizzaShop.Shared.Model.Authentication
 open FunPizzaShop.Shared.Command.Authentication
 open FunPizzaShop.Shared.Command.Pizza
+open System.Net.Mail
+open System.Net
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration) as self =
@@ -20,10 +22,27 @@ type AppEnv(config: IConfiguration) as self =
         member _.SendVerificationMail =
             fun (email:Email) (subject: Subject) (body: Body) ->
                 async{
-                    // MailSender.sendMessage 
-                    //     config["config:SmtpUser"]
-                    //     config.["config:SmtpPass"] 
-                    //         (email.Value) (subject.Value) (body.Value)
+                    let sender = "info@bindrake.com"
+                    let password = config.GetSection("config:SendGrid:APIKEY").Value
+                    let target = email.Value
+                    let subject = subject.Value
+                    let body = body.Value
+                    let userName = "apikey"
+                    let msg = new MailMessage()
+                    msg.To.Add(new MailAddress(target))
+                    msg.From <- new MailAddress(sender)
+                    msg.Subject <- subject
+                    msg.Body <- body
+                    msg.IsBodyHtml <- true
+
+                    let client =
+                        new SmtpClient(
+                            Host = "smtp.sendgrid.net",
+                            Port = 587,
+                            EnableSsl = true,
+                            Credentials = new NetworkCredential(userName, password)
+                        )
+                    client.Send(msg)
                     return ()
                 }
 
