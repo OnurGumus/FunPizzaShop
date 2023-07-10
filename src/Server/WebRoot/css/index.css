@@ -83,7 +83,9 @@ animation;
             block-size: 2rem;
             margin-block-end: 0.25rem;
         }
-        order:2;
+        @media (width < 768px) {
+            order:2;
+        }
     }
 
     .user-info {
