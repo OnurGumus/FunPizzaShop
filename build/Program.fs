@@ -10,7 +10,6 @@ let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
 let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
-let clientDeployReleasePath = "clientFiles" |> Path.combine deployDir
 let automationPath = Path.getFullName "./test/Automation"
 
 let platformTool tool winTool =
@@ -107,4 +106,4 @@ let main argv =
     initTargets () |> ignore
     Target.runOrDefaultWithArguments "RunServer"
 
-    0 // return an integer exit cod
+    0

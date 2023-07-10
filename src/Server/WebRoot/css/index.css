@@ -31,10 +31,8 @@ animation;
         >*:not(:is(.sidebar)) {
             flex-grow: 1;
         }
-
     }
    
-
     main {
         >*:not(.sidebar) {
             overflow-y: auto;
@@ -52,11 +50,9 @@ animation;
         display:contents;
     }
     .sidebar {
-        background-color: #2b2b2b;
-        width: 20rem;
+        inline-size: 20rem;
         display: flex;
         flex-direction: column;
-        color: white;
     }
 
 
@@ -67,11 +63,10 @@ animation;
     
     .main {
         display: flex;
-        height: 100%;
+        min-block-size: 100%;
         flex-direction: column;
         flex-grow: 1;
         overflow-y: auto;
-        background: linear-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,0.4) 80%);
         padding: 1.5rem !important;
     }
     
@@ -113,22 +108,13 @@ animation;
             align-items: center;
             justify-content: center;
         }
-       
     }
 
     a.sign-in {
         padding: 0.2rem 0.8rem 0.1rem 0.8rem;
     }
 
-    .user-info a.sign-out {
-        color: #fff2cc;
-        font-size: 0.8rem;
-        cursor: pointer;
-    }
     
-    .user-info a.sign-out:hover {
-        text-decoration: underline;
-    }
     
     
     .pizza-cards {
@@ -139,7 +125,7 @@ animation;
         padding-left: 0;
 
         >li {
-            height: 10rem;
+            block-size: 10rem;
             position: relative;
             background-size: cover;
         }
@@ -195,9 +181,9 @@ animation;
         z-index: 2000;
         align-self: center;
         margin: auto;
-        width: 700px !important;
-        max-width: 95vi;
-        max-height: calc(100% - 3rem);
+        inline-size: 700px !important;
+        max-inline-size: 95vi;
+        max-block-size: calc(100% - 3rem);
     }
 
     .dialog-title {
@@ -221,18 +207,18 @@ animation;
 
         :is(label) {
             text-align: right;
-            width: 200px;
+            inline-size: 200px;
             margin: 0 1.5rem;
         }
 
         .size-label {
-            min-width: 110px;
+            min-inline-size: 110px;
             text-align: right;
         }
     }
 
     .dialog-buttons {
-        height: 4rem;
+        block-size: 4rem;
         flex-shrink: 0;
         display: flex;
         align-items: center;
@@ -242,7 +228,7 @@ animation;
     .dialog-body input,
     .dialog-body select {
         flex-grow: 1;
-        width: unset;
+        block-size: unset;
     }
 
     .dialog {
@@ -287,73 +273,42 @@ animation;
         padding: 2rem 1.5rem 1.5rem 1.5rem;
         flex-grow: 1;
         :is(h2) {
-            color: #fff2cc;
-            font-size: 1.3rem;
-            font-weight: 300;
             margin-bottom: 1rem;
-            font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
-            text-transform: uppercase;
         }
     }
 
-
     .order-total {
-        background-color: rgb(191, 52, 52);
-        height: 4rem;
+        block-size: 4rem;
         flex-shrink: 0;
         display: flex;
         flex-direction: row;
         align-items: center;
-        color: white;
-        font-size: 1.2rem;
-        transition: all 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
         padding: 0 1.5rem;
-
         &.hidden {
             transform: translate3d(0, 4rem, 0);
         }
-
         .total-price {
-            font-weight: 700;
-            font-size: 1.5rem;
-
             &::before {
-                content: '£';
-                font-weight: 300;
                 margin: 0 0.1rem 0 0.4rem;
             }
         }
-
         .btn {
             margin-left: auto;
-            font-weight: 700;
-            border-radius: 20px;
-            padding: 0.4rem 1.2rem;
         }
-
     }
-
-
 
     .checkout-button {
         margin: auto;
         display: block;
-        font-weight: 700;
-        border-radius: 20px;
         padding: 0.4rem 1.2rem;
     }
 
     .cart-item {
-        background-color: #333333;
         padding: 0.8rem 1.2rem;
         border-radius: 6px;
-        font-weight: 100;
-        margin-top: 1rem;
+        margin-block-start: 1rem;
         position: relative;
 
-        .title {
-            font-weight: 700;
-        }
 
         :is(ul) {
             padding: 0;
@@ -374,11 +329,11 @@ animation;
 
     .checkout-cols {
         display: flex;
-        height: 100%;
+        block-size: 100%;
     }
 
     .checkout-cols h4 {
-        margin-bottom: 1.5rem;
+        margin-block-end: 1.5rem;
     }
 
     .checkout-cols>div {
@@ -388,31 +343,11 @@ animation;
     }
 
     .checkout-cols>div:first-child {
-        margin-left: 0;
+        margin-inline-start: 0;
     }
 
     .checkout-cols>div:last-child {
-        margin-right: 0;
-    }
-
-    .loading-bar {
-        position: absolute;
-        top: calc(50% - 3px);
-        left: calc(50% - 250px);
-        width: 500px;
-        height: 6px;
-        background-color: white;
-        overflow: hidden;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
-        &::after {
-            content: '';
-            display: block;
-            width: 200px;
-            height: 100%;
-            background-color: #dc105a;
-            animation: progressbar-slide 1s infinite;
-            animation-timing-function: ease-in-out;
-        }
+        margin-inline-end: 0;
     }
 
 
@@ -436,7 +371,7 @@ animation;
             display: flex;
             border:1px solid #eee;
             background: white;
-            border-top: none;
+            border-block-start: none;
             first-child {
                 border-top: 1px solid #eee;
             }
@@ -448,9 +383,6 @@ animation;
             margin: auto;
         }
         :is(h5) {
-            color: #c03939;
-            font-size: 1.3rem;
-            font-weight: 300;
             margin: 0.2rem 0 0 0;
             text-transform: uppercase;
         }
@@ -458,9 +390,7 @@ animation;
 
 
     .track-order {
-        background-color: white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
-        height: 100%;
+        block-size: 100%;
         display: flex;
         flex-direction: column;
         > div {
@@ -470,16 +400,11 @@ animation;
 
 
     .track-order-title {
-        background-color: #eee;
         display: flex;
         align-items: center;
         padding: 1rem 3rem;
         :is(h2) {
-            color: #c03939;
-            font-size: 1.3rem;
-            font-weight: 300;
             margin: 0rem;
-            text-transform: uppercase;
         }
     }
 
@@ -530,7 +455,7 @@ animation;
         }
 
         .order-contents {
-            max-height: 30vb;
+            max-block-size: 30vb;
         }
     }
 
@@ -602,10 +527,22 @@ animation;
             }
         }
     }
-
+    .sidebar {
+        background-color: #2b2b2b;
+        color: white;
+    }
+    
     .user-info a {
         color: #fff2cc;
         font-size: 0.8rem;
+        &.sign-out {
+            color: #fff2cc;
+            font-size: 0.8rem;
+            cursor: pointer;
+            &:hover {
+                text-decoration: underline;
+            }
+        }
     }
 
     a.sign-in {
@@ -800,7 +737,9 @@ animation;
             margin-top: 0;
         }
     }
-
+    .main {
+        background: linear-gradient(rgba(0,0,0,0) 40%, rgba(0,0,0,0.4) 80%);
+    }
 
     .dialog-title {
         background-color: #444;
@@ -886,6 +825,15 @@ animation;
             opacity: 1;
         }
     }
+    .order-contents {
+        :is(h2) {
+            color: #fff2cc;
+            font-size: 1.3rem;
+            font-weight: 300;
+            font-family: 'Bahnschrift', Arial, Helvetica, sans-serif;
+            text-transform: uppercase;
+        }
+    }
 
     .dialog {
         background-color: white;
@@ -894,6 +842,71 @@ animation;
         animation-timing-function: cubic-bezier(0.075, 0.820, 0.165, 1.000);
         .form-field{
             color:black;
+        }
+    }
+
+    .order-total {
+        background-color: rgb(191, 52, 52);
+        color: white;
+        font-size: 1.2rem;
+        transition: all 600ms cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        .total-price {
+            font-weight: 700;
+            font-size: 1.5rem;
+
+            &::before {
+                content: '£';
+                font-weight: 300;
+            }
+        }
+        .btn {
+            font-weight: 700;
+            border-radius: 20px;
+        }
+
+    }
+    .orders-list {
+        :is(h5) {
+            color: #c03939;
+            font-size: 1.3rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+    }
+
+
+    .track-order {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+
+    .track-order-title {
+        background-color: #eee;
+        padding: 1rem 3rem;
+        :is(h2) {
+            color: #c03939;
+            font-size: 1.3rem;
+            font-weight: 300;
+            text-transform: uppercase;
+        }
+    }
+    .checkout-button {
+        font-weight: 700;
+        border-radius: 20px;
+    }
+
+    .cart-item {
+        background-color: #333333;
+        border-radius: 6px;
+        font-weight: 100;
+
+        .title {
+            font-weight: 700;
+        }
+        :is(li) {
+            list-style-type: none;
+            font-size: 0.8rem;
         }
     }
 
