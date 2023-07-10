@@ -16,7 +16,7 @@ Live Demo Online:
 
 https://funpizzashop.azurewebsites.net/
 
-![](https://github.com/OnurGumus/FunPizzaShop/funpizzashop.gif)
+![](https://raw.githubusercontent.com/OnurGumus/FunPizzaShop/main/funpizzashop.gif)
 
 
 You need docker for desktop installed in your machine for MacOS or Windows. 
