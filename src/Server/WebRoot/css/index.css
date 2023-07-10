@@ -5,7 +5,7 @@ appearance,
 other,
 animation;
 
-@import "base.css" layer(base);
+@import "base.css?v=202307101701" layer(base);
 
 @layer layout {
     body {
@@ -83,6 +83,7 @@ animation;
             block-size: 2rem;
             margin-block-end: 0.25rem;
         }
+        order:2;
     }
 
     .user-info {
@@ -375,6 +376,7 @@ animation;
             first-child {
                 border-top: 1px solid #eee;
             }
+            padding: 0 0.5em;
         }
     }
 
@@ -412,17 +414,28 @@ animation;
     .track-order-body {
         flex-grow: 1;
         display: flex;
+        @media (width < 768px) {
+            flex-direction: column;
+            align-items: center;
+        }
     }
 
     .track-order-details {
         overflow-y: auto;
         padding: 1.5rem 3rem;
         flex-grow: 1;
+        @media (width < 768px) {
+            flex-grow: revert;
+        }
+       
     }
 
     .track-order-map {
         inline-size: 350px;
         flex-shrink: 0;
+        @media (width < 768px) {
+        flex-grow: 1;
+        }
     }
 
 
@@ -456,6 +469,9 @@ animation;
 
         .order-contents {
             max-block-size: 30vb;
+        }
+        .user-info {
+            order:1;
         }
     }
 
@@ -638,8 +654,6 @@ animation;
         &:hover {
             color: yellow;
         }
-
-        ;
         right: 10px;
     }
 
@@ -885,6 +899,9 @@ animation;
             font-size: 1.3rem;
             font-weight: 300;
             text-transform: uppercase;
+            @media (width < 768px) {
+                font-size: 1rem;
+            }
         }
     }
     .checkout-button {
