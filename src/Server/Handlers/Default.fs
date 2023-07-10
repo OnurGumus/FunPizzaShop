@@ -34,7 +34,6 @@ let webApp (env: #_) (layout: HttpContext -> (int -> Task<string>) -> string Tas
             >=>(pizzaHandler env)
 
         routeCi "/myOrders"
-            >=> auth
             >=>(myOrders)
 
         routex "^.*socket.*$"

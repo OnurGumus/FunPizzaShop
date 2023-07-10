@@ -46,9 +46,6 @@ let rec execute (host: LitElement) order (dispatch: Msg -> unit) =
             do! Server.api.OrderPizza order
             dispatch OrderPlaced
             window.location.href <- sprintf "/trackOrder/%s" order.OrderId.Value.Value
-            // history.replaceState (null, "", sprintf "order/%s" order.OrderId.Value.Value)
-            // let ev = CustomEvent.Create(NavigatedEvent)
-            // window.dispatchEvent ev |> ignore
         }
         |> Async.StartImmediate
       

@@ -10,7 +10,16 @@ open Microsoft.AspNetCore.Http
 
 let view (env:#_) (ctx:HttpContext)  (dataLevel: int) = task{
     let query = env :> IQuery
-    let! orders = query.Query<Order> (filter = Equal ("UserId", ctx.User.Identity.Name), take = 20, orderbydesc = "CreatedTime")
+    let! orders = 
+        async{
+        if ctx.User.Identity.IsAuthenticated |> not then
+            return []
+        else
+            return! 
+                query.Query<Order> (
+                    filter = Equal ("UserId", ctx.User.Identity.Name), 
+                        take = 20, orderbydesc = "CreatedTime")
+        }
     let li = 
         orders |> List.map(fun order ->
             html $"""
