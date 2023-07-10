@@ -9,6 +9,7 @@ open FunPizzaShop.Shared.Command.Authentication
 open FunPizzaShop.Shared.Command.Pizza
 open System.Net.Mail
 open System.Net
+open Serilog
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration) as self =
@@ -21,9 +22,13 @@ type AppEnv(config: IConfiguration) as self =
     interface IMailSender with
         member _.SendVerificationMail =
             fun (email:Email) (subject: Subject) (body: Body) ->
+                Log.Debug("Sending mail to {email}: {@body}", email, body)
                 async{
                     let sender = "info@bindrake.com"
                     let password = config.GetSection("config:SendGrid:APIKEY").Value
+                    if password = null then
+                        Log.Error("No SendGrid APIKEY found in config")
+                        return ()
                     let target = email.Value
                     let subject = subject.Value
                     let body = body.Value

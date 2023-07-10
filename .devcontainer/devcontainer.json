@@ -21,10 +21,14 @@
 			}
 	},
 	"containerEnv": {
-		"ASPNETCORE_Kestrel__Certificates__Default__Password": "crypticpassword",
-		"ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
+		// uncomment the below two lines once you have certificate
+		// "ASPNETCORE_Kestrel__Certificates__Default__Password": "crypticpassword",
+		// "ASPNETCORE_Kestrel__Certificates__Default__Path": "/home/vscode/.aspnet/https/aspnetapp.pfx",
 		"ASPNETCORE_ENVIRONMENT":"Development",
-		"ASPNETCORE_URLS":"https://+:8001;http://+:8000"
+		//Use the following line instead once you have certificate
+		//"ASPNETCORE_URLS":"https://+:8001;http://+:8000",
+
+		"ASPNETCORE_URLS":"http://+:8000"
 	},
  //
  // 3. Do one of the following depending on your scenario:
@@ -35,9 +39,10 @@
  //
  //    * If only using Remote - Containers with a local container, uncomment this line instead:
 	"mounts": [ 
-		"source=${env:HOME}${env:USERPROFILE}/.aspnet/https,target=/home/vscode/.aspnet/https,type=bind",
-		"source=${env:HOME}${env:USERPROFILE}/.microsoft/usersecrets,target=/root/.microsoft/usersecrets,type=bind",
-		"source=${env:HOME}${env:USERPROFILE}/.aspnet/DataProtection-Keys,target=/root/.aspnet/DataProtection-Keys,type=bind"
+		// uncomment the next line for cert
+		// "source=${env:HOME}${env:USERPROFILE}/.aspnet/https,target=/home/vscode/.aspnet/https,type=bind",
+		// "source=${env:HOME}${env:USERPROFILE}/.microsoft/usersecrets,target=/root/.microsoft/usersecrets,type=bind",
+		// "source=${env:HOME}${env:USERPROFILE}/.aspnet/DataProtection-Keys,target=/root/.aspnet/DataProtection-Keys,type=bind"
 	 ],
 
 	"customizations": {
@@ -63,7 +68,7 @@
 
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-     "postCreateCommand": "dotnet tool restore",
+     "postCreateCommand": "./postbuild.sh",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
