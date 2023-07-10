@@ -46,7 +46,7 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
             html $"""<fps-signin username={ ctx.User.Identity.Name }></fps-signin>"""
         else
             html $"""<fps-signin></fps-signin>"""
-                    
+    let isMyOders = ctx.Request.Path.Value.Contains("myOrders")                
     return
         html $"""
     <!DOCTYPE html>
@@ -94,17 +94,11 @@ let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
         <body>
             <header>
                 <img class=logo src = "/assets/icons/logo.svg" alt="Fun Pizza Shop"/>
-               
-                    <!-- <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="/order">Order</a></li>
-                        <li><a href="/about">About</a></li>
-                    </ul> -->
-                    <a href="/" class=nav-tab>
+                    <a href="/" class='nav-tab { if isMyOders then "" else "active"}'>
                         <img src="/assets/icons/pizza-slice.svg" alt="Get Pizza" />
                         <div>Get Pizza</div>
                     </a>
-                    <a href="/myOrders" class=nav-tab>
+                    <a href="/myOrders" class='nav-tab { if isMyOders then "active" else ""}'>
                         <img src="/assets/icons/bike.svg" alt="My Orders" />
                         <span>My Orders</span>
                     </a>

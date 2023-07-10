@@ -293,7 +293,7 @@ animation;
             }
         }
         .btn {
-            margin-left: auto;
+            margin-inline-start: auto;
         }
     }
 
@@ -317,7 +317,7 @@ animation;
 
         :is(li) {
             list-style-type: none;
-            margin-left: 0rem;
+            margin-inline-start: 0rem;
             font-size: 0.8rem;
         }
 
@@ -752,13 +752,9 @@ animation;
             text-transform: uppercase;
         }
     }
-
-
     .dialog-buttons {
         background-color: #eee;
     }
-
-
     .dialog {
         .toppings {
             text-align: center;
