@@ -33,7 +33,7 @@ Once done, open a terminal in vscode and type
 Then navigate to 
 
 ```
-http://localhost:8000.
+http://localhost:8000
 ```
 
 
