@@ -1,35 +1,51 @@
-#r @"/root/.nuget/packages/akka.cluster.sharding/1.5.7/lib/net6.0/Akka.Cluster.Sharding.dll"
-#r @"/root/.nuget/packages/akka.cluster.tools/1.5.7/lib/net6.0/Akka.Cluster.Tools.dll"
-#r @"/root/.nuget/packages/akka.cluster/1.5.7/lib/net6.0/Akka.Cluster.dll"
-#r @"/root/.nuget/packages/akka.coordination/1.5.7/lib/net6.0/Akka.Coordination.dll"
-#r @"/root/.nuget/packages/akka.distributeddata.lightningdb/1.5.7/lib/net6.0/Akka.DistributedData.LightningDB.dll"
-#r @"/root/.nuget/packages/akka.distributeddata/1.5.7/lib/net6.0/Akka.DistributedData.dll"
+#r @"/root/.nuget/packages/akka.cluster.sharding/1.5.8/lib/net6.0/Akka.Cluster.Sharding.dll"
+#r @"/root/.nuget/packages/akka.cluster.tools/1.5.8/lib/net6.0/Akka.Cluster.Tools.dll"
+#r @"/root/.nuget/packages/akka.cluster/1.5.8/lib/net6.0/Akka.Cluster.dll"
+#r @"/root/.nuget/packages/akka.coordination/1.5.8/lib/net6.0/Akka.Coordination.dll"
+#r @"/root/.nuget/packages/akka.distributeddata.lightningdb/1.5.8/lib/net6.0/Akka.DistributedData.LightningDB.dll"
+#r @"/root/.nuget/packages/akka.distributeddata/1.5.8/lib/net6.0/Akka.DistributedData.dll"
 #r @"/root/.nuget/packages/akka.logger.serilog/1.5.7/lib/netstandard2.0/Akka.Logger.Serilog.dll"
-#r @"/root/.nuget/packages/akka.persistence.query.sql/1.5.7/lib/net6.0/Akka.Persistence.Query.Sql.dll"
-#r @"/root/.nuget/packages/akka.persistence.query/1.5.7/lib/net6.0/Akka.Persistence.Query.dll"
-#r @"/root/.nuget/packages/akka.persistence.sql.common/1.5.7/lib/net6.0/Akka.Persistence.Sql.Common.dll"
-#r @"/root/.nuget/packages/akka.persistence.sqlite/1.5.7/lib/net6.0/Akka.Persistence.Sqlite.dll"
-#r @"/root/.nuget/packages/akka.persistence/1.5.7/lib/net6.0/Akka.Persistence.dll"
-#r @"/root/.nuget/packages/akka.remote/1.5.7/lib/net6.0/Akka.Remote.dll"
-#r @"/root/.nuget/packages/akka.serialization.hyperion/1.5.7/lib/net6.0/Akka.Serialization.Hyperion.dll"
-#r @"/root/.nuget/packages/akka.streams/1.5.7/lib/net6.0/Akka.Streams.dll"
-#r @"/root/.nuget/packages/akka/1.5.7/lib/net6.0/Akka.dll"
+#r @"/root/.nuget/packages/akka.persistence.query.sql/1.5.8/lib/net6.0/Akka.Persistence.Query.Sql.dll"
+#r @"/root/.nuget/packages/akka.persistence.query/1.5.8/lib/net6.0/Akka.Persistence.Query.dll"
+#r @"/root/.nuget/packages/akka.persistence.sql.common/1.5.8/lib/net6.0/Akka.Persistence.Sql.Common.dll"
+#r @"/root/.nuget/packages/akka.persistence.sqlite/1.5.8/lib/net6.0/Akka.Persistence.Sqlite.dll"
+#r @"/root/.nuget/packages/akka.persistence/1.5.8/lib/net6.0/Akka.Persistence.dll"
+#r @"/root/.nuget/packages/akka.remote/1.5.8/lib/net6.0/Akka.Remote.dll"
+#r @"/root/.nuget/packages/akka.serialization.hyperion/1.5.8/lib/net6.0/Akka.Serialization.Hyperion.dll"
+#r @"/root/.nuget/packages/akka.streams/1.5.8/lib/net6.0/Akka.Streams.dll"
+#r @"/root/.nuget/packages/akka/1.5.8/lib/net6.0/Akka.dll"
 #r @"/root/.nuget/packages/akkling.cluster.sharding/0.13.0/lib/net6.0/Akkling.Cluster.Sharding.dll"
 #r @"/root/.nuget/packages/akkling.distributeddata/0.13.0/lib/net6.0/Akkling.DistributedData.dll"
 #r @"/root/.nuget/packages/akkling.persistence/0.13.0/lib/net6.0/Akkling.Persistence.dll"
 #r @"/root/.nuget/packages/akkling.streams/0.13.0/lib/net6.0/Akkling.Streams.dll"
 #r @"/root/.nuget/packages/akkling/0.13.0/lib/net6.0/Akkling.dll"
-#r @"/root/.nuget/packages/azure.core/1.32.0/lib/net6.0/Azure.Core.dll"
+#r @"/root/.nuget/packages/azure.core/1.33.0/lib/net6.0/Azure.Core.dll"
 #r @"/root/.nuget/packages/azure.identity/1.9.0/lib/netstandard2.0/Azure.Identity.dll"
 #r @"/workspaces/FunPizzaShop/src/Command/bin/Debug/net7.0/Command.dll"
 #r @"/root/.nuget/packages/destructurama.fsharp/1.2.0/lib/netstandard2.0/Destructurama.FSharp.dll"
-#r @"/workspaces/FunPizzaShop/src/Domain/bin/Debug/net7.0/Domain.dll"
 #r @"/root/.nuget/packages/dotnetty.buffers/0.7.5/lib/net6.0/DotNetty.Buffers.dll"
 #r @"/root/.nuget/packages/dotnetty.codecs/0.7.5/lib/net6.0/DotNetty.Codecs.dll"
 #r @"/root/.nuget/packages/dotnetty.common/0.7.5/lib/net6.0/DotNetty.Common.dll"
 #r @"/root/.nuget/packages/dotnetty.handlers/0.7.5/lib/net6.0/DotNetty.Handlers.dll"
 #r @"/root/.nuget/packages/dotnetty.transport/0.7.5/lib/net6.0/DotNetty.Transport.dll"
 #r @"/root/.nuget/packages/dynamitey/2.0.10.189/lib/netstandard2.0/Dynamitey.dll"
+#r @"/root/.nuget/packages/elmish.bridge.giraffe/7.0.0/lib/net6.0/Elmish.Bridge.Giraffe.dll"
+#r @"/root/.nuget/packages/elmish.bridge.rpc/7.0.0/lib/net6.0/Elmish.Bridge.RPC.dll"
+#r @"/root/.nuget/packages/elmish.bridge.server/7.0.0/lib/net6.0/Elmish.Bridge.Server.dll"
+#r @"/root/.nuget/packages/elmish/4.0.2/lib/netstandard2.0/Elmish.dll"
+#r @"/root/.nuget/packages/exceldatareader.dataset/3.6.0/lib/netstandard2.0/ExcelDataReader.DataSet.dll"
+#r @"/root/.nuget/packages/exceldatareader/3.6.0/lib/netstandard2.0/ExcelDataReader.dll"
+#r @"/root/.nuget/packages/excelprovider/2.0.0/lib/netstandard2.0/ExcelProvider.Runtime.dll"
+#r @"/root/.nuget/packages/fsharp.data.csv.core/6.2.0/lib/netstandard2.0/FSharp.Data.Csv.Core.dll"
+#r @"/root/.nuget/packages/fsharp.data.html.core/6.2.0/lib/netstandard2.0/FSharp.Data.Html.Core.dll"
+#r @"/root/.nuget/packages/fsharp.data.http/6.2.0/lib/netstandard2.0/FSharp.Data.Http.dll"
+#r @"/root/.nuget/packages/fsharp.data.json.core/6.2.0/lib/netstandard2.0/FSharp.Data.Json.Core.dll"
+#r @"/root/.nuget/packages/fsharp.data.runtime.utilities/6.2.0/lib/netstandard2.0/FSharp.Data.Runtime.Utilities.dll"
+#r @"/root/.nuget/packages/sqlprovider/1.3.10/lib/net6.0/FSharp.Data.SqlProvider.dll"
+#r @"/root/.nuget/packages/fsharp.data.worldbank.core/6.2.0/lib/netstandard2.0/FSharp.Data.WorldBank.Core.dll"
+#r @"/root/.nuget/packages/fsharp.data.xml.core/6.2.0/lib/netstandard2.0/FSharp.Data.Xml.Core.dll"
+#r @"/root/.nuget/packages/fsharp.data/6.2.0/lib/netstandard2.0/FSharp.Data.dll"
+#r @"/root/.nuget/packages/fsharp.interop.dynamic/5.0.1.268/lib/netstandard2.0/FSharp.Interop.Dynamic.dll"
 #r @"/root/.nuget/packages/fsharp.systemtextjson/1.1.23/lib/netstandard2.0/FSharp.SystemTextJson.dll"
 #r @"/root/.nuget/packages/fable.core/4.0.0/lib/netstandard2.0/Fable.Core.dll"
 #r @"/root/.nuget/packages/fable.remoting.giraffe/5.14.0/lib/net5.0/Fable.Remoting.Giraffe.dll"
@@ -56,15 +72,15 @@
 #r @"/root/.nuget/packages/fluentmigrator.runner/3.3.2/lib/netstandard2.0/FluentMigrator.Runner.dll"
 #r @"/root/.nuget/packages/fluentmigrator/3.3.2/lib/netstandard2.0/FluentMigrator.dll"
 #r @"/root/.nuget/packages/fshttp/10.0.0/lib/net7.0/FsHttp.dll"
-#r @"/root/.nuget/packages/fstoolkit.errorhandling/4.6.0/lib/netstandard2.1/FsToolkit.ErrorHandling.dll"
+#r @"/root/.nuget/packages/fstoolkit.errorhandling/4.7.0/lib/netstandard2.1/FsToolkit.ErrorHandling.dll"
 #r @"/root/.nuget/packages/giraffe.serilogextensions/2.2.0/lib/net6.0/Giraffe.SerilogExtensions.dll"
 #r @"/root/.nuget/packages/giraffe.viewengine/1.4.0/lib/net5.0/Giraffe.ViewEngine.dll"
-#r @"/root/.nuget/packages/giraffe/6.0.0/lib/net6.0/Giraffe.dll"
-#r @"/root/.nuget/packages/google.apis.auth/1.60.0/lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll"
-#r @"/root/.nuget/packages/google.apis.auth/1.60.0/lib/netstandard2.0/Google.Apis.Auth.dll"
-#r @"/root/.nuget/packages/google.apis.core/1.60.0/lib/netstandard2.0/Google.Apis.Core.dll"
-#r @"/root/.nuget/packages/google.apis/1.60.0/lib/netstandard2.0/Google.Apis.dll"
-#r @"/root/.nuget/packages/google.protobuf/3.23.2/lib/net5.0/Google.Protobuf.dll"
+#r @"/root/.nuget/packages/giraffe/6.1.0/lib/net7.0/Giraffe.dll"
+#r @"/root/.nuget/packages/google.apis.auth/1.61.0/lib/netstandard2.0/Google.Apis.Auth.PlatformServices.dll"
+#r @"/root/.nuget/packages/google.apis.auth/1.61.0/lib/netstandard2.0/Google.Apis.Auth.dll"
+#r @"/root/.nuget/packages/google.apis.core/1.61.0/lib/netstandard2.0/Google.Apis.Core.dll"
+#r @"/root/.nuget/packages/google.apis/1.61.0/lib/netstandard2.0/Google.Apis.dll"
+#r @"/root/.nuget/packages/google.protobuf/3.23.4/lib/net5.0/Google.Protobuf.dll"
 #r @"/root/.nuget/packages/hocon.extensions.configuration/2.0.4/lib/netstandard2.0/Hocon.Extensions.Configuration.dll"
 #r @"/root/.nuget/packages/hocon/2.0.4/lib/netstandard1.3/Hocon.dll"
 #r @"/root/.nuget/packages/hyperion/0.12.2/lib/netstandard2.0/Hyperion.dll"
@@ -105,7 +121,9 @@
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Hosting.Server.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Hosting.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Html.Abstractions.dll"
-#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Http.Abstractions.dll"
+//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Http.Abstractions.dll"
+//#r @"/root/.nuget/packages/microsoft.aspnetcore.http.abstractions/2.2.0/lib/netstandard2.0/Microsoft.AspNetCore.Http.Abstractions.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.AspNetCore.Http.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Http.Connections.Common.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Http.Connections.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.Http.Extensions.dll"
@@ -155,7 +173,7 @@
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.SignalR.Core.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.SignalR.Protocols.Json.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.SignalR.dll"
-#r @"/root/.nuget/packages/microsoft.aspnetcore.spaservices.extensions/7.0.5/lib/net7.0/Microsoft.AspNetCore.SpaServices.Extensions.dll"
+#r @"/root/.nuget/packages/microsoft.aspnetcore.spaservices.extensions/7.0.8/lib/net7.0/Microsoft.AspNetCore.SpaServices.Extensions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.StaticFiles.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.WebSockets.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.AspNetCore.WebUtilities.dll"
@@ -163,41 +181,38 @@
 #r @"/root/.nuget/packages/microsoft.bcl.asyncinterfaces/7.0.0/lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/Microsoft.CSharp.dll"
 #r @"/root/.nuget/packages/microsoft.data.sqlclient/5.1.1/ref/net6.0/Microsoft.Data.SqlClient.dll"
-#r @"/root/.nuget/packages/microsoft.data.sqlite.core/7.0.5/lib/net6.0/Microsoft.Data.Sqlite.dll"
+#r @"/root/.nuget/packages/microsoft.data.sqlite.core/7.0.8/lib/net6.0/Microsoft.Data.Sqlite.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Caching.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Caching.Memory.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.caching.stackexchangeredis/7.0.5/lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll"
+#r @"/root/.nuget/packages/microsoft.extensions.caching.stackexchangeredis/7.0.8/lib/net7.0/Microsoft.Extensions.Caching.StackExchangeRedis.dll"
 //#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.configuration.abstractions/7.0.0/lib/net7.0/Microsoft.Extensions.Configuration.Abstractions.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Configuration.Abstractions.dll"
 
 #r @"/root/.nuget/packages/microsoft.extensions.configuration.binder/7.0.4/lib/net7.0/Microsoft.Extensions.Configuration.Binder.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.CommandLine.dll"
-// #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.EnvironmentVariables.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.configuration.environmentvariables/7.0.0/lib/net7.0/Microsoft.Extensions.Configuration.EnvironmentVariables.dll"
-
+//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.EnvironmentVariables.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Configuration.EnvironmentVariables.dll"
 //#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.FileExtensions.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.configuration.fileextensions/7.0.0/lib/net7.0/Microsoft.Extensions.Configuration.FileExtensions.dll"
-
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Configuration.FileExtensions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.Ini.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.Json.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.KeyPerFile.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.UserSecrets.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.Xml.dll"
 //#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Configuration.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.configuration/7.0.0/lib/net7.0/Microsoft.Extensions.Configuration.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Configuration.dll"
+
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll"
+#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.DependencyInjection.dll"
 #r @"/root/.nuget/packages/microsoft.extensions.dependencymodel/7.0.0/lib/net7.0/Microsoft.Extensions.DependencyModel.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Diagnostics.HealthChecks.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Diagnostics.HealthChecks.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Features.dll"
-// #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Abstractions.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.fileproviders.abstractions/7.0.0/lib/net7.0/Microsoft.Extensions.FileProviders.Abstractions.dll"
-
+//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Abstractions.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.FileProviders.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Composite.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Embedded.dll"
-//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Physical.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.fileproviders.physical/7.0.0/lib/net7.0/Microsoft.Extensions.FileProviders.Physical.dll"
-
+#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileProviders.Physical.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.FileSystemGlobbing.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Hosting.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Hosting.dll"
@@ -206,9 +221,7 @@
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Identity.Stores.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Localization.Abstractions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Localization.dll"
-//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.Abstractions.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.0/lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll"
-
+#r @"/root/.nuget/packages/microsoft.extensions.logging.abstractions/7.0.1/lib/net7.0/Microsoft.Extensions.Logging.Abstractions.dll"
 #r @"/root/.nuget/packages/microsoft.extensions.logging.applicationinsights/2.21.0/lib/netstandard2.0/Microsoft.Extensions.Logging.ApplicationInsights.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.Configuration.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.Console.dll"
@@ -217,14 +230,13 @@
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.EventSource.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.TraceSource.dll"
 //#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Logging.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.logging/7.0.0/lib/net7.0/Microsoft.Extensions.Logging.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.objectpool/7.0.5/lib/net7.0/Microsoft.Extensions.ObjectPool.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Logging.dll"
+#r @"/root/.nuget/packages/microsoft.extensions.objectpool/7.0.8/lib/net7.0/Microsoft.Extensions.ObjectPool.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Options.ConfigurationExtensions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Options.DataAnnotations.dll"
-//#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Options.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.options/7.0.1/lib/net7.0/Microsoft.Extensions.Options.dll"
+#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Options.dll"
 //#r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.Primitives.dll"
-#r @"/root/.nuget/packages/microsoft.extensions.primitives/7.0.0/lib/net7.0/Microsoft.Extensions.Primitives.dll"
+#r @"/usr/share/dotnet/shared/Microsoft.AspNetCore.App/7.0.3/Microsoft.Extensions.Primitives.dll"
 
 #r @"/usr/share/dotnet/packs/Microsoft.AspNetCore.App.Ref/7.0.3/ref/net7.0/Microsoft.Extensions.WebEncoders.dll"
 #r @"/root/.nuget/packages/microsoft.io.recyclablememorystream/2.3.2/lib/net5.0/Microsoft.IO.RecyclableMemoryStream.dll"
@@ -268,9 +280,10 @@
 #r @"/root/.nuget/packages/serilog.sinks.periodicbatching/3.1.0/lib/netstandard2.1/Serilog.Sinks.PeriodicBatching.dll"
 #r @"/root/.nuget/packages/serilog.sinks.seq/5.2.2/lib/net5.0/Serilog.Sinks.Seq.dll"
 #r @"/root/.nuget/packages/serilog/2.12.0/lib/net6.0/Serilog.dll"
-#r @"/root/.nuget/packages/stackexchange.redis/2.6.111/lib/net5.0/StackExchange.Redis.dll"
-#r @"/root/.nuget/packages/stripe.net/41.20.0/lib/net6.0/Stripe.net.dll"
-#r @"/root/.nuget/packages/swaggerprovider/2.0.0-beta9/lib/netstandard2.0/SwaggerProvider.Runtime.dll"
+#r @"/workspaces/FunPizzaShop/src/ServerInterfaces/bin/Debug/net7.0/ServerInterfaces.dll"
+#r @"/workspaces/FunPizzaShop/src/Shared/bin/Debug/net7.0/Shared.dll"
+#r @"/root/.nuget/packages/stackexchange.redis/2.6.116/lib/net5.0/StackExchange.Redis.dll"
+#r @"/root/.nuget/packages/stripe.net/41.23.0/lib/net6.0/Stripe.net.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.AppContext.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Buffers.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Collections.Concurrent.dll"
@@ -353,6 +366,7 @@
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Net.WebHeaderCollection.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Net.WebProxy.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Net.WebSockets.Client.dll"
+#r @"/root/.nuget/packages/system.net.websockets.websocketprotocol/5.0.0/lib/netcoreapp2.1/System.Net.WebSockets.WebSocketProtocol.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Net.WebSockets.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Net.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Numerics.Vectors.dll"
@@ -363,7 +377,7 @@
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.Emit.Lightweight.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.Emit.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.Extensions.dll"
-#r @"/root/.nuget/packages/system.reflection.metadata/7.0.1/lib/net7.0/System.Reflection.Metadata.dll"
+#r @"/root/.nuget/packages/system.reflection.metadata/7.0.2/lib/net7.0/System.Reflection.Metadata.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.Primitives.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.TypeExtensions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Reflection.dll"
@@ -410,7 +424,7 @@
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Text.Encoding.Extensions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Text.Encoding.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Text.Encodings.Web.dll"
-#r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Text.Json.dll"
+#r @"/root/.nuget/packages/system.text.json/7.0.3/lib/net7.0/System.Text.Json.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Text.RegularExpressions.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Threading.Channels.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/System.Threading.Overlapped.dll"
@@ -444,26 +458,26 @@
 #r @"/root/.nuget/packages/thoth.json/10.2.0/lib/netstandard2.0/Thoth.Json.dll"
 #r @"/root/.nuget/packages/throttlingtroll/3.0.4/lib/net6.0/ThrottlingTroll.AspNet.dll"
 #r @"/root/.nuget/packages/throttlingtroll/3.0.4/lib/net6.0/ThrottlingTroll.Core.dll"
-#r @"/root/.nuget/packages/twilio/6.7.0/lib/netstandard2.0/Twilio.dll"
+#r @"/root/.nuget/packages/twilio/6.9.0/lib/netstandard2.0/Twilio.dll"
 #r @"/root/.nuget/packages/utf8json/1.3.7/lib/netstandard2.0/Utf8Json.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/WindowsBase.dll"
 #r @"/usr/share/dotnet/packs/Microsoft.NETCore.App.Ref/7.0.3/ref/net7.0/netstandard.dll"
-// #load @"/workspaces/FunPizzaShop/src/Server/Query.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Command.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Views/Common.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Views/MyOrders.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Views/Index.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Views/Layout.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Handlers/Authentication.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Handlers/Pizza.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Handlers/Default.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/DB.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Environments.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Throttling.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Views/Common.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Views/TrackOrder.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Views/MyOrders.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Views/Index.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Views/Layout.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Handlers/Authentication.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Handlers/TrackOrder.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Handlers/Pizza.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Handlers/Default.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/DB.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Environments.fs"
+#load @"/workspaces/FunPizzaShop/src/Server/Throttling.fs"
 #load @"/workspaces/FunPizzaShop/src/Server/Serilog.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/HTTP.fs"
-// #load @"/workspaces/FunPizzaShop/src/Server/Program.fs"
+
 #I @"/workspaces/FunPizzaShop/src/Query/libs"
+
 open System
 open System.IO
 open Microsoft.Extensions.Logging
@@ -472,10 +486,12 @@ open Giraffe.SerilogExtensions
 open Microsoft.Extensions.Configuration
 open Serilog
 open Hocon.Extensions.Configuration
-open FunPizzaShop.Domain.Constants
-open FunPizzaShop.Domain.Model
-open FunPizzaShop.Domain.Model.Authentication
+open FunPizzaShop.Shared.Constants
+open FunPizzaShop.Shared.Model
+open FunPizzaShop.Shared.Model.Authentication
 open FunPizzaShop.Server.Serilog
+open FunPizzaShop.ServerInterfaces.Command
+open FunPizzaShop.Shared.Command.Authentication
 
 let configBuilder =
     ConfigurationBuilder()
@@ -483,12 +499,36 @@ let configBuilder =
         .AddEnvironmentVariables()
 
 let config = configBuilder.Build()
-let commandApi =
-    FunPizzaShop.Command.API.api config NodaTime.SystemClock.Instance
-    
-bootstrapLogger()
+
+
+type IEnv =
+    inherit IMailSender
+    inherit IConfiguration
+
+let env =
+    { new IEnv with
+
+        member this.GetChildren() = config.GetChildren()
+        member this.GetReloadToken() = config.GetReloadToken()
+        member this.GetSection(key: string) = config.GetSection(key)
+
+        member this.Item
+            with get (key: string) = config.[key]
+            and set (key: string) (v: string) = config.[key] <- v
+
+        member this.SendVerificationMail: SendVerificationMail =
+            fun x _ _ ->
+            async {
+                printfn "Sending verification mail to %A" x
+                return ()
+            } 
+        }
+
+let commandApi = FunPizzaShop.Command.API.api env NodaTime.SystemClock.Instance
+
+bootstrapLogger ()
 
 let user = "onur@outlook.com.tr" |> UserId.TryCreate |> forceValidate
 printfn "Starting login for %A" commandApi
-let t = Async.StartImmediate (commandApi.Login user |> Async.Ignore)
+let t = Async.StartImmediate(commandApi.Login user |> Async.Ignore)
 printfn "Login completed %A" (t)
