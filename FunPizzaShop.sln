@@ -1,4 +1,4 @@
-
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
@@ -20,6 +20,10 @@ EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Command", "src\Command\Command.fsproj", "{AD13BFCE-9440-41C4-90FC-192494E02CB8}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ServerInterfaces", "src\ServerInterfaces\ServerInterfaces.fsproj", "{AB6133CD-058F-4A6A-ADE6-C8409998957E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{23AE61BD-DDCC-4FF4-ACA7-3C0191CDE25C}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Automation", "test\Automation\Automation.fsproj", "{4E0A9D01-757C-4DDF-9155-47AC188E4223}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -62,6 +66,10 @@ Global
 		{AB6133CD-058F-4A6A-ADE6-C8409998957E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB6133CD-058F-4A6A-ADE6-C8409998957E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB6133CD-058F-4A6A-ADE6-C8409998957E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E0A9D01-757C-4DDF-9155-47AC188E4223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E0A9D01-757C-4DDF-9155-47AC188E4223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E0A9D01-757C-4DDF-9155-47AC188E4223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E0A9D01-757C-4DDF-9155-47AC188E4223}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{AB6133CD-058F-4A6A-ADE6-C8409998957E} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
@@ -71,5 +79,6 @@ Global
 		{671A306A-A517-456C-84DB-12269C02930A} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
 		{73B46A52-B640-4147-9BDD-C0762ED74BDF} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
 		{5B66FAB1-A824-4B54-9D4D-EFF922818706} = {11878012-D471-4B99-8FFF-EC6A5C39C977}
+		{4E0A9D01-757C-4DDF-9155-47AC188E4223} = {23AE61BD-DDCC-4FF4-ACA7-3C0191CDE25C}
 	EndGlobalSection
 EndGlobal

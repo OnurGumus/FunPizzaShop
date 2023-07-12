@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net7.0</TargetFramework>
+    <PlaywrightPlatform>all</PlaywrightPlatform>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="FunPizzaShop.fs" />
+    <Compile Include="Program.fs" />
+    <EmbeddedResource Include="../../features/Login.feature" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Server\Server.fsproj" />
+    <Content Include="../../features/Login.feature" />
+  </ItemGroup>
+  <Import Project="..\..\.paket\Paket.Restore.targets" />
+</Project>
