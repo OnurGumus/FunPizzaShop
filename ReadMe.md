@@ -11,14 +11,16 @@ https://www.meetup.com/tackling-f-web-development/events/294016439/
 
 https://www.meetup.com/tackling-f-web-development/events/294016439/
 
-Live Demo Online:
+## Live Demo Online:
 
+Please note the web socket based live tracking in the map screen if wait long enough in the actual demo.
 
 https://funpizzashop.azurewebsites.net/
 
 ![](https://raw.githubusercontent.com/OnurGumus/FunPizzaShop/main/funpizzashop.gif)
 
 
+## Build steps
 You need `Docker for Desktop` installed in your machine for MacOS or Windows. 
 You also need `VSCode` with `Dev Containers` extensions.
 
@@ -45,7 +47,7 @@ config{
 }
 ```
 
-To build for production 
+## To build for production 
 
 ``` bash
 ./fake.sh PublishServer
