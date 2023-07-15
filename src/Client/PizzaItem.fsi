@@ -15,9 +15,9 @@ open ElmishOrder
 open Browser.Types
 open FunPizzaShop.MVU.PizzaItem
 open Thoth.Json
-open FunPizzaShop.Domain.Model.Pizza
-open FunPizzaShop.Domain.Model
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Model.Pizza
+open FunPizzaShop.Shared.Model
+open FunPizzaShop.Shared.Constants
 
 val execute: host: LitElement -> order: Order -> dispatch: (Msg -> unit) -> unit
 

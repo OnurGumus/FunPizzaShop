@@ -10,6 +10,6 @@ val srciptSrcElem: string
 val styleSrcWithHashes: string
 val styleSrc: string
 val styleSrcElem: string
-val headerMiddleware: (HttpContext -> Func<Task> -> Task)
+val headerMiddleware: context: HttpContext -> next: Func<Task> -> Task
 val provider: FileExtensionContentTypeProvider
 val staticFileOptions: StaticFileOptions

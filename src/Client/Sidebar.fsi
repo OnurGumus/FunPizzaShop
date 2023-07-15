@@ -1,4 +1,4 @@
-module FunPizzaShop.Client.PizzaMenu
+module FunPizzaShop.Client.Sidebar
 
 open Elmish
 open Elmish.HMR
@@ -13,19 +13,18 @@ open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
 open Browser.Types
-open FunPizzaShop.MVU.PizzaMenu
-open Thoth.Json
+open FunPizzaShop.MVU.Sidebar
 open FunPizzaShop.Shared.Model.Pizza
-open FunPizzaShop.Shared.Model
-open FunPizzaShop.Shared
 open FunPizzaShop.Shared.Constants
+open Thoth.Json
+open FunPizzaShop.Shared.Model
 
 val execute: host: LitElement -> order: Order -> dispatch: (Msg -> unit) -> unit
 
 [<HookComponent>]
 val view: host: LitElement -> model: Model -> dispatch: (Msg -> unit) -> TemplateResult
 
-[<LitElement("fps-pizza-menu")>]
+[<LitElement("fps-side-bar")>]
 val LitElement: unit -> TemplateResult
 
 val register: unit -> unit

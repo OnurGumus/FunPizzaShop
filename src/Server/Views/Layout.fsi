@@ -9,4 +9,4 @@ open Common
 
 val scriptFiles: string array
 val path: string array
-val view: ctx: HttpContext -> env: #_ -> isDev: bool -> body: (int -> Task<string>) -> Task<string>
+val view: ctx: HttpContext -> env: 'a -> isDev: bool -> body: (int -> Task<string>) -> Task<string>

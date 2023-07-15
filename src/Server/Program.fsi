@@ -18,19 +18,33 @@ open Serilog
 open Hocon.Extensions.Configuration
 open ThrottlingTroll
 open FunPizzaShop.Server.Views
-open BestFitBox.Server.Handlers.Default
+open FunPizzaShop.Server.Handlers.Default
 open HTTP
-open FunPizzaShop.Domain.Constants
+open FunPizzaShop.Shared.Constants
+open System.Globalization
 
 type Self = Self
 val configBuilder: IConfigurationBuilder
 val config: IConfigurationRoot
 val errorHandler: ex: Exception -> ctx: HttpContext -> (HttpFunc -> HttpContext -> HttpFuncResult)
 val configureCors: builder: CorsPolicyBuilder -> unit
-val configureApp: app: IApplicationBuilder -> unit
+
+val configureApp:
+    app: IApplicationBuilder * appEnv: 'a -> unit
+        when 'a :> FunPizzaShop.ServerInterfaces.Query.IQuery
+        and 'a :> FunPizzaShop.ServerInterfaces.Command.IAuthentication
+        and 'a :> IConfiguration
+        and 'a :> FunPizzaShop.ServerInterfaces.Command.IPizza
+
 val configureServices: services: IServiceCollection -> unit
 val configureLogging: builder: ILoggingBuilder -> unit
-val host: args: string array -> IHost
+
+val host:
+    appEnv: 'a -> args: string array -> IHost
+        when 'a :> FunPizzaShop.ServerInterfaces.Query.IQuery
+        and 'a :> FunPizzaShop.ServerInterfaces.Command.IAuthentication
+        and 'a :> IConfiguration
+        and 'a :> FunPizzaShop.ServerInterfaces.Command.IPizza
 
 [<EntryPoint>]
 val main: args: string array -> int

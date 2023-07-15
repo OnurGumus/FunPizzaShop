@@ -1,4 +1,4 @@
-module FunPizzaShop.Client.PizzaMenu
+module FunPizzaShop.Client.Checkout
 
 open Elmish
 open Elmish.HMR
@@ -12,20 +12,25 @@ open Browser
 open Elmish.Debug
 open FsToolkit.ErrorHandling
 open ElmishOrder
-open Browser.Types
-open FunPizzaShop.MVU.PizzaMenu
+open FunPizzaShop.MVU
+open FunPizzaShop.MVU.Checkout
 open Thoth.Json
 open FunPizzaShop.Shared.Model.Pizza
 open FunPizzaShop.Shared.Model
-open FunPizzaShop.Shared
 open FunPizzaShop.Shared.Constants
+open CustomNavigation
+open FunPizzaShop.Shared
+
+module Server =
+    open Fable.Remoting.Client
+    val api: API.Order
 
 val execute: host: LitElement -> order: Order -> dispatch: (Msg -> unit) -> unit
 
 [<HookComponent>]
 val view: host: LitElement -> model: Model -> dispatch: (Msg -> unit) -> TemplateResult
 
-[<LitElement("fps-pizza-menu")>]
+[<LitElement("fps-checkout")>]
 val LitElement: unit -> TemplateResult
 
 val register: unit -> unit

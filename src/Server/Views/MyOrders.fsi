@@ -1,6 +1,7 @@
-module FunPizzaShop.Server.Views.Index
+module FunPizzaShop.Server.Views.MyOrders
 
 open Common
+open FunPizzaShop.Server
 open FunPizzaShop.ServerInterfaces.Query
 open FunPizzaShop.Shared.Model.Pizza
 open FunPizzaShop.Shared.Model
