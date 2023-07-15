@@ -28,7 +28,7 @@ module Server =
     open Fable.Remoting.Client
     let api: API.Order =
         Remoting.createApi ()
-        |> Remoting.withRouteBuilder API.Route.builder
+        |> Remoting.withRouteBuilder (API.Route.builder None)
         |> Remoting.buildProxy<API.Order>
 
 let rec execute (host: LitElement) order (dispatch: Msg -> unit) =

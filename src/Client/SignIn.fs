@@ -25,9 +25,9 @@ let private hmr = HMR.createToken ()
 module Server =
     open Fable.Remoting.Client
     open FunPizzaShop.Shared
-    let api: API.Authentication =
+    let api queryString: API.Authentication =
         Remoting.createApi ()
-        |> Remoting.withRouteBuilder API.Route.builder
+        |> Remoting.withRouteBuilder (API.Route.builder (queryString))
         |> Remoting.buildProxy<API.Authentication>
 
 let rec execute (host :LitElement) order dispatch =
@@ -39,7 +39,8 @@ let rec execute (host :LitElement) order dispatch =
         window.alert(ex)
     | Order.Login email ->
         async {
-            let! result = Server.api.Login email
+            // just for demo purposes adding some headers
+            let! result = Server.api(Some("foo=bar")) .Login email
             match result with
             | Ok _ -> dispatch  EmailSent
             | Error e -> dispatch (EmailFailed (sprintf "%A" e))
@@ -49,7 +50,7 @@ let rec execute (host :LitElement) order dispatch =
     | Order.Verify (email,code) ->
         async {
             try
-                let! result = Server.api.Verify (email, Some code)
+                let! result = Server.api(None).Verify (email, Some code)
                 match result with
                 | Ok _ -> 
                     dispatch VerificationSuccessful
@@ -62,7 +63,7 @@ let rec execute (host :LitElement) order dispatch =
 
     | Order.Logout (email) ->
         async {
-            let! result = Server.api.Logout email
+            let! result = Server.api(None).Logout ()
             match result with
             | Ok _ -> 
                 dispatch LogoutSuccess

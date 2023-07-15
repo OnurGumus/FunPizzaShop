@@ -7,6 +7,7 @@ open System.Threading.Tasks
 open type Microsoft.Playwright.Assertions
 open System.IO
 open System.Diagnostics
+open FunPizzaShop.Server
 
 [<BeforeScenario>]
 let setUpContext () = 
@@ -20,17 +21,27 @@ let setUpContext () =
 
 [<Given>]
 let ``I am at login screen`` (context:IBrowserContext) =
-    context.ClearCookiesAsync().Wait()
-
-
-[<When>]
-let ``I typed a valid email address`` (context:IBrowserContext) = 
     (task{
-        let host = (Server.App.host [||])
+        do! context.ClearCookiesAsync()
+        let appEnv = Environments.AppEnv(App.config)
+        let host = (App.host appEnv [||])
         host.Start()
         do! Task.Delay 2000
         let! page = context.NewPageAsync()
         let! _ = page.GotoAsync("http://localhost:8000")
+        do! page.GetByText("SIGN IN").ClickAsync()
+        return (page,host)
+    }).Result
+    
+
+
+[<When>]
+let ``I typed a valid email address`` (page:IPage,host:IHost) = 
+    (task{
+        let email = page.GetByPlaceholder("Email")
+        do! email.FillAsync("onur@outlook.com.tr")
+        let! button =  page.QuerySelectorAsync("#confirmButton")
+        do! button.ClickAsync()
         return (page,host)
     }).Result
 
@@ -38,10 +49,7 @@ let ``I typed a valid email address`` (context:IBrowserContext) =
 [<Then>]
 let ``it should ask me verification code`` (page:IPage,host:IHost)= 
     (task{
-        // let form =
-        //     page.GetByRole(AriaRole.Form, PageGetByRoleOptions(Name = "Calculation input form" ))
-        // do! Expect(form).ToHaveCountAsync(1)
-        // printfn "element found"
-            
+        let verification = page.GetByPlaceholder("Verification").First
+        do! Expect(verification).ToBeVisibleAsync()
         do! host.StopAsync()
     }).Wait()

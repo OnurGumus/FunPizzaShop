@@ -33,6 +33,6 @@ let pizzaAPI (ctx: HttpContext) (env: #_) : API.Order = {
 let pizzaHandler (env: #_) =
     Remoting.createApi ()
     |> Remoting.withErrorHandler (fun ex routeInfo -> Log.Error(ex,"Remoting error");  Propagate ex.Message; )
-    |> Remoting.withRouteBuilder API.Route.builder
+    |> Remoting.withRouteBuilder (API.Route.builder None)
     |> Remoting.fromContext (fun ctx -> pizzaAPI ctx env)
     |> Remoting.buildHttpHandler

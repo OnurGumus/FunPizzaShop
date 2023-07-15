@@ -33,3 +33,4 @@ src/Server/Database/FunPizzaShop.db
 src/Server/secrets.hocon
 .gitignore
 logs/
+*.report.html

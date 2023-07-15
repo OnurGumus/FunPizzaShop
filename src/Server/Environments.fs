@@ -29,26 +29,27 @@ type AppEnv(config: IConfiguration) as self =
                     if password = null then
                         Log.Error("No SendGrid APIKEY found in config")
                         return ()
-                    let target = email.Value
-                    let subject = subject.Value
-                    let body = body.Value
-                    let userName = "apikey"
-                    let msg = new MailMessage()
-                    msg.To.Add(new MailAddress(target))
-                    msg.From <- new MailAddress(sender)
-                    msg.Subject <- subject
-                    msg.Body <- body
-                    msg.IsBodyHtml <- true
+                    else
+                        let target = email.Value
+                        let subject = subject.Value
+                        let body = body.Value
+                        let userName = "apikey"
+                        let msg = new MailMessage()
+                        msg.To.Add(new MailAddress(target))
+                        msg.From <- new MailAddress(sender)
+                        msg.Subject <- subject
+                        msg.Body <- body
+                        msg.IsBodyHtml <- true
 
-                    let client =
-                        new SmtpClient(
-                            Host = "smtp.sendgrid.net",
-                            Port = 587,
-                            EnableSsl = true,
-                            Credentials = new NetworkCredential(userName, password)
-                        )
-                    client.Send(msg)
-                    return ()
+                        let client =
+                            new SmtpClient(
+                                Host = "smtp.sendgrid.net",
+                                Port = 587,
+                                EnableSsl = true,
+                                Credentials = new NetworkCredential(userName, password)
+                            )
+                        client.Send(msg)
+                        return ()
                 }
 
     interface IAuthentication with
@@ -56,7 +57,7 @@ type AppEnv(config: IConfiguration) as self =
             commandApi.Value.Login
             
         member _.Logout: Logout = 
-            fun (userId: UserId) -> 
+            fun () -> 
                 async { 
                     return  Ok()
                 }

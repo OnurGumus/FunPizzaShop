@@ -47,7 +47,9 @@ let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
         fun userId  ->
             async {
                 let email = userId.Value
-
+                //just for demo purposes printing query string
+                let foo = ctx.GetQueryStringValue("foo")
+                Log.Information("foo: {@foo}", foo)
                 let anyError =
                     if email.Contains("@") then
                         let domainName = email.Split('@').[1]
@@ -88,11 +90,10 @@ let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
                 return result
             }
     Logout =
-        fun userId ->
+        fun () ->
             async {
                 let auth = env :> IAuthentication
-                let! result = auth.Logout userId
-
+                let! result = auth.Logout ()
                 match result with
                 | Ok _ -> do! ctx.SignOutAsync() |> Async.AwaitTask
                 | _ -> ()
@@ -104,7 +105,7 @@ let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
 let authenticationHandler (env: #_) =
     Remoting.createApi ()
     |> Remoting.withErrorHandler (fun ex routeInfo -> Log.Error(ex,"Remoting error");  Propagate ex.Message; )
-    |> Remoting.withRouteBuilder API.Route.builder
+    |> Remoting.withRouteBuilder (API.Route.builder None)
     |> Remoting.fromContext (fun ctx -> authenticationAPI ctx env)
     |> Remoting.buildHttpHandler
 

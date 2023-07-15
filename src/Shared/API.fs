@@ -34,4 +34,7 @@ module TrackOrder =
 
 module Route =
     /// Defines how routes are generated on server and mapped from client
-    let builder typeName methodName = sprintf "/api/%s/%s" typeName methodName
+    let builder queryString typeName methodName  = 
+        match queryString with 
+        | None  ->  sprintf "/api/%s/%s" typeName methodName
+        | Some queryString -> sprintf "/api/%s/%s?%s" typeName methodName queryString

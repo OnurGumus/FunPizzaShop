@@ -57,10 +57,10 @@ let configureCors (builder: CorsPolicyBuilder) =
         ()
     #endif
     
-let configureApp (app: IApplicationBuilder) =
+let configureApp (app: IApplicationBuilder, appEnv) =
     let env = app.ApplicationServices.GetService<IWebHostEnvironment>()
     let isDevelopment = env.IsDevelopment()
-    let appEnv = Environments.AppEnv(config)
+   
    
     let app = if isDevelopment then app else app.UseResponseCompression()
 
@@ -116,11 +116,10 @@ let configureServices (services: IServiceCollection) =
 let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
-let host args =
+let host appEnv args =
     DB.init config
     let contentRoot = Directory.GetCurrentDirectory()
     let webRoot = Path.Combine(contentRoot, "WebRoot")
-
     Host
         .CreateDefaultBuilder(args)
         .UseSerilog(Serilog.configureMiddleware)
@@ -133,7 +132,7 @@ let host args =
 #endif
                 .UseContentRoot(contentRoot)
                 .UseWebRoot(webRoot)
-                .Configure(Action<IApplicationBuilder> configureApp)
+                .Configure(Action<IApplicationBuilder> (fun builder -> configureApp (builder, appEnv)))
                 .ConfigureServices(configureServices)
                 .ConfigureLogging(configureLogging)
             |> ignore)
@@ -142,9 +141,10 @@ let host args =
 [<EntryPoint>]
 let main args =
     let mutable ret = 0
+    let appEnv = Environments.AppEnv(config)
     try
         try
-            (host args).Run()
+            (host appEnv args).Run()
         with ex -> 
             Log.Fatal(ex, "Host terminated unexpectedly")
             ret <- -1
