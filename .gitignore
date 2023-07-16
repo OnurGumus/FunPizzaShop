@@ -34,3 +34,4 @@ src/Server/secrets.hocon
 .gitignore
 logs/
 *.report.html
+test/Automation/Test.db

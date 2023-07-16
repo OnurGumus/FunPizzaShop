@@ -14,57 +14,73 @@ open FunPizzaShop.Shared.Model
 open System
 open Microsoft.Extensions.Configuration
 open Hocon.Extensions.Configuration
-
+open FunPizzaShop.Shared.Command.Authentication
 let configBuilder =
     ConfigurationBuilder()
         .AddHoconFile("test-config.hocon")
         .AddEnvironmentVariables()
 
 let config = configBuilder.Build()
+let mutable host: IHost = Unchecked.defaultof<_>
+let appEnv: Environments.AppEnv ref = ref Unchecked.defaultof<_>
 
 [<BeforeScenario>]
 let setUpContext () = 
-    Directory.SetCurrentDirectory("/workspaces/FunPizzaShop/src/Server")
     (task {
         let! playwright = Playwright.CreateAsync()
         let! browser = playwright.Chromium.LaunchAsync(BrowserTypeLaunchOptions(Headless = true))
         let! context = browser.NewContextAsync(BrowserNewContextOptions(IgnoreHTTPSErrors = true))
-        return context
+        let sr:SendVerificationMail ref = ref Unchecked.defaultof<_>
+        let mailSender = 
+            { new IMailSender with
+                member _.SendVerificationMail =
+                    sr.Value
+        
+            }
+        appEnv.Value <- new Environments.AppEnv(config, mailSender)
+        
+        return (context, appEnv,sr)
+    }).Result
+
+[<AfterScenario>]
+let afterContext () = 
+    (task {
+        if (host <> Unchecked.defaultof<_>) then
+            printfn "stopping host"
+            (appEnv.Value:IDisposable).Dispose()
+            host.StopAsync().Wait()
     }).Result
 
 [<Given>]
-let ``I am at login screen`` (context:IBrowserContext) =
+let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail ref) =
     (task{
         let verificationCode: VerificationCode ref = ref Unchecked.defaultof<_>
 
         let trimNonNumeric (s:string) =
             s.ToCharArray() |> Array.filter(Char.IsDigit) |> String
-
-        let mailSender = 
-            { new IMailSender with
-                member _.SendVerificationMail =
-                    fun _ _ code ->
-                    verificationCode.Value <- 
-                        code.Value
-                        |> trimNonNumeric 
-                        |> VerificationCode.TryCreate |> forceValidate
-                    async { return () }
-            }
+          // failwith "not implemented"
+        sr.Value <- fun _ _ code ->
+          verificationCode.Value <- 
+              code.Value
+              |> trimNonNumeric 
+              |> VerificationCode.TryCreate |> forceValidate
+          async { return () }
+       
         do! context.ClearCookiesAsync()
-        let appEnv = Environments.AppEnv(config, mailSender)
-        let host = (App.host appEnv [||])
+       
+        host <- (App.host appEnv.Value [||])
         host.Start()
         do! Task.Delay 2000
         let! page = context.NewPageAsync()
         let! _ = page.GotoAsync("http://localhost:8000")
         do! page.GetByText("SIGN IN").ClickAsync()
-        return (page,host, verificationCode)
+        return (page, verificationCode)
     }).Result
     
 
 
 [<When>]
-let ``I typed a valid email address`` (page:IPage,host:IHost, verificationCode:VerificationCode ref) = 
+let ``I typed a valid email address`` (page:IPage, verificationCode:VerificationCode ref) = 
     (task{
         let email = page.GetByPlaceholder("Email")
         do! email.FillAsync("onur@outlook.com.tr")
@@ -72,14 +88,13 @@ let ``I typed a valid email address`` (page:IPage,host:IHost, verificationCode:V
         do! button.ClickAsync()
         do! Task.Delay 3000
         printfn "verification code: %A" verificationCode
-        return (page,host)
+        return (page)
     }).Result
 
 
 [<Then>]
-let ``it should ask me verification code`` (page:IPage,host:IHost)= 
+let ``it should ask me verification code`` (page:IPage)= 
     (task{
         let verification = page.GetByPlaceholder("Verification").First
         do! Expect(verification).ToBeVisibleAsync()
-        do! host.StopAsync()
     }).Wait()

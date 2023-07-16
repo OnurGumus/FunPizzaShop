@@ -114,23 +114,25 @@ let host appEnv args =
     DB.init appEnv
     let contentRoot = Directory.GetCurrentDirectory()
     let webRoot = Path.Combine(contentRoot, "WebRoot")
-    Host
-        .CreateDefaultBuilder(args)
-        .UseSerilog(Serilog.configureMiddleware)
-        .ConfigureWebHostDefaults(fun webHostBuilder ->
-            webHostBuilder
-#if !DEBUG
-                .UseEnvironment(Environments.Production)
-#else
-                .UseEnvironment(Environments.Development)
-#endif
-                .UseContentRoot(contentRoot)
-                .UseWebRoot(webRoot)
-                .Configure(Action<IApplicationBuilder> (fun builder -> configureApp (builder, appEnv)))
-                .ConfigureServices(configureServices)
-                .ConfigureLogging(configureLogging)
-            |> ignore)
-        .Build()
+    let host = 
+        Host
+            .CreateDefaultBuilder(args)
+            .UseSerilog(Serilog.configureMiddleware)
+            .ConfigureWebHostDefaults(fun webHostBuilder ->
+                webHostBuilder
+    #if !DEBUG
+                    .UseEnvironment(Environments.Production)
+    #else
+                    .UseEnvironment(Environments.Development)
+    #endif
+                    .UseContentRoot(contentRoot)
+                    .UseWebRoot(webRoot)
+                    .Configure(Action<IApplicationBuilder> (fun builder -> configureApp (builder, appEnv)))
+                    .ConfigureServices(configureServices)
+                    .ConfigureLogging(configureLogging)
+                |> ignore)
+            .Build()
+    host
 
 [<EntryPoint>]
 let main args =
@@ -151,7 +153,7 @@ let main args =
                   MailSender.sendMail config
         }
 
-    let appEnv = Environments.AppEnv(config, mailSender)
+    let appEnv = new Environments.AppEnv(config, mailSender)
     try
         try
             (host appEnv args).Run()

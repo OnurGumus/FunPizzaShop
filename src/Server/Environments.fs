@@ -10,7 +10,7 @@ open FunPizzaShop.Shared.Command.Pizza
 open System.Net.Mail
 open System.Net
 open Serilog
-
+open System
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
     let commandApi =
@@ -19,6 +19,9 @@ type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
     let queryApi =
         lazy(Query.API.api config commandApi.Value.ActorApi)
         
+    do 
+        DB.init config
+    
     interface IMailSender with
         member _.SendVerificationMail =
             mailSender.SendVerificationMail
@@ -48,6 +51,9 @@ type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
         member _.GetReloadToken() = config.GetReloadToken()
         member _.GetSection key = config.GetSection(key)
 
+    interface IDisposable with
+            member _.Dispose()  = 
+                commandApi.Value.ActorApi.System.Terminate().Wait()
     
     interface IQuery with
         member _.Query(?filter, ?orderby,?orderbydesc, ?thenby, ?thenbydesc, ?take, ?skip) =

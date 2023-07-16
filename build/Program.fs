@@ -82,11 +82,13 @@ let initTargets () =
     Target.create "RunAutomation" (fun _ ->
         Process.setKillCreatedProcesses true
         async {
-                let uiTask = (runTool Proc.startRaw) "dotnet" "run" automationPath
-                let ExitCode = uiTask.Result.Raw.Result.RawExitCode 
-                Process.killAllCreatedProcesses()
-                if ExitCode <> 0 then
-                    failwith "UITest failed"
+                try
+                    let uiTask = (runTool Proc.startRaw) "dotnet" "run" automationPath
+                    let ExitCode = uiTask.Result.Raw.Result.RawExitCode 
+                    if ExitCode <> 0 then
+                        failwithf "UITest failed with exit code %d" ExitCode
+                finally
+                    Process.killAllCreatedProcesses()
         }
         |> Async.RunSynchronously
         |> ignore)

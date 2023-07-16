@@ -56,7 +56,6 @@ let inline decode<'T> =
   
 open FunPizzaShop.Command.Domain
 let handleEvent (connectionString: string) (subQueue: ISourceQueue<_>) (envelop: EventEnvelope) =
-    let ctx = Sql.GetDataContext(connectionString)
     Log.Verbose("Handle event {@Envelope}", envelop)
     let offsetValue = (envelop.Offset :?> Sequence).Value
     let lastSlash = envelop.PersistenceId.LastIndexOf("/")

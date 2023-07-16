@@ -197,7 +197,8 @@ let createServices (config: IConfiguration) =
         .BuildServiceProvider(false)
 
 
-let init (config: IConfiguration) =
+let init (env: #_) =
+    let config = env :> IConfiguration
     use serviceProvider = createServices config
     use scope = serviceProvider.CreateScope()
     updateDatabase scope.ServiceProvider
