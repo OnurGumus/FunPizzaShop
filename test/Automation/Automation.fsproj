@@ -6,6 +6,7 @@
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Setup.fs" />
     <Compile Include="FunPizzaShop.fs" />
     <Compile Include="Program.fs" />
     <EmbeddedResource Include="../../features/Login.feature" />

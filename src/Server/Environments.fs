@@ -13,10 +13,10 @@ open Serilog
 open System
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
-    let commandApi =
+    let mutable commandApi =
         lazy(Command.API.api self NodaTime.SystemClock.Instance)
 
-    let queryApi =
+    let mutable queryApi =
         lazy(Query.API.api config commandApi.Value.ActorApi)
         
     do 
@@ -51,9 +51,11 @@ type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
         member _.GetReloadToken() = config.GetReloadToken()
         member _.GetSection key = config.GetSection(key)
 
-    interface IDisposable with
-            member _.Dispose()  = 
-                commandApi.Value.ActorApi.System.Terminate().Wait()
+    member _.Reset()  = 
+        commandApi.Value.ActorApi.System.Terminate().Wait()
+        commandApi <- lazy(Command.API.api self NodaTime.SystemClock.Instance)
+        queryApi <- lazy(Query.API.api config commandApi.Value.ActorApi)
+        DB.init config
     
     interface IQuery with
         member _.Query(?filter, ?orderby,?orderbydesc, ?thenby, ?thenbydesc, ?take, ?skip) =

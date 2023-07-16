@@ -2,22 +2,25 @@
 
 open System.Reflection
 open TickSpec
+open FunPizzaShop.Automation.Setup
 
-[<AfterScenarioAttribute>]
-let quitBrowser () = ()
+
 
 [<EntryPointAttribute>]
 let main _ =
     try
-        do
-            let ass = Assembly.GetExecutingAssembly()
-            let definitions = StepDefinitions(ass)
+        try
+            do
+                let ass = Assembly.GetExecutingAssembly()
+                let definitions = StepDefinitions(ass)
 
-            [ "Login" ]
-            |> Seq.iter (fun source ->
-                let s = ass.GetManifestResourceStream("Automation." + source + ".feature")
-                definitions.Execute(source, s))
-        0
-    with e ->
-        printf "%A" e
-        -1
+                [ "Login" ]
+                |> Seq.iter (fun source ->
+                    let s = ass.GetManifestResourceStream("Automation." + source + ".feature")
+                    definitions.Execute(source, s))
+            0
+        with e ->
+            printf "%A" e
+            -1
+    finally
+        host.StopAsync().Wait()

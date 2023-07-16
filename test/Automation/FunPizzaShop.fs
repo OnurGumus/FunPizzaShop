@@ -15,41 +15,18 @@ open System
 open Microsoft.Extensions.Configuration
 open Hocon.Extensions.Configuration
 open FunPizzaShop.Shared.Command.Authentication
-let configBuilder =
-    ConfigurationBuilder()
-        .AddHoconFile("test-config.hocon")
-        .AddEnvironmentVariables()
-
-let config = configBuilder.Build()
-let mutable host: IHost = Unchecked.defaultof<_>
-let appEnv: Environments.AppEnv ref = ref Unchecked.defaultof<_>
+open FunPizzaShop.Automation.Setup
 
 [<BeforeScenario>]
 let setUpContext () = 
     (task {
-        let! playwright = Playwright.CreateAsync()
-        let! browser = playwright.Chromium.LaunchAsync(BrowserTypeLaunchOptions(Headless = true))
         let! context = browser.NewContextAsync(BrowserNewContextOptions(IgnoreHTTPSErrors = true))
-        let sr:SendVerificationMail ref = ref Unchecked.defaultof<_>
-        let mailSender = 
-            { new IMailSender with
-                member _.SendVerificationMail =
-                    sr.Value
-        
-            }
-        appEnv.Value <- new Environments.AppEnv(config, mailSender)
-        
-        return (context, appEnv,sr)
+        return (context,sr)
     }).Result
 
 [<AfterScenario>]
 let afterContext () = 
-    (task {
-        if (host <> Unchecked.defaultof<_>) then
-            printfn "stopping host"
-            (appEnv.Value:IDisposable).Dispose()
-            host.StopAsync().Wait()
-    }).Result
+     appEnv.Reset()
 
 [<Given>]
 let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail ref) =
@@ -68,8 +45,7 @@ let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail 
        
         do! context.ClearCookiesAsync()
        
-        host <- (App.host appEnv.Value [||])
-        host.Start()
+       
         do! Task.Delay 2000
         let! page = context.NewPageAsync()
         let! _ = page.GotoAsync("http://localhost:8000")
@@ -81,6 +57,7 @@ let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail 
 
 [<When>]
 let ``I typed a valid email address`` (page:IPage, verificationCode:VerificationCode ref) = 
+    printfn "when"
     (task{
         let email = page.GetByPlaceholder("Email")
         do! email.FillAsync("onur@outlook.com.tr")
