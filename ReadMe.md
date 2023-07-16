@@ -11,14 +11,20 @@ https://www.meetup.com/tackling-f-web-development/events/294016439/
 
 https://www.meetup.com/tackling-f-web-development/events/294016439/
 
-Live Demo Online:
+## Live Demo Online:
 
+
+When loging in, no password required. Just write your email then you will get the verification code to your email address.
 
 https://funpizzashop.azurewebsites.net/
+
+Also please note the web socket based live tracking in the map screen if wait long enough in the actual demo after placing the order. 
+
 
 ![](https://raw.githubusercontent.com/OnurGumus/FunPizzaShop/main/funpizzashop.gif)
 
 
+## Build steps
 You need `Docker for Desktop` installed in your machine for MacOS or Windows. 
 You also need `VSCode` with `Dev Containers` extensions.
 
@@ -36,8 +42,8 @@ Then navigate to
 http://localhost:8000
 ```
 
-
-Sign in requires send grid key, to send verification code. If you don't have it, you can find the verification code from the logs in terminal. If you have it, you need to provide via asp.net config. I use a file called secrets.hocon, must be inside debug/bin folder of Server project when running with content:
+### Sending verification emails
+This step is optional. Sign in requires send grid key, to send verification code. If you don't have it, you can find the verification code from the logs in terminal. If you have it, you need to provide via asp.net config. I use a file called secrets.hocon, must be inside debug/bin folder of Server project when running with content:
 
 ```hocon
 config{
@@ -45,7 +51,7 @@ config{
 }
 ```
 
-To build for production 
+## To build for production 
 
 ``` bash
 ./fake.sh PublishServer
