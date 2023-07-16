@@ -22,22 +22,16 @@ open FunPizzaShop.Server.Handlers.Default
 open HTTP
 open FunPizzaShop.Shared.Constants
 open System.Globalization
+open FunPizzaShop.ServerInterfaces.Command
 
 CultureInfo.DefaultThreadCurrentCulture <- CultureInfo.InvariantCulture
 CultureInfo.DefaultThreadCurrentUICulture <- CultureInfo.InvariantCulture
 
 bootstrapLogger()
-        
+
 type Self = Self
  
-let configBuilder =
-    ConfigurationBuilder()
-        .AddUserSecrets<Self>()
-        .AddHoconFile(ConfigHocon)
-        .AddHoconFile("secrets.hocon", true)
-        .AddEnvironmentVariables()
 
-let config = configBuilder.Build()
 
 let errorHandler (ex: Exception) (ctx: HttpContext) =
     Log.Error(ex, "Error Handler")
@@ -117,7 +111,7 @@ let configureLogging (builder: ILoggingBuilder) =
     builder.AddConsole().AddDebug() |> ignore
 
 let host appEnv args =
-    DB.init config
+    DB.init appEnv
     let contentRoot = Directory.GetCurrentDirectory()
     let webRoot = Path.Combine(contentRoot, "WebRoot")
     Host
@@ -140,8 +134,24 @@ let host appEnv args =
 
 [<EntryPoint>]
 let main args =
+
+    let configBuilder =
+        ConfigurationBuilder()
+            .AddUserSecrets<Self>()
+            .AddHoconFile(ConfigHocon)
+            .AddHoconFile("secrets.hocon", true)
+            .AddEnvironmentVariables()
+    
+    let config = configBuilder.Build()
+
     let mutable ret = 0
-    let appEnv = Environments.AppEnv(config)
+    let mailSender = 
+        {  new IMailSender with
+               member _.SendVerificationMail = 
+                  MailSender.sendMail config
+        }
+
+    let appEnv = Environments.AppEnv(config, mailSender)
     try
         try
             (host appEnv args).Run()

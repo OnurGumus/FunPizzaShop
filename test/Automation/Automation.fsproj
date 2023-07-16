@@ -3,6 +3,7 @@
     <OutputType>Exe</OutputType>
     <TargetFramework>net7.0</TargetFramework>
     <PlaywrightPlatform>all</PlaywrightPlatform>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="FunPizzaShop.fs" />
@@ -12,6 +13,9 @@
   <ItemGroup>
     <ProjectReference Include="..\..\src\Server\Server.fsproj" />
     <Content Include="../../features/Login.feature" />
+    <Content Include="./test-config.hocon">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="..\..\.paket\Paket.Restore.targets" />
 </Project>

@@ -1,5 +1,5 @@
 config {
-  connection-string = "Data Source=Database/FunPizzaShop.db;"
+  connection-string = "Data Source=file::memory:?cache=shared"
   admins = ["onur@outlook.com.tr"]
   akka {
     persistence {

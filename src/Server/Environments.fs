@@ -12,7 +12,7 @@ open System.Net
 open Serilog
 
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
-type AppEnv(config: IConfiguration) as self =
+type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
     let commandApi =
         lazy(Command.API.api self NodaTime.SystemClock.Instance)
 
@@ -21,36 +21,7 @@ type AppEnv(config: IConfiguration) as self =
         
     interface IMailSender with
         member _.SendVerificationMail =
-            fun (email:Email) (subject: Subject) (body: Body) ->
-                Log.Debug("Sending mail to {email}: {@body}", email, body)
-                async{
-                    let sender = "info@bindrake.com"
-                    let password = config.GetSection("config:SendGrid:APIKEY").Value
-                    if password = null then
-                        Log.Error("No SendGrid APIKEY found in config")
-                        return ()
-                    else
-                        let target = email.Value
-                        let subject = subject.Value
-                        let body = body.Value
-                        let userName = "apikey"
-                        let msg = new MailMessage()
-                        msg.To.Add(new MailAddress(target))
-                        msg.From <- new MailAddress(sender)
-                        msg.Subject <- subject
-                        msg.Body <- body
-                        msg.IsBodyHtml <- true
-
-                        let client =
-                            new SmtpClient(
-                                Host = "smtp.sendgrid.net",
-                                Port = 587,
-                                EnableSsl = true,
-                                Credentials = new NetworkCredential(userName, password)
-                            )
-                        client.Send(msg)
-                        return ()
-                }
+            mailSender.SendVerificationMail
 
     interface IAuthentication with
         member _.Login: Login = 

@@ -15,6 +15,7 @@
     <Compile Include="Handlers\Pizza.fs" />
     <Compile Include="Handlers\Default.fs" />
     <Compile Include="DB.fs" />
+    <Compile Include="MailSender.fs" />
     <Compile Include="Environments.fs" />
     <Compile Include="Throttling.fs" />
     <Compile Include="Serilog.fs" />
