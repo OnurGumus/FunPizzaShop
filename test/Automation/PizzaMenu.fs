@@ -19,7 +19,6 @@ open FunPizzaShop.Automation.Setup
 
 [<When>]
 let ``I get the main menu``  (context:IBrowserContext)= 
-    printfn "when"
     (task{
         let! page = context.NewPageAsync()
         let! _ = page.GotoAsync("http://localhost:8000")
@@ -33,4 +32,30 @@ let ``pizza items should be fetched`` (page:IPage)=
         let! pizzaItems = page.QuerySelectorAllAsync("fps-pizza-item")
         if pizzaItems.Count = 0 then
             failwith "expected at least 1 pizza"
+    }).Wait()
+
+
+[<Given>]
+let ``pizza items are fetched``  (context:IBrowserContext)= 
+    (task{
+        let page = ``I get the main menu`` (context)
+        ``pizza items should be fetched`` (page)
+        return (page)
+    }).Result
+
+
+[<When>]
+let ``I choose a pizza``  (page:IPage)= 
+    (task{
+        let! pizzaItems = page.QuerySelectorAllAsync("fps-pizza-item")
+        do! pizzaItems[0].ClickAsync()
+        return (page)
+    }).Result
+
+[<Then>]
+let ``that pizza should be selected for configuration`` (page:IPage)= 
+    (task{
+        let el=  page.GetByText("BASIC CHEESE PIZZA").First
+        Expect(el).ToBeVisibleAsync().Wait()
+        return()
     }).Wait()
