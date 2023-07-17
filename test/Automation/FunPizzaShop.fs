@@ -29,7 +29,7 @@ let afterContext () =
      appEnv.Reset()
 
 [<Given>]
-let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail ref) =
+let ``I was asked for login`` (context:IBrowserContext, sr: SendVerificationMail ref) =
     (task{
         let verificationCode: VerificationCode ref = ref Unchecked.defaultof<_>
 
@@ -56,7 +56,7 @@ let ``I am at login screen`` (context:IBrowserContext, sr: SendVerificationMail 
 
 
 [<When>]
-let ``I typed a valid email address`` (page:IPage, verificationCode:VerificationCode ref) = 
+let ``I provided a valid email address`` (page:IPage, verificationCode:VerificationCode ref) = 
     printfn "when"
     (task{
         let email = page.GetByPlaceholder("Email")

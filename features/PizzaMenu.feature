@@ -1,10 +1,10 @@
 Feature: Configure Pizza
 
 Scenario: Show Menu
-When I visit main page
-Then pizza menu should be visible
+When I get the main menu
+Then pizza items should be fetched
 
 Scenario: Configure Pizza
-Given I am in the main page
-When I click a pizza
-Then configure pizza screen should be visible
+Given pizza items are fetched
+When I chose a pizza
+Then that pizza should be selected for configuration

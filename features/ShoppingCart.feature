@@ -2,15 +2,15 @@ Feature: Shpping Cart
 
 Scenario: Add to Cart 
 Given I configured a pizza
-When I click order in confiugation
+When I order a configuration
 Then pizza should be added to cart
 
 Scenario: Remove from Cart
 Given There is an item in the cart
-When I click remove
+When I remove that item
 Then the item should be removed from the cart
 
 Scenario: Review Order
 Given there are items in the cart
-When I click order in sidebar
-Then review order screen should be visible
+When I order from  sidebar
+Then order should be reviewed
