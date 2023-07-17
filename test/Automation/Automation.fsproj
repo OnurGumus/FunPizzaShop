@@ -8,8 +8,11 @@
   <ItemGroup>
     <Compile Include="Setup.fs" />
     <Compile Include="FunPizzaShop.fs" />
+    <Compile Include="Login.fs" />
+    <Compile Include="PizzaMenu.fs" />
     <Compile Include="Program.fs" />
     <EmbeddedResource Include="../../features/Login.feature" />
+    <EmbeddedResource Include="../../features/PizzaMenu.feature" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\Server\Server.fsproj" />

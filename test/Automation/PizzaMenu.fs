@@ -1,4 +1,4 @@
-module FunPizzaShop.Automation.FunPizzaShop
+module FunPizzaShop.Automation.PizzaMenu
 open FunPizzaShop
 open Microsoft.Playwright
 open TickSpec
@@ -17,13 +17,20 @@ open Hocon.Extensions.Configuration
 open FunPizzaShop.Shared.Command.Authentication
 open FunPizzaShop.Automation.Setup
 
-[<BeforeScenario>]
-let setUpContext () = 
-    (task {
-        let! context = browser.NewContextAsync(BrowserNewContextOptions(IgnoreHTTPSErrors = true))
-        return (context,sr)
+[<When>]
+let ``I get the main menu``  (context:IBrowserContext)= 
+    printfn "when"
+    (task{
+        let! page = context.NewPageAsync()
+        let! _ = page.GotoAsync("http://localhost:8000")
+        return (page)
     }).Result
 
-[<AfterScenario>]
-let afterContext () = 
-     appEnv.Reset()
+
+[<Then>]
+let ``pizza items should be fetched`` (page:IPage)= 
+    (task{
+        let! pizzaItems = page.QuerySelectorAllAsync("fps-pizza-item")
+        if pizzaItems.Count = 0 then
+            failwith "expected at least 1 pizza"
+    }).Wait()
