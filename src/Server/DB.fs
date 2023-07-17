@@ -225,13 +225,13 @@ let createServices (config: IConfiguration) =
         .BuildServiceProvider(false)
 
 
-let init (env: #_) =
+let init (env: _) =
     let config = env :> IConfiguration
     use serviceProvider = createServices config
     use scope = serviceProvider.CreateScope()
     updateDatabase scope.ServiceProvider
     
-let reset (env: #_) =
+let reset (env: _) =
     let config = env :> IConfiguration
     use serviceProvider = createServices config
     use scope = serviceProvider.CreateScope()

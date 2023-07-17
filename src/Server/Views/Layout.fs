@@ -20,7 +20,7 @@ let path =
     scriptFiles
     |> Array.map (fun x -> x.Substring(x.LastIndexOf(Path.DirectorySeparatorChar) + 1))
 
-let view (ctx:HttpContext) (env:#_) (isDev) (body: int -> Task<string>) = task{
+let view (ctx:HttpContext) (env:_) (isDev) (body: int -> Task<string>) = task{
     let script =
         if isDev || path.Length = 0 then
             html

@@ -37,7 +37,7 @@ type State = {
 
     interface IDefaultTag
 
-let actorProp (env:#_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
+let actorProp (env:_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventsourced<obj>) =
     let config  = env :> IConfiguration
     let mailSender = env:> IMailSender
     let log = mailbox.UntypedContext.GetLogger()
@@ -174,10 +174,10 @@ let actorProp (env:#_ ) toEvent (mediator: IActorRef<Publish>) (mailbox: Eventso
         Verification = None
     }
 
-let init (env: #_) toEvent (actorApi: IActor) =
+let init (env: _) toEvent (actorApi: IActor) =
     AkklingHelpers.entityFactoryFor actorApi.System shardResolver "User"
     <| propsPersist (actorProp env toEvent (typed actorApi.Mediator))
     <| false
 
-let factory (env: #_) toEvent actorApi entityId =
+let factory (env: _) toEvent actorApi entityId =
     (init env toEvent actorApi).RefFor DEFAULT_SHARD entityId

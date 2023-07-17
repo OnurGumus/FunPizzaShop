@@ -37,7 +37,7 @@ type SagaData = { DeliveryId : DeliveryId option; Order: Order option}
 type SagaState = { Data : SagaData; State: State}
 
 let actorProp
-    (env: #_)
+    (env: _)
     toEvent
     (actorApi: IActor)
     (clockInstance: IClock)
@@ -170,10 +170,10 @@ let actorProp
 
     set { State = NotStarted; Data = { DeliveryId = None; Order = None} }
 
-let init (env: #_) toEvent (actorApi: IActor) (clock: IClock) =
+let init (env: _) toEvent (actorApi: IActor) (clock: IClock) =
     (AkklingHelpers.entityFactoryFor actorApi.System shardResolver "OrderSaga"
      <| propsPersist (actorProp env toEvent actorApi clock (typed actorApi.Mediator))
      <| true)
 
-let factory (env: #_) toEvent actorApi clock entityId =
+let factory (env: _) toEvent actorApi clock entityId =
     (init env toEvent actorApi clock).RefFor DEFAULT_SHARD entityId

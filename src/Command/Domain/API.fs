@@ -15,7 +15,7 @@ open Actor
 open Akkling.Cluster.Sharding
 open Microsoft.Extensions.Configuration
 
-let sagaCheck (env:#_) toEvent actorApi (clock: IClock) (o: obj) =
+let sagaCheck (env:_) toEvent actorApi (clock: IClock) (o: obj) =
     match o with
     | :? (Event<Order.Event>) as e ->
         match e with
@@ -37,7 +37,7 @@ type IDomain =
     abstract OrderFactory: string -> IEntityRef<obj>
     abstract DeliveryFactory: string -> IEntityRef<obj>
 
-let api (env: #_) (clock: IClock) (actorApi: IActor) =
+let api (env: _) (clock: IClock) (actorApi: IActor) =
 
     let toEvent ci = Common.toEvent clock ci
     SagaStarter.init actorApi.System actorApi.Mediator (sagaCheck env toEvent actorApi clock)

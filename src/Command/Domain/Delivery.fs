@@ -109,10 +109,10 @@ let actorProp (config: IConfiguration) toEvent (mediator: IActorRef<Publish>) (m
         Order = None
     }
 
-let init (env: #_) toEvent (actorApi: IActor) =
+let init (env: _) toEvent (actorApi: IActor) =
     AkklingHelpers.entityFactoryFor actorApi.System shardResolver "Delivery"
     <| propsPersist (actorProp env toEvent (typed actorApi.Mediator))
     <| false
 
-let factory (env: #_) toEvent actorApi entityId =
+let factory (env: _) toEvent actorApi entityId =
     (init env toEvent actorApi).RefFor DEFAULT_SHARD entityId

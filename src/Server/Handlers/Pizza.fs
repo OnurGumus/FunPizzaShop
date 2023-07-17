@@ -20,7 +20,7 @@ open System.IO
 open System.Collections.Generic
 open Serilog
 
-let pizzaAPI (ctx: HttpContext) (env: #_) : API.Order = {
+let pizzaAPI (ctx: HttpContext) (env: _) : API.Order = {
     OrderPizza =
         fun order  ->
             async {
@@ -30,7 +30,7 @@ let pizzaAPI (ctx: HttpContext) (env: #_) : API.Order = {
             }
 }
 
-let pizzaHandler (env: #_) =
+let pizzaHandler (env: _) =
     Remoting.createApi ()
     |> Remoting.withErrorHandler (fun ex routeInfo -> Log.Error(ex,"Remoting error");  Propagate ex.Message; )
     |> Remoting.withRouteBuilder (API.Route.builder None)

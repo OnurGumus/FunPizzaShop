@@ -42,7 +42,7 @@ module private Internal =
         |> ClaimsPrincipal
 
 
-let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
+let authenticationAPI (ctx: HttpContext) (env: _) : API.Authentication = {
     Login =
         fun userId  ->
             async {
@@ -102,7 +102,7 @@ let authenticationAPI (ctx: HttpContext) (env: #_) : API.Authentication = {
             }
 }
 
-let authenticationHandler (env: #_) =
+let authenticationHandler (env: _) =
     Remoting.createApi ()
     |> Remoting.withErrorHandler (fun ex routeInfo -> Log.Error(ex,"Remoting error");  Propagate ex.Message; )
     |> Remoting.withRouteBuilder (API.Route.builder None)
@@ -113,7 +113,7 @@ open Google.Apis.Auth
 open Google.Apis.Auth.OAuth2
 open Serilog
 // etc.
-let googleSignIn (env: #_) : HttpHandler =
+let googleSignIn (env: _) : HttpHandler =
     fun (next: HttpFunc) (ctx: HttpContext) ->
         task {
             Log.Information("google login start")
