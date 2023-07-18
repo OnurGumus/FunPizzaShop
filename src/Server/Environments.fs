@@ -55,7 +55,7 @@ type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
         commandApi.Value.ActorApi.System.Terminate().Wait()
         commandApi <- lazy(Command.API.api self NodaTime.SystemClock.Instance)
         queryApi <- lazy(Query.API.api config commandApi.Value.ActorApi)
-        DB.init config
+        DB.reset config
     
     interface IQuery with
         member _.Query(?filter, ?orderby,?orderbydesc, ?thenby, ?thenbydesc, ?take, ?skip) =

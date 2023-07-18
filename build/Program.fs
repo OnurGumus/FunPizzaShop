@@ -8,7 +8,6 @@ open Fake.Core.TargetOperators
 
 let serverPath = Path.getFullName "./src/Server"
 let clientPath = Path.getFullName "./src/Client"
-let clientDeployPath = Path.combine clientPath "deploy"
 let deployDir = Path.getFullName "./deploy"
 let automationPath = Path.getFullName "./test/Automation"
 
@@ -53,7 +52,7 @@ let openBrowser url =
     |> ignore
 
 let initTargets () =
-    Target.create "Clean" (fun _ -> [ deployDir; clientDeployPath ] |> Shell.cleanDirs)
+    Target.create "Clean" (fun _ -> [ deployDir; ] |> Shell.cleanDirs)
     "Clean" |> ignore
 
     Target.create "InstallClient" (fun _ ->
