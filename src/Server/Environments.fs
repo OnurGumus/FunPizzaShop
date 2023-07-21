@@ -11,6 +11,8 @@ open System.Net.Mail
 open System.Net
 open Serilog
 open System
+open Microsoft.FSharp.Control
+open System.Threading
 [<System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage>]
 type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
     let mutable commandApi =
@@ -56,7 +58,11 @@ type AppEnv(config: IConfiguration, mailSender:IMailSender) as self =
         commandApi <- lazy(Command.API.api self NodaTime.SystemClock.Instance)
         queryApi <- lazy(Query.API.api config commandApi.Value.ActorApi)
         DB.reset config
-    
+
+    member _.Init() = 
+        if commandApi.Value = Unchecked.defaultof<_> || queryApi.Value = Unchecked.defaultof<_> then
+            failwith "AppEnv not initialized"
+        
     interface IQuery with
         member _.Query(?filter, ?orderby,?orderbydesc, ?thenby, ?thenbydesc, ?take, ?skip) =
             queryApi.Value.Query(?filter = filter, ?orderby = orderby, ?orderbydesc = orderbydesc, ?thenby = thenby, ?thenbydesc = thenbydesc,  ?take = take, ?skip = skip)

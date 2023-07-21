@@ -97,7 +97,9 @@ let configureServices (services: IServiceCollection) =
         .AddCors()
         .AddGiraffe()
         .AddAntiforgery()
+#if !DEBUG
         .AddApplicationInsightsTelemetry()
+#endif
         .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(
             CookieAuthenticationDefaults.AuthenticationScheme,
@@ -154,6 +156,7 @@ let main args =
         }
 
     let appEnv = new Environments.AppEnv(config, mailSender)
+    appEnv.Init()
     try
         try
             (host appEnv args).Run()

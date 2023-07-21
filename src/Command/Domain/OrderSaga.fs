@@ -35,7 +35,7 @@ type Event =
     interface IDefaultTag
 type SagaData = { DeliveryId : DeliveryId option; Order: Order option}
 type SagaState = { Data : SagaData; State: State}
-
+let initialState = { State = NotStarted; Data = { DeliveryId = None; Order = None} }
 let actorProp
     (env: _)
     toEvent
@@ -62,7 +62,7 @@ let actorProp
 
         let startDelivery (order:Order) =
             Delivery.StartDelivery order |> createCommand
-      
+
         let orderActor (orderId: OrderId) =
             let toEvent ci = Common.toEvent clockInstance ci
             Order.factory env toEvent actorApi orderId.Value.Value
@@ -76,29 +76,41 @@ let actorProp
             | WaitingForDeliveryStart (deliveryId, order) ->
                 { state.Data with DeliveryId = Some deliveryId ; Order =Some order}
             | _ -> state.Data
+            
+        let orderId = 
+                mailbox.Self.Path.Name 
+                |> toOriginatorName 
+                |> ShortString.TryCreate 
+                |> forceValidate |> OrderId
 
-        let applySideEffects (state:SagaState) =
+        let applySideEffects (state:SagaState) recovered =
             match state.State with
             | NotStarted -> Started |> Some
             | Started ->
-                SagaStarter.cont mediator
-                let orderId = 
-                    mailbox.Self.Path.Name 
-                    |> toOriginatorName 
-                    |> ShortString.TryCreate 
-                    |> forceValidate |> OrderId
-                (WaitingForOrderPlaced orderId) |> Some
+                if recovered then
+                    Some Completed
+                else
+                    SagaStarter.cont mediator
+                    (WaitingForOrderPlaced orderId) |> Some
+                    
             | WaitingForDeliveryStart (deliveryId,order) ->
                 deliveryActor(deliveryId) <! startDelivery(order)
                 None
             | WaitingForOrderDeliveryStatusSet (status) ->
-                orderActor (state.Data.Order.Value.OrderId) <! setDeliveryStatus status
+                orderActor (orderId) <! setDeliveryStatus status
                 None
             | Completed -> 
-                mailbox.Parent() <! Passivate(Actor.PoisonPill.Instance)
-                log.Info("OrderSaga Completed")
-                None
-            | WaitingForOrderPlaced _ -> None
+                if recovered then
+                    Some Started
+                else
+                    mailbox.Parent() <! Passivate(Actor.PoisonPill.Instance)
+                    log.Info("OrderSaga Completed")
+                    None
+            | WaitingForOrderPlaced _ -> 
+                if recovered then
+                   Completed |> Some
+                else
+                    None
 
         actor {
             let! msg = mailbox.Receive()
@@ -127,8 +139,9 @@ let actorProp
             | _ ->
                 match msg, state with
                 | SagaStarter.SubscrptionAcknowledged mailbox _, _ ->
+                  
                     // notify saga starter about the subscription completed
-                    let newState = applySideEffects state
+                    let newState = applySideEffects state true
                     match newState with
                     | Some newState ->  return!  (newState |> StateChanged |> box |> Persist)
                     | None -> return! state |> set
@@ -138,7 +151,7 @@ let actorProp
                     | StateChanged originalState ->
                         let data = apply { state with  State = originalState }
                         let newSagaState = { state with Data = data}
-                        let newState = applySideEffects { Data = data; State = originalState }
+                        let newState = applySideEffects { Data = data; State = originalState } false
                         match newState with
                         | Some newState ->  return! ( newSagaState  |> set)  <@> (newState |> StateChanged |> box |> Persist)
                         | None -> return! newSagaState |> set
@@ -168,7 +181,7 @@ let actorProp
                     return! set state
         }
 
-    set { State = NotStarted; Data = { DeliveryId = None; Order = None} }
+    set initialState
 
 let init (env: _) toEvent (actorApi: IActor) (clock: IClock) =
     (AkklingHelpers.entityFactoryFor actorApi.System shardResolver "OrderSaga"

@@ -11,9 +11,12 @@
             "program": "${workspaceFolder}/src/Server/bin/Debug/net7.0/Server.dll",
             "args": [],
             "cwd": "${workspaceFolder}/src/Server",
-            "console": "internalConsole",
+            "console": "integratedTerminal",
             "stopAtEntry": false,
             "justMyCode": true,
+            "logging": {
+                "moduleLoad": false
+            }
             // "symbolOptions": {
             //     "searchMicrosoftSymbolServer": true,
             //     "searchNuGetOrgSymbolServer": true

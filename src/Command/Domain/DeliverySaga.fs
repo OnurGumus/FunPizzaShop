@@ -37,7 +37,7 @@ type Event =
     interface IDefaultTag
 type SagaData = { DeliveryId : DeliveryId option; Order: OrderId option}
 type SagaState = { Data : SagaData; State: State}
-
+let initialState = { State = NotStarted; Data = { DeliveryId = None; Order = None} }
 let actorProp
     (env: _)
     toEvent
@@ -85,10 +85,14 @@ let actorProp
                 state.Data
             | _ -> state.Data
 
-        let applySideEffects (state:SagaState) =
+        let applySideEffects (state:SagaState) recovered =
             match state.State with
             | NotStarted -> Started |> Some
+
             | Started ->
+                if recovered then 
+                    Some Completed
+                else
                 SagaStarter.cont mediator
                 let deliveryId = 
                     mailbox.Self.Path.Name 
@@ -98,7 +102,10 @@ let actorProp
                 (WaitingForDeliveryStart deliveryId) |> Some
 
             | WaitingForDeliveryStart _ ->
-               None
+                if recovered then
+                    Some (Completed)
+                else
+                    None
 
             | WaitingForOrderDeliveryCompleted _ ->
                 let deliveryId = state.Data.DeliveryId.Value
@@ -128,6 +135,9 @@ let actorProp
                 orderActor(state.Data.Order.Value) <! setDeliveryStatusForOrder(DeliveryStatus.Delivered)
                 None
             | Completed -> 
+                if recovered then
+                    Some (Started)
+                else
                 mailbox.Parent() <! Akka.Cluster.Sharding.Passivate(Actor.PoisonPill.Instance)
                 log.Info("DeliverySaga Completed")
                 None
@@ -158,8 +168,7 @@ let actorProp
             | _ ->
                 match msg, state with
                 | SagaStarter.SubscrptionAcknowledged mailbox _, _ ->
-                    // notify saga starter about the subscription completed
-                    let newState = applySideEffects state
+                    let newState = applySideEffects state true
                     match newState with
                     | Some newState ->  return!  (newState |> StateChanged |> box |> Persist)
                     | None -> return! state |> set
@@ -169,7 +178,7 @@ let actorProp
                     | StateChanged originalState ->
                         let data = apply { state with  State = originalState }
                         let newSagaState = { state with Data = data}
-                        let newState = applySideEffects { Data = data; State = originalState }
+                        let newState = applySideEffects { Data = data; State = originalState } false
                         match newState with
                         | Some newState ->  return! ( newSagaState  |> set)  <@> (newState |> StateChanged |> box |> Persist)
                         | None -> return! newSagaState |> set
@@ -206,7 +215,7 @@ let actorProp
                     return! set state
         }
 
-    set { State = NotStarted; Data = { DeliveryId = None; Order = None} }
+    set initialState
 
 let init (env: _) toEvent (actorApi: IActor) (clock: IClock) =
     (AkklingHelpers.entityFactoryFor actorApi.System shardResolver "DeliverySaga"
