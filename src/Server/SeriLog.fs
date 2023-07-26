@@ -67,8 +67,8 @@ let configureMiddleware _ (services:IServiceProvider) (loggerConfiguration:Logge
     #if DEBUG
         .WriteTo.Seq("http://192.168.50.236:5341")
     #else
-        .WriteTo.ApplicationInsights(
-            services.GetRequiredService<TelemetryConfiguration>(),
-            TelemetryConverter.Traces)
+        // .WriteTo.ApplicationInsights(
+        //     services.GetRequiredService<TelemetryConfiguration>(),
+        //     TelemetryConverter.Traces)
     #endif
     |> ignore

@@ -84,7 +84,12 @@ let authenticationAPI (ctx: HttpContext) (env: _) : API.Authentication = {
                 match result with
                 | Ok _ ->
                     let p = prepareClaimsPrincipal userId.Value admins
-                    do! ctx.SignInAsync(p) |> Async.AwaitTask
+                    let authProperties = new AuthenticationProperties(
+                        IsPersistent = true
+    
+                    )
+    
+                    do! ctx.SignInAsync(p,authProperties) |> Async.AwaitTask
                 | _ -> ()
 
                 return result

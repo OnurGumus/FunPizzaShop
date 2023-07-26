@@ -98,7 +98,7 @@ let configureServices (services: IServiceCollection) =
         .AddGiraffe()
         .AddAntiforgery()
 #if !DEBUG
-        .AddApplicationInsightsTelemetry()
+     //   .AddApplicationInsightsTelemetry()
 #endif
         .AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
         .AddCookie(
