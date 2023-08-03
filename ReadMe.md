@@ -1,3 +1,20 @@
+# Testimonials for this workshop
+
+"The workshop was a condensed grouping of simple but very powerful  modeling techniques. We could see how to wire complex Tecnologies in a meaningful and flexible architecture, that's built for scaling from the ground up while we still maintaining the code semantics. That will highly impact my future arquitetural decisions for sure."
+Jessé Junior
+
+---
+"I attended a brilliant workshop hosted by Onur where he covered a huge amount of material including CQRS/ES architecture, back-end & front-end FSharp development stacks."
+
+Darran, Principal Software Developer
+
+---
+
+"The content of this course was very interesting: Onur has brought disparate F# technologies together and made a promising web stack from them. There's plenty for a SAFE Stack enthusiast like me to explore further!" 
+
+Matt Gallagher, Consultant, Compositional IT
+
+
 # Building & Running
 
 
