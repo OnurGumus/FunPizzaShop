@@ -35,3 +35,5 @@ src/Server/secrets.hocon
 logs/
 *.report.html
 Test.db
+
+.fake
