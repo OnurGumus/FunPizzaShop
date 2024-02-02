@@ -28,14 +28,6 @@ https://www.meetup.com/tackling-f-web-development/events/294016439/
 
 https://www.meetup.com/tackling-f-web-development/events/294016439/
 
-## Live Demo Online:
-
-
-When loging in, no password required. Just write your email then you will get the verification code to your email address.
-
-https://funpizzashop.azurewebsites.net/
-
-Also please note the web socket based live tracking in the map screen if wait long enough in the actual demo after placing the order. 
 
 
 ![](https://raw.githubusercontent.com/OnurGumus/FunPizzaShop/main/funpizzashop.gif)
