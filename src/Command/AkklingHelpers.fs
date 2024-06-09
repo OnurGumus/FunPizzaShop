@@ -7,12 +7,11 @@ open Akkling
 open Akkling.Persistence
 open Akkling.Cluster.Sharding
 
-
 type Extractor<'Envelope, 'Message> = 'Envelope -> string * string * 'Message
 type ShardResolver = string -> string
 
-type internal TypedMessageExtractor<'Envelope, 'Message>(extractor: Extractor<_, 'Message>,
-                                                         shardResolver: ShardResolver) =
+type internal TypedMessageExtractor<'Envelope, 'Message>
+    (extractor: Extractor<_, 'Message>, shardResolver: ShardResolver) =
     interface IMessageExtractor with
         member _.ShardId message =
             match message with
@@ -35,6 +34,8 @@ type internal TypedMessageExtractor<'Envelope, 'Message>(extractor: Extractor<_,
                 let _, _, msg = extractor env
                 box msg
             | other -> invalidOp <| string other
+        member this.ShardId(entityId: string, messageHint: obj): string = 
+            shardResolver (entityId)
 
 
 // HACK over persistent actors
@@ -51,30 +52,28 @@ type FunPersistentShardingActor<'Message>(actor: Eventsourced<'Message> -> Effec
     override _.PersistenceId = pid
 
 // this function hacks persistent functional actors props by replacing them with dedicated sharded version using different PeristenceId strategy
-let internal adjustPersistentProps (props: Props<'Message>): Props<'Message> =
+let internal adjustPersistentProps (props: Props<'Message>) : Props<'Message> =
     if props.ActorType = typeof<FunPersistentActor<'Message>> then
         { props with
-              ActorType = typeof<FunPersistentShardingActor<'Message>> }
+            ActorType = typeof<FunPersistentShardingActor<'Message>> }
     else
         props
 
 
-let entityFactoryFor (system: ActorSystem)
-                     (shardResolver: ShardResolver)
-                     (name: string)
-                     (props: Props<'Message>)
-                     (rememberEntities)
-                     : EntityFac<'Message> =
+let entityFactoryFor
+    (system: ActorSystem)
+    (shardResolver: ShardResolver)
+    (name: string)
+    (props: Props<'Message>)
+    (rememberEntities)
+    : EntityFac<'Message> =
 
     let clusterSharding = ClusterSharding.Get(system)
     let adjustedProps = adjustPersistentProps props
 
     let shardSettings =
         match rememberEntities with
-        | true ->
-            ClusterShardingSettings
-                .Create(system)
-                .WithRememberEntities(true)
+        | true -> ClusterShardingSettings.Create(system).WithRememberEntities(true)
         | _ -> ClusterShardingSettings.Create(system)
 
     let shardRegion =
@@ -88,5 +87,5 @@ let entityFactoryFor (system: ActorSystem)
     { ShardRegion = shardRegion
       TypeName = name }
 
-let (|Recovering|_|) (context: Eventsourced<'Message>) (msg: 'Message): 'Message option =
+let (|Recovering|_|) (context: Eventsourced<'Message>) (msg: 'Message) : 'Message option =
     if context.IsRecovering() then Some msg else None

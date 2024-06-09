@@ -37,3 +37,4 @@ logs/
 Test.db
 
 .fake
+packages/

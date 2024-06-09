@@ -1,7 +1,7 @@
 source https://api.nuget.org/v3/index.json
 
 storage: none
-framework: auto-detect
+framework:net8.0
 
 nuget Giraffe
 nuget FSharp.Core
@@ -57,6 +57,7 @@ nuget FSharp.SystemTextJson
 group Client
     source https://api.nuget.org/v3/index.json
     framework: auto-detect
+    storage: net8.0
     storage: none
     
     nuget FSharp.Core
@@ -80,7 +81,7 @@ group Client
 
 group Build
     source https://api.nuget.org/v3/index.json
-    framework: auto-detect
+    framework: net8.0
     storage: none
 
     nuget FSharp.Core
