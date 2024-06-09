@@ -71,14 +71,13 @@ let configureApp (app: IApplicationBuilder, appEnv) =
             webAppWrapper appEnv layout
     let sConfig = Serilog.configure errorHandler 
     let handler = SerilogAdapter.Enable(webApp, sConfig)
-
+    (Elmish.Bridge.Giraffe.useWebSockets(app)) |> ignore
     (match isDevelopment with
      | true -> app.UseDeveloperExceptionPage()
      | false -> app.UseHttpsRedirection())
         .UseCors(configureCors)
         .UseStaticFiles(staticFileOptions)
         .UseThrottlingTroll(Throttling.setOptions)
-        .UseWebSockets() 
         .UseGiraffe(handler)
 
     if env.IsDevelopment() then
