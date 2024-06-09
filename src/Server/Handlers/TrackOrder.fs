@@ -10,6 +10,7 @@ open FunPizzaShop.Shared.Model
 open FunPizzaShop.Shared.Model.Pizza
 open Akka.Streams
 open FunPizzaShop.Query.Projection
+open Serilog
 
 let mkBridgeProgramWithOrderExecute endpoint
     (init: 'arg -> 'model * 'order)
@@ -68,6 +69,7 @@ let execute (env:_) (clientDispatch:Dispatch<ServerToClient.Msg>) (order:Order) 
 
         async {
             let getOrder () = async{
+                Log.Information("Getting order {OrderId}", orderId)
                 let! orders = 
                     query.Query<Pizza.Order>(filter = Equal("OrderId", orderId.Value.Value), take = 1)
                 return orders |> Seq.tryHead

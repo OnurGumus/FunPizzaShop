@@ -20,12 +20,12 @@ let sagaCheck (env:_) toEvent actorApi (clock: IClock) (o: obj) =
     | :? (Event<Order.Event>) as e ->
         match e with
         | { EventDetails = Order.OrderPlaced _  } ->
-            [ (OrderSaga.factory env toEvent actorApi clock, id |> Some |> PrefixConversion) ]
+            [ (OrderSaga.factory env toEvent actorApi clock, id |> Some |> PrefixConversion, o) ]
         | _ -> []
     | :? (Event<Delivery.Event>) as e ->
         match e with 
         | { EventDetails = Delivery.DeliveryStarted _  } ->
-            [ (DeliverySaga.factory env toEvent actorApi clock, id |> Some |> PrefixConversion ) ]
+            [ (DeliverySaga.factory env toEvent actorApi clock, id |> Some |> PrefixConversion, o ) ]
         | _ -> []
     | _ -> []
 

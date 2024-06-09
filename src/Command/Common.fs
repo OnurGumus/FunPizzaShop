@@ -216,14 +216,14 @@ module SagaStarter =
         | :? SubscribeAck as s when s.Subscribe.Topic = originatorName -> Some msg
         | _ -> None
 
-    let actorProp (sagaCheck: obj -> (((string -> IEntityRef<_>) * PrefixConversion) list)) (mailbox: Actor<_>) =
+    let actorProp (sagaCheck: obj -> (((string -> IEntityRef<_>) * PrefixConversion*obj) list)) (mailbox: Actor<_>) =
         let rec set (state: Map<string, (Actor.IActorRef * string list)>) =
 
-            let startSaga cid (originator: Actor.IActorRef) (list: ((string -> IEntityRef<_>) * PrefixConversion) list) =
+            let startSaga cid (originator: Actor.IActorRef) (list: ((string -> IEntityRef<_>) * PrefixConversion*obj) list) =
                 let sender = untyped <| mailbox.Sender()
 
                 let sagas = [
-                    for (factory, prefix) in list do
+                    for (factory, prefix,e) in list do
                         let saga =
                             cid
                             |> fun name ->
@@ -233,7 +233,7 @@ module SagaStarter =
                                       originator.Path.Name + SAGA_Suffix + (f (name |> toRawGuid))
                             |> factory
 
-                        saga <! box (ShardRegion.StartEntity(saga.EntityId))
+                        saga <!  e //box (ShardRegion.StartEntity(saga.EntityId))
 
                         yield saga.EntityId
                 ]

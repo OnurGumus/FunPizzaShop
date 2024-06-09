@@ -23,7 +23,7 @@ open Akka.Event
 
 type State =
     | NotStarted
-    | Started 
+    | Started of (Common.Event<Delivery.Event>) 
     | WaitingForDeliveryStart of DeliveryId
     | WaitingForOrderDeliveryCompleted  of OrderId
     | WaitingForOrderDeliveryStatusSet
@@ -87,9 +87,9 @@ let actorProp
 
         let applySideEffects (state:SagaState) recovered =
             match state.State with
-            | NotStarted -> Started |> Some
+            | NotStarted ->  None
 
-            | Started ->
+            | Started _ ->
                 if recovered then 
                     Some Completed
                 else
@@ -136,7 +136,7 @@ let actorProp
                 None
             | Completed -> 
                 if recovered then
-                    Some (Started)
+                    failwith    "Completed"
                 else
                 mailbox.Parent() <! Akka.Cluster.Sharding.Passivate(Actor.PoisonPill.Instance)
                 log.Info("DeliverySaga Completed")
@@ -194,21 +194,28 @@ let actorProp
                         return! set state
                     
 
-                | :? (Common.Event<Delivery.Event>) as { EventDetails = deliveryEvent }, _ ->
-                    match deliveryEvent with
-                    | Delivery.DeliveryStarted(order) ->
+                | :? (Common.Event<Delivery.Event> ) as ({ EventDetails = deliveryEvent }as de) , _ ->
+                    
+                    match state.State, deliveryEvent with
+                    // | NotStarted,w->
+                    //     log.Warning("Start event {@e}", box w)
+                    //     return! set state
+                    | _,Delivery.DeliveryStarted(order) when state.Data.DeliveryId.IsSome ->
                         let state =
                             WaitingForOrderDeliveryCompleted order.OrderId |> StateChanged
                         return! state |> box |> Persist
-                    | Delivery.Delivered _ ->
+                    | _,Delivery.Delivered _ ->
                         let state =
                             WaitingForOrderDeliveryStatusSet  |> StateChanged
                         return! state |> box |> Persist
-                    | Delivery.LocationUpdated _ ->
+                    | _, Delivery.LocationUpdated _ ->
                         return! set state
-                    // | e ->
-                    //     log.Warning("Unhandled event in delivery saga {@Event}", box e)
-                    //     return! set state
+                    | State.NotStarted, _ ->
+                        let state = Started  de |> StateChanged
+                        return! state |> box |> Persist
+                    | e ->
+                        log.Warning("Unhandled event in delivery saga {@Event}", box e)
+                        return! set state
 
                 | e ->
                     log.Warning("Unhandled event in global {@Event}", e)
